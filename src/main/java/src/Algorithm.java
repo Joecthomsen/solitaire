@@ -1,0 +1,195 @@
+package src;
+
+import src.Interfaces.Solver;
+import src.Interfaces.Table;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Algorithm implements Solver {
+
+    private int cardFromPile;// = -10;
+    private int cardToPile;// = -10;
+    private int cardFromPileIndex;
+    private boolean complexMatch = false;
+    private  boolean printTable;
+    private boolean turnOverCard_playerDeck = false;
+    private boolean firstTurn = true;
+    List<List<Card>> tempPile = new ArrayList<>();
+    List<List<Card>> sortedList = new ArrayList<>();
+
+    Table table;
+
+    Algorithm(Table table){
+        this.table = table;
+    }
+
+    public List<List<Card>> sortList(List<List<Card>> listToSort) {
+        /*
+         * @void
+         * Takes a list and sort it in accenting order
+         * -Create current and next index
+         * -Compaire the value of the current and next card.
+         * -If next is smaller than current, swap it.
+         * -Iterate through the list.
+         * -Start over, if no swaps is done, set the boolean to false, and the loop is broken.
+         * */
+        boolean swapped = true;
+        while (swapped)
+        {
+            swapped = false;
+            int current = 0;
+            int next = 1;
+            while (next < listToSort.size())
+            {
+                if(listToSort.get(current).isEmpty() || listToSort.get(next).isEmpty()){current++; next++; continue;}
+                if(listToSort.get(current).get(0).getValue() > listToSort.get(next).get(0).getValue())
+                {
+                    Collections.swap(listToSort, current, next);
+                    swapped = true;
+                }
+                current++;
+                next++;
+            }
+        }
+        return listToSort;
+    }
+
+    private void createSortedList_OfCards(){        //TODO Lav disse to finctioner createSortedList_OfCards() & sortList mere overskuelige
+        /*
+         * Initialize the temporary pile of cars and create a sorted list from low value to high value
+         * */
+        tempPile.clear();   //Clear any existing instance of the list
+        tempPile.addAll(table.getAllFaceUpCards());
+        sortedList = sortList(tempPile);
+    }
+
+    private boolean checkForMatchBottomPiles() {
+
+        createSortedList_OfCards(); //Re-init the temp pile, so that we get the cards back in it.d
+        while (!sortedList.isEmpty())
+        {
+
+//            if(checkKingCondition()){return true;};
+//            createSortedList_OfCards();
+            int validValue = 0;
+            int validColor = 0;
+            if(!sortedList.get(0).isEmpty()) {
+                validValue = (sortedList.get(0).get(0).getValue()) + 1;
+                if (sortedList.get(0).get(0).getColor() == 0) {
+                    validColor = 1;
+                }
+            }
+            for (int j = 0 ; j < sortedList.size(); j++)
+            {
+                if(sortedList.get(j).isEmpty()){continue;}
+                if(sortedList.get(j).get(sortedList.get(j).size() - 1).getColor() == validColor && sortedList.get(j).get(sortedList.get(j).size() - 1).getValue() == validValue){
+                    cardFromPile = sortedList.get(0).get(0).getBelongToPile();
+                    cardToPile = sortedList.get(j).get(0).getBelongToPile();
+                    return true;
+                }
+            }
+            sortedList.remove(0);
+        }
+        return false;
+
+    }
+    @Override
+    public Match checkForAnyMatch() {
+        if(checkForMatch_TopPile()){
+            return new Match(cardFromPile, cardToPile, true);
+        }
+
+        else if(checkForMatchBottomPiles()){
+            return new Match(cardFromPile, cardToPile, true);
+        }
+        return new Match(false);
+    }
+
+    private boolean checkForMatch_TopPile() {
+        createSortedList_OfCards();
+        //Check for simple match only at the top card in a pile
+        while (!sortedList.isEmpty())
+        {
+            for (int j = 0 ; j < 4 ; j++)
+            {
+                if(sortedList.get(0).isEmpty()){continue;}
+                if(sortedList.get(0).get(sortedList.get(0).size() - 1).getValue() == table.getTopCard_fromFundamentStack(j).getValue() + 1
+                        && sortedList.get(0).get(sortedList.get(0).size() - 1).getType() == table.getTopCard_fromFundamentStack(j).getType())
+                {
+                    cardFromPile = sortedList.get(0).get(0).getBelongToPile();
+                    cardToPile = 7 + j;
+                    //System.out.println("Hit in a top deck");
+                    return true;
+                }
+            }
+            sortedList.remove(0);
+        }
+        //Check for complex match where the algorithm breaks a pile up to make a match
+        return checkForComplexMatch();
+    }
+
+    private boolean indexCanSplit(Card card) {
+        //createSortedList_OfCards();
+        int validValue = card.getValue() + 1;
+        int validColor = 0;
+        if(card.getColor() == 0){validColor = 1;}
+        for(int i = 0 ; i < table.getAllPiles().size() ; i++)
+        {
+            //System.out.println("Test2");
+            //if(sortedList.get(0).isEmpty())
+            if(table.getPile(i).isEmpty())
+            {
+                continue;
+            }
+            if (table.getPile(i).get(table.getPile(i).size() - 1).getValue() == validValue && table.getPile(i).get(table.getPile(i).size() - 1).getColor() == validColor)
+            {
+                cardToPile = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkForComplexMatch() {
+        /*
+         * This function will see, if there is any open-faced card that can be a potential match in the foundation piles.
+         * If so, then it will also check, if it is possible to move the card on top of that card, to somewhere else, in order for
+         * the card to become free.
+         *
+         * - Store the valid value and type with respect to foundation pile
+         * - Run through all the cards, but skip the face-down cards
+         * - If a card matches the value stored, check if the pile can be split with the indexCanSplit() function
+         * - If indexCanSplit() returns true, store the relevant index and piles, and return true-
+         * */
+        for (int i = 0 ; i < 4 ; i++)   //Check all four fundament pile
+        {
+            int validValue = table.getTopCard_fromFundamentStack(i).getValue() + 1;
+            int validType = table.getTopCard_fromFundamentStack(i).getType();
+            for(int j = 0 ; j < table.getAllPiles().size() ; j++)
+            {
+                for (int k = 0 ; k < table.getPile(j).size() ; k++)
+                {
+                    if(!table.getPile(j).get(k).isFaceUp()){continue;}
+                    if(table.getPile(j).get(k).getValue() == validValue && table.getPile(j).get(k).getType() == validType)
+                    {
+                        if(indexCanSplit(table.getPile(j).get(k+1)) ) //See if we can move the card on top of the indexed card
+                        {
+                            cardFromPile = j;
+                            cardFromPileIndex = k + 1;
+                            //cardHandler.setComplexMatch(true);  //This is a flag, telling the card handler, that it has to split piles
+                            table.setComplexSplitIndex(cardFromPileIndex);
+                            complexMatch = true;
+                            //if (printTable)
+                                //System.out.println("SPLIT PILE " + cardFromPile + " at card value: " + cardHandler.getPile(j).get(k+1).getValue() + " type: " + cardHandler.getPile(j).get(k+1).getType() + " to pile: " + cardToPile );
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+}
