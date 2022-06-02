@@ -71,9 +71,19 @@ public class Mover implements Move {
 
     @Override
     public void insertNextCardFromInput(Match match, Card card) {
+
+        if (match.getFromPile() == 11 && !table.getPlayerDeck().get(table.getPlayerDeckIndex()).isFaceUp()){
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(card.getColor());
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(card.getValue());
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(card.getType());
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setBelongToPile(card.getBelongToPile());
+        }
+        else {
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setColor(card.getColor());
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setType(card.getType());
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setValue(card.getValue());
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setFaceUp(true);
+        }
     }
 }

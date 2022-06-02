@@ -97,6 +97,7 @@ public class Algorithm implements Solver {
     }
     @Override
     public Match checkForAnyMatch() {
+
         if(checkForMatch_TopPile()){
             return new Match(cardFromPile, cardToPile, true);
         }
@@ -104,8 +105,73 @@ public class Algorithm implements Solver {
         else if(checkForMatchBottomPiles()){
             return new Match(cardFromPile, cardToPile, true);
         }
-        return new Match(false);
+
+        else if(checkForMatch_playerDeck()){
+            return new Match(cardFromPile, cardToPile, true);
+        }
+            return new Match(false);
     }
+
+    private boolean checkForMatch_playerDeck() {
+//Check for match in top piles,
+        if(table.getTopCard_PlayerDeck() == null){return false;}
+        for (int i = 0; i < 4; i++) {
+            if (table.getTopCard_PlayerDeck().getValue() == table.getTopCard_fromFundamentStack(i).getValue() + 1 && table.getTopCard_PlayerDeck().getType() == table.getTopCard_fromFundamentStack(i).getType()) {
+                cardFromPile = 11;
+                cardToPile = i + 7;
+                return true;
+            }
+        }
+//Check for match tablou piles
+        for (int i = 0; i < table.getAllPiles().size(); i++) {
+            if(table.getTopCard_PlayerDeck().getValue() == 1) {break;}  //The algorithm don't want to place a two on a tablou pile, as it is then locked
+            if (table.getTopCard_PlayerDeck().getValue() + 1 == table.getPile(i).get(table.getPile(i).size() - 1).getValue() && table.getTopCard_PlayerDeck().getColor() != table.getPile(i).get(table.getPile(i).size() - 1).getColor()) {
+                cardFromPile = 11;
+                cardToPile = i;
+                return true;
+            }
+        }
+
+//Check for king to move onto empty pile
+        //TODO perhaps check for the dept
+        if(table.getTopCard_PlayerDeck().getValue() == 12 && checkForAnyEmptyPile()) {
+            if(kingHasMatch(table.getTopCard_PlayerDeck()))
+            {
+                cardFromPile = 11;
+                //cardToPile = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean kingHasMatch(Card king) {   //TODO maybe improve this
+        int validValue = 11;
+        int validColor = 0;
+
+        if(king.getColor() == 0)
+        {
+            validColor = 1;
+        }
+
+        for (int i = 0 ; i < table.getAllPiles().size() ; i++)
+        {
+            if(table.getBottomFaceUpCard_FromPile(i).getColor() == validColor && table.getBottomFaceUpCard_FromPile(i).getValue() == validValue)
+            {
+                return true;
+            }
+        }
+        //TODO remember the cards in the players pile, and move the king, if there is a match there as well.
+        return false;
+    }
+
+    private boolean checkForAnyEmptyPile() {
+        if (table.getAllPiles().size() < 7){
+            return true;
+        }
+        return false;
+    }
+
 
     private boolean checkForMatch_TopPile() {
         createSortedList_OfCards();

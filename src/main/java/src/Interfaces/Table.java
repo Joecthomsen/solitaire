@@ -26,4 +26,16 @@ public interface Table {
     List<Card> getPile(int pile);
 
     void setComplexSplitIndex(int cardFromPileIndex);
+
+    public Card getBottomFaceUpCard_FromPile(int pile);
+
+    public List<List<Card>> getPiles();
+
+    public List<Card> getPlayerDeck();
+
+    public void setPlayerDeck(List<Card> playerDeck);
+
+    public int getPlayerDeckIndex();
+
+    public void setPlayerDeckIndex(int playerDeckIndex);
 }

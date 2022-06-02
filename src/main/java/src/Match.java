@@ -15,4 +15,28 @@ public class Match {
         this.toPile = toPile;
         this.match = match;
     }
+
+    public int getFromPile() {
+        return fromPile;
+    }
+
+    public void setFromPile(int fromPile) {
+        this.fromPile = fromPile;
+    }
+
+    public int getToPile() {
+        return toPile;
+    }
+
+    public void setToPile(int toPile) {
+        this.toPile = toPile;
+    }
+
+    public boolean isMatch() {
+        return match;
+    }
+
+    public void setMatch(boolean match) {
+        this.match = match;
+    }
 }
