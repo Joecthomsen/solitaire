@@ -1,9 +1,6 @@
 package src.Interfaces;
 
 import src.Card;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public interface Table {
