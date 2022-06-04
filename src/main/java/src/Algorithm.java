@@ -11,7 +11,7 @@ public class Algorithm implements Solver {
 
     private int cardFromPile;// = -10;
     private int cardToPile;// = -10;
-    private int cardFromPileIndex;
+    private int cardFromComplexPileIndex;
     private boolean complexMatch = false;
     private  boolean printTable;
     private boolean turnOverCard_playerDeck = false;
@@ -101,15 +101,19 @@ public class Algorithm implements Solver {
         //TODO implement complex match
 
         if(checkForMatch_TopPile()){
-            return new Match(cardFromPile, cardToPile, true);
+            return new Match(cardFromPile, cardToPile, true, false);
         }
 
         else if(checkForMatchBottomPiles()){
-            return new Match(cardFromPile, cardToPile, true);
+            return new Match(cardFromPile, cardToPile, true, false);
         }
 
         else if(checkForMatch_playerDeck()){
-            return new Match(cardFromPile, cardToPile, true);
+            return new Match(cardFromPile, cardToPile, true, false);
+        }
+
+        else if(checkForComplexMatch()){
+            return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
         }
             return new Match(false);
     }
@@ -195,7 +199,8 @@ public class Algorithm implements Solver {
             sortedList.remove(0);
         }
         //Check for complex match where the algorithm breaks a pile up to make a match
-        return checkForComplexMatch();
+        //return checkForComplexMatch();
+        return false;
     }
 
     private boolean indexCanSplit(Card card) {
@@ -245,9 +250,9 @@ public class Algorithm implements Solver {
                         if(indexCanSplit(table.getPile(j).get(k+1)) ) //See if we can move the card on top of the indexed card
                         {
                             cardFromPile = j;
-                            cardFromPileIndex = k + 1;
+                            cardFromComplexPileIndex = k + 1;
                             //cardHandler.setComplexMatch(true);  //This is a flag, telling the card handler, that it has to split piles
-                            table.setComplexSplitIndex(cardFromPileIndex);
+                            table.setComplexSplitIndex(cardFromComplexPileIndex);
                             complexMatch = true;
                             //if (printTable)
                                 //System.out.println("SPLIT PILE " + cardFromPile + " at card value: " + cardHandler.getPile(j).get(k+1).getValue() + " type: " + cardHandler.getPile(j).get(k+1).getType() + " to pile: " + cardToPile );

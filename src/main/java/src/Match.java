@@ -6,14 +6,27 @@ public class Match {
     int toPile;
     boolean match;
 
+    boolean complex = false;
+
+    int complexIndex;
+
     public Match(boolean match) {
         this.match = match;
     }
 
-    public Match(int fromPile, int toPile, boolean match) {
+    public Match(int fromPile, int toPile, boolean match, boolean complex, int complexIndex) {
         this.fromPile = fromPile;
         this.toPile = toPile;
         this.match = match;
+        this.complex = complex;
+        this.complexIndex = complexIndex;
+    }
+
+    public Match(int fromPile, int toPile, boolean match, boolean comlex) {
+        this.fromPile = fromPile;
+        this.toPile = toPile;
+        this.match = match;
+        this.complex = comlex;
     }
 
     public int getFromPile() {
