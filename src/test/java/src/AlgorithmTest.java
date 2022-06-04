@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import src.Interfaces.Table;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +32,15 @@ class AlgorithmTest {
         pileTwo.add(new Card(1,1,7,true,1));
         pileThree.add(new Card(1,1,2,true,2));
         pileFour.add(new Card(1,1,6,true,3));
+
         pileFive.add(new Card(1,1,8,true,4));
+        pileFive.add(new Card(0,0,7,true,4));
+        pileFive.add(new Card(1,1,6,true,4));
+        pileFive.add(new Card(0,0,5,true,4));
+        pileFive.add(new Card(1,1,4,true,4));
+        pileFive.add(new Card(0,0,3,true,4));
+        pileFive.add(new Card(1,1,2,true,4));
+
         pileSix.add(new Card(1,1,11,true,5));
         pileSeven.add(new Card(1,1,3,true,6));
 
@@ -69,9 +76,42 @@ class AlgorithmTest {
         assertEquals(12, actualValue);
 
     }
-
     @Test
-    void checkForAnyMatch() {
-
+    void checkFromTablouPile_ToTablouPile() {
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        table.initStartTable("H7,S10,H9,S2,K10,S12,R10");
+        Match match = algorithm.checkForAnyMatch();
+        assertEquals(2, match.fromPile);
+        assertEquals(1, match.toPile);
+    }
+    @Test
+    void checkFromTablouPile_ToFoundation(){
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        table.initStartTable("H7,S10,H9,S2,K10,S0,R10");
+        Match match = algorithm.checkForAnyMatch();
+        assertEquals(5, match.fromPile);
+        assertEquals(10, match.toPile);
+    }
+    @Test
+    void checkForNoMatchCondition(){
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        table.initStartTable("H7,S10,H12,S2,K10,H2,R10");
+        Match match = algorithm.checkForAnyMatch();
+        assertFalse(match.match);
+    }
+    @Test
+    void checkFromPlayerCard_ToFoundation(){
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        table.initStartTable("H7,S10,H12,S2,K10,H2,R10");
+        algorithm.checkForAnyMatch();
+        table.getPlayerDeck().add(2, new Card(0, 0, 0, true, 11));
+        table.setPlayerDeckIndex(2);
+        Match match = algorithm.checkForAnyMatch();
+        assertEquals(11, match.fromPile);
+        assertEquals(7, match.toPile);
     }
 }
