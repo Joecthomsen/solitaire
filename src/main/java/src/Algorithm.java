@@ -98,6 +98,8 @@ public class Algorithm implements Solver {
     @Override
     public Match checkForAnyMatch() {
 
+        //TODO implement complex match
+
         if(checkForMatch_TopPile()){
             return new Match(cardFromPile, cardToPile, true);
         }

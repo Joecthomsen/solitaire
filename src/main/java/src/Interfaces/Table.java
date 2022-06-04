@@ -38,4 +38,7 @@ public interface Table {
     public int getPlayerDeckIndex();
 
     public void setPlayerDeckIndex(int playerDeckIndex);
+
+    boolean checkIfNextCardIsKnown();
+
 }

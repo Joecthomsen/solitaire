@@ -9,7 +9,7 @@ import java.util.List;
 public class Mover implements Move {
 
     Table table;
-
+    int cardsLeft;
     Mover(Table table){
         this.table = table;
     }
@@ -72,13 +72,66 @@ public class Mover implements Move {
     @Override
     public void insertNextCardFromInput(Match match, Card card) {
 
-        if (match.getFromPile() == 11 && !table.getPlayerDeck().get(table.getPlayerDeckIndex()).isFaceUp()){
+
+        //If there is no match, and we wants to turn a card in the player deck.
+        if (match.getFromPile() == 11 && !match.match){
+
+            cardsLeft = (table.getPlayerDeck().size() - (table.getPlayerDeckIndex() + 1));
+            //Check if there is more than 3 cards left to turn
+            if(cardsLeft < 3 && cardsLeft != 0){
+                List<Card> tempPile = new ArrayList<>();
+                for (int i = 0 ; i < cardsLeft ; i++){
+                    tempPile.add(table.getPlayerDeck().get(table.getPlayerDeckIndex()));
+                    table.getPlayerDeck().remove(table.getPlayerDeckIndex());
+                }
+                for (int i = 0 ; i < cardsLeft ; i++){
+                    table.getPlayerDeck().add(i, tempPile.get(i));
+                }
+                table.setPlayerDeckIndex(-1);
+                table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);   //Increment pointer with 3
+            }
+            else if(cardsLeft == 0){
+                table.setPlayerDeckIndex(-1);
+                table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);   //Increment pointer with 3
+            }
+            else {
+                table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);   //Increment pointer with 3
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(card.getColor());
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(card.getValue());
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(card.getType());
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
+            }
+        }
+        //If the card from the player deck is a match to the toblou piles, and we want to reveal the card underneath
+        else if (match.getFromPile() == 11 && match.match && match.toPile < 7){
+            //Move the card from player pile to table
+            table.getPile(match.toPile).add(table.getPlayerDeck().get(table.getPlayerDeckIndex()));
+            table.getPlayerDeck().remove(table.getPlayerDeckIndex());
+
+            table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
+
             table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(card.getColor());
             table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(card.getValue());
             table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(card.getType());
             table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
-            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setBelongToPile(card.getBelongToPile());
+
+
         }
+
+        //If the card from the player deck is a match to the foundation piles, and we want to reveal the card underneath
+        else if (match.getFromPile() == 11 && match.match && match.toPile > 7){
+            //Move the card from player pile to foundation
+            table.getFundamentPiles().get(match.toPile - 7).add(card);
+            table.getPlayerDeck().remove(table.getPlayerDeckIndex());
+
+            table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(card.getColor());
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(card.getValue());
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(card.getType());
+            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
+
+        }
+
         else {
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setColor(card.getColor());
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setType(card.getType());
