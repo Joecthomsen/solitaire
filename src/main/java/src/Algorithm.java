@@ -133,7 +133,7 @@ public class Algorithm implements Solver {
         }
 //Check for match tablou piles
         for (int i = 0; i < table.getAllPiles().size(); i++) {
-            if(table.getTopCard_PlayerDeck().getValue() == 1) {break;}  //The algorithm don't want to place a two on a tablou pile, as it is then locked
+            //if(table.getTopCard_PlayerDeck().getValue() == 1) {break;}  //The algorithm don't want to place a two on a tablou pile, as it is then locked
             if(table.getPile(i).size() == 0){continue;}
             if (table.getTopCard_PlayerDeck().getValue() + 1 == table.getPile(i).get(table.getPile(i).size() - 1).getValue() && table.getTopCard_PlayerDeck().getColor() != table.getPile(i).get(table.getPile(i).size() - 1).getColor()) {
                 cardFromPile = 11;

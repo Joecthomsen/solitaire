@@ -12,7 +12,6 @@ class AlgorithmTest {
 
     //TODO Test for empty piles error
 
-
     @Test
     void sortList() {
 
