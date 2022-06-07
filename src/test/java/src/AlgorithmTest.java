@@ -79,6 +79,84 @@ class AlgorithmTest {
     }
 
     @Test
+    void endOfPlayerPileTest(){
+    //Test when the player deck is divisible with 3
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        Move move = new Mover(table);
+    //Init start table with no match
+        table.initStartTable("H7,S10,H10,S2,K10,S12,H2");
+        Match match = algorithm.checkForAnyMatch();
+        boolean hasMatch = match.match;
+        assertFalse(hasMatch, "Assert that there is no match, and therefore a player card move is recommended");
+        match.nextPlayerCard = table.stringToCardConverter("H12");
+        move.insertNextCardFromInput(match);
+    //Rerun Algorithm with the new no-match until supposed index 21
+        for (int i = 0 ; i < 7 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            hasMatch = match.match;
+            assertFalse(hasMatch, "Assert that there is no match, and therefore a player card move is recommended");
+            match.nextPlayerCard = table.stringToCardConverter("H12");
+            move.insertNextCardFromInput(match);
+        }
+        int actual = table.getPlayerDeckIndex();
+        assertEquals(23, actual, "Assert that the player deck index is 23");
+    //Now we get one more match, so the playerPile should start over
+        match = algorithm.checkForAnyMatch();
+        hasMatch = match.match;
+        assertFalse(hasMatch, "Assert that there is no match, and therefore a player card move is recommended");
+        match.nextPlayerCard = table.stringToCardConverter("H12");
+        move.insertNextCardFromInput(match);
+        actual = table.getPlayerDeckIndex();
+        assertEquals(2, actual, "Assert that the player deck index is now at 2");
+
+    //Test when the player deck is NOT divisible with 3
+        table = new TableIO();
+        algorithm = new Algorithm(table);
+        move = new Mover(table);
+        //Init start table with no match
+        table.initStartTable("H7,S10,H10,S2,K10,S12,H2");
+        match = algorithm.checkForAnyMatch();
+        hasMatch = match.match;
+        assertFalse(hasMatch, "Assert that there is no match, and therefore a player card move is recommended");
+        match.nextPlayerCard = table.stringToCardConverter("H0"); //Get rid of one card in the player deck by adding an ace to match
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        hasMatch = match.match;
+        assertTrue(hasMatch, "Assert that there is match");
+        match.nextPlayerCard = table.stringToCardConverter("H12");
+        move.insertNextCardFromInput(match);
+
+    //Rerun Algorithm with the new no-match until supposed index 21
+        for (int i = 0 ; i < 7 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            hasMatch = match.match;
+            assertFalse(hasMatch, "Assert that there is no match, and therefore a player card move is recommended");
+            match.nextPlayerCard = table.stringToCardConverter("H12");
+            move.insertNextCardFromInput(match);
+        }
+        actual = table.getPlayerDeckIndex();
+        assertEquals(22, actual, "Assert that the player deck index is 22");
+    //Rerun again, this time there will be two cards left at the end of the player deck
+        for (int i = 0 ; i < 7 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            hasMatch = match.match;
+            assertFalse(hasMatch, "Assert that there is no match, and therefore a player card move is recommended");
+            match.nextPlayerCard = table.stringToCardConverter("K12");
+            move.insertNextCardFromInput(match);
+        }
+    //Now the index is pointing at the last possible card in the player pile, with two cards left
+        match = algorithm.checkForAnyMatch();
+        hasMatch = match.match;
+        assertFalse(hasMatch, "Assert that there is no match, and therefore a player card move is recommended");
+        match.nextPlayerCard = table.stringToCardConverter("R12");
+        move.insertNextCardFromInput(match);
+        System.out.println("test");
+
+    }
+
+    @Test
     void checkForEmptyTablouPile(){
 
         Table table = new TableIO();

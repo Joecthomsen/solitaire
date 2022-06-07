@@ -118,6 +118,7 @@ public class Algorithm implements Solver {
         else if(checkForComplexMatch()){
             return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
         }
+
         return new Match(11, -1, false, false);
     }
 

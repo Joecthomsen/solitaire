@@ -182,7 +182,7 @@ class MoverTest {
         match = algorithm.checkForAnyMatch();
         move.moveCard_OrPile(match);
         actual = table.getFundamentPiles().get(8-7).get(table.getFundamentPiles().get(8-7).size() - 1).getValue();
-        assertEquals(0, actual, "Assert that the ace of club has been moved");
+        assertEquals(0, actual, "Assert that the ace of hearts has been moved");
     }
 
     @Test

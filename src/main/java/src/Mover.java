@@ -28,13 +28,20 @@ public class Mover implements Move {
         cardsLeft = table.getPlayerDeck().size() - table.getPlayerDeckIndex();
             cardsLeft = table.getPlayerDeck().size() - table.getPlayerDeckIndex();
             if(cardsLeft < 3 && cardsLeft != 0){
-                table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);
+                List<Card> tempList = new ArrayList<>();
+                for (int i = 0 ; i < cardsLeft ; i++){
+                    tempList.add(table.getPlayerDeck().get(table.getPlayerDeckIndex() + i));
+                }
+                for (int i = cardsLeft ; i >= 0 ; i--){
+                    table.getPlayerDeck().add(0, tempList.get(i));
+                }
+                table.setPlayerDeckIndex(2);
+                //TODO handle end of pile
             }
             else if(cardsLeft == 0 && table.getPlayerDeck().size() > 3){
                 table.setPlayerDeckIndex(2);
             }
             else{table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);}
-            //TODO handle end of pile
     }
 
     private void decrementPlayerDeckIndex() {
@@ -109,8 +116,10 @@ public class Mover implements Move {
             if(cardsLeft < 3 && cardsLeft != 0){
                 List<Card> tempPile = new ArrayList<>();
                 for (int i = 0 ; i < cardsLeft ; i++){
-                    tempPile.add(table.getPlayerDeck().get(table.getPlayerDeckIndex()));
-                    table.getPlayerDeck().remove(table.getPlayerDeckIndex());
+                    tempPile.add(table.getPlayerDeck().get(table.getPlayerDeckIndex() + i + 1));
+                }
+                for (int i = 0 ; i < cardsLeft ; i++){
+                    table.getPlayerDeck().remove(table.getPlayerDeckIndex() + 1);
                 }
                 for (int i = 0 ; i < cardsLeft ; i++){
                     table.getPlayerDeck().add(i, tempPile.get(i));
@@ -121,6 +130,11 @@ public class Mover implements Move {
             else if(cardsLeft == 0){
                 table.setPlayerDeckIndex(-1);
                 table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);   //Increment pointer with 3
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setBelongToPile(11);
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(match.nextPlayerCard.getType());
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(match.nextPlayerCard.getValue());
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(match.nextPlayerCard.getColor());
+                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
             }
             else {
                 table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);   //Increment pointer with 3
@@ -139,13 +153,6 @@ public class Mover implements Move {
             if(table.getPlayerDeckIndex() != 0) {
                 table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
             }
-
-//            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(card.getColor());
-//            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(card.getValue());
-//            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(card.getType());
-//            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
-
-
         }
 
     //If the card from the player deck is a match to the foundation piles, and we want to reveal the card underneath
