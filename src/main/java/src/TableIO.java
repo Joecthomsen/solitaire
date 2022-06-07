@@ -85,7 +85,7 @@ public class TableIO implements Table {
             case 'E' :
                 convertType = -1;
                 color = -1;
-                break;
+                return new Card(convertType, color, -1, false);
             default:
                 System.out.println("Error in switch statement during converting String to Card");
                 convertType = -1;

@@ -162,11 +162,12 @@ public class Mover implements Move {
 
         }
     //If the match is from the tablou pile to another tablou pile (i think)
-        else {
+        else if(!table.getAllPiles().get(match.fromPile).isEmpty()) {
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setColor(match.nextPlayerCard.getColor());
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setType(match.nextPlayerCard.getType());
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setValue(match.nextPlayerCard.getValue());
             table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setFaceUp(true);
         }
+        else System.out.println("EMPTY PILE!");
     }
 }

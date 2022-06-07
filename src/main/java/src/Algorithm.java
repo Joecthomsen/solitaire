@@ -145,11 +145,15 @@ public class Algorithm implements Solver {
 
 //Check for king to move onto empty pile
         //TODO perhaps check for the dept
-        if(table.getTopCard_PlayerDeck().getValue() == 12 && checkForAnyEmptyPile()) {
-            if(kingHasMatch(table.getTopCard_PlayerDeck()))
+        if(table.getPlayerDeck().get(table.getPlayerDeckIndex()).getValue() == 12 && checkForAnyEmptyPile()) {
+            if(kingHasMatch(table.getPlayerDeck().get(table.getPlayerDeckIndex())))
             {
                 cardFromPile = 11;
-                //cardToPile = i;
+                for(int i = 0 ; i < 7 ; i++){
+                    if(table.getAllPiles().get(i).isEmpty()){
+                        cardToPile = i;
+                    }
+                }
                 return true;
             }
         }
