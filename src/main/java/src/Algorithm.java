@@ -31,7 +31,7 @@ public class Algorithm implements Solver {
          * @void
          * Takes a list and sort it in accenting order
          * -Create current and next index
-         * -Compaire the value of the current and next card.
+         * -Compare the value of the current and next card.
          * -If next is smaller than current, swap it.
          * -Iterate through the list.
          * -Start over, if no swaps is done, set the boolean to false, and the loop is broken.
@@ -118,7 +118,7 @@ public class Algorithm implements Solver {
         else if(checkForComplexMatch()){
             return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
         }
-            return new Match(false);
+        return new Match(11, -1, false, false);
     }
 
     private boolean checkForMatch_playerDeck() {
@@ -133,7 +133,8 @@ public class Algorithm implements Solver {
         }
 //Check for match tablou piles
         for (int i = 0; i < table.getAllPiles().size(); i++) {
-            //if(table.getTopCard_PlayerDeck().getValue() == 1) {break;}  //The algorithm don't want to place a two on a tablou pile, as it is then locked
+           // if(table.getTopCard_PlayerDeck().getValue() == 1) {break;}  //The algorithm don't want to place a two on a tablou pile, as it is then locked
+            if(table.getPlayerDeck().get(table.getPlayerDeckIndex()).getValue() == 1) {break;}
             if(table.getPile(i).size() == 0){continue;}
             if (table.getTopCard_PlayerDeck().getValue() + 1 == table.getPile(i).get(table.getPile(i).size() - 1).getValue() && table.getTopCard_PlayerDeck().getColor() != table.getPile(i).get(table.getPile(i).size() - 1).getColor()) {
                 cardFromPile = 11;

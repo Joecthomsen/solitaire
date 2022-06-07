@@ -1,0 +1,11 @@
+src/Run.class
+src/TableIO.class
+src/Algorithm.class
+src/Interfaces/Table.class
+src/Card$Colors.class
+src/Match.class
+src/Interfaces/Solver.class
+src/Interfaces/Move.class
+src/Mover.class
+src/Card$Types.class
+src/Card.class

@@ -10,6 +10,8 @@ public class Match {
 
     int complexIndex;
 
+    Card nextPlayerCard;
+
     public Match(boolean match) {
         this.match = match;
     }
@@ -27,6 +29,15 @@ public class Match {
         this.toPile = toPile;
         this.match = match;
         this.complex = complex;
+    }
+
+    public Match(int fromPile, int toPile, boolean match, boolean complex, int complexIndex, Card nextPlayerCard) {
+        this.fromPile = fromPile;
+        this.toPile = toPile;
+        this.match = match;
+        this.complex = complex;
+        this.complexIndex = complexIndex;
+        this.nextPlayerCard = nextPlayerCard;
     }
 
     public int getFromPile() {

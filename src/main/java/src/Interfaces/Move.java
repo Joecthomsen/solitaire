@@ -9,7 +9,7 @@ public interface Move {
     void moveComplexPile(int fromPile, int fromIndex, int toPile);
     void moveCard_OrPile(Match match);
 
-    void insertNextCardFromInput(Match match, Card card);
+    void insertNextCardFromInput(Match match);
 
     
 }
