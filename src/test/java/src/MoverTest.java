@@ -18,28 +18,29 @@ class MoverTest {
         assertFalse(match.match, "Confirms that the algorithm found that there is no match, and therefor must turn over a card from the player deck");
         assertEquals(11, match.fromPile, "Confirms that the algorithm found that there is no match, and therefor must turn over a card from the player deck");
     //Get next input
-        Card nextCard = table.stringToCardConverter("R12");
-    //Insert next card into match object, which then automatically insert it into the player pile
-        match.nextPlayerCard = nextCard;
-        move.insertNextCardFromInput(match);
-    //Check playerDeck index
-        int actual = table.getPlayerDeckIndex();
-        assertEquals(2, actual, "Assert that the player deck index has incremented correctly");
-        actual = table.getPlayerDeck().get(2).getValue();
-        assertEquals(12, actual, "Assert that the new card in the player deck is flipped at the correct index and that it is the correct card");
-        actual = table.getPlayerDeck().size();
-        assertEquals(24, actual, "Assert that the size player deck size is correct after inserting.");
-    //Insert one more card
-        match = algorithm.checkForAnyMatch();
-        match.nextPlayerCard = table.stringToCardConverter("R12");  //Insert R12 again in order to not find any match.
-        move.insertNextCardFromInput(match);
-    //Check that the next card is inserted correctly
-        actual = table.getPlayerDeckIndex();
-        assertEquals(5, actual, "Assert that the player deck index has incremented correctly when inserting the second card");
-        actual = table.getPlayerDeck().get(2).getValue();
-        assertEquals(12, actual, "Assert that the new card in the player deck is flipped at the correct index and that it is the correct card");
-        actual = table.getPlayerDeck().size();
-        assertEquals(24, actual, "Assert that the size player deck size is correct after inserting the second card.");
+        //Insert next card into match object, which then automatically insert it into the player pile
+        for (int i = 0 ; i < 8 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            match.nextPlayerCard = table.stringToCardConverter("R12");
+            move.insertNextCardFromInput(match);
+            //Check playerDeck index
+            int actual = table.getPlayerDeckIndex();
+            assertEquals(2+(3*i), actual, "Assert that the player deck index has incremented correctly. Round in for loop: " + i);
+            actual = table.getPlayerDeck().get(2 + (3*i)).getValue();
+            assertEquals(12, actual, "Assert that the new card in the player deck is flipped at the correct index and that it is the correct card");
+            actual = table.getPlayerDeck().size();
+            assertEquals(24, actual, "Assert that the size player deck size is correct after inserting.");
+        }
+        if(!match.nextPlayerDeckCardIsKnown) {
+            match = algorithm.checkForAnyMatch();
+            match.nextPlayerCard = table.stringToCardConverter("S9");
+            move.insertNextCardFromInput(match);
+            //Check playerDeck index
+        }
+        else{
+            System.out.println("Next card known");
+        }
+        System.out.println("");
     }
 
     @Test
@@ -47,7 +48,7 @@ class MoverTest {
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
-        table.initStartTable("H1,H12,R8,R6,R7,H2,R11");
+        table.initStartTable("H1,H12,R8,R12,R7,H2,R11");
         Match match = algorithm.checkForAnyMatch();
     //Await next input
         Card card = table.stringToCardConverter("S7");
@@ -61,6 +62,12 @@ class MoverTest {
         assertEquals(7, actual, "Assert that the card is actually moved to the player pile");
         boolean actualDeleted = table.getPlayerDeck().contains(match.nextPlayerCard);
         assertFalse(actualDeleted, "Assert that the card, is deleted from the player deck");
+    //Check next card in player deck
+        match = algorithm.checkForAnyMatch();
+        match.nextPlayerCard = table.stringToCardConverter("S11");
+        move.insertNextCardFromInput(match);
+        actual = table.getAllPiles().get(3).get(table.getAllPiles().get(3).size() - 1).getValue();
+        assertEquals(11, actual);
     }
 
     @Test

@@ -118,8 +118,18 @@ public class Algorithm implements Solver {
         else if(checkForComplexMatch()){
             return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
         }
-
+        if(isNextPlayerCardKnown()){
+            return new Match(11, -1, false, false, -1, null, true);
+        }
         return new Match(11, -1, false, false);
+    }
+
+    private boolean isNextPlayerCardKnown() {
+        if(table.getPlayerDeck().get(table.getPlayerDeckIndex()).isFaceUp()){
+            return true;
+        }
+        else
+            return false;
     }
 
     private boolean checkForMatch_playerDeck() {

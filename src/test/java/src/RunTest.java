@@ -50,26 +50,62 @@ class RunTest {
         System.out.println(initTable);
         table.initStartTable(initTable);
         table.printTable();
-        for (int i = 0 ; i < 250 ; i++) {
-            Match match = algorithm.checkForAnyMatch();
-            if (match.match && !match.complex) {
-                System.out.println("Move from pile " + match.fromPile + " to pile " + match.toPile);
-                move.moveCard_OrPile(match);
-                if(table.getAllPiles().get(match.fromPile).isEmpty()){continue;}
+        Match match = algorithm.checkForAnyMatch();
+        int ranNum = randomNumber.getNewNumber();
+        if(!match.match & !match.complex){
+            System.out.println("Turn over card in player pile");
+            move.moveCard_OrPile(match);
+            match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
+            randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
+            cards.remove(ranNum);
+            move.insertNextCardFromInput(match);
+        }
+        else if(match.match && !match.complex){
+            System.out.println("Move from " + match.fromPile + " to " + match.toPile);
+            move.moveCard_OrPile(match);
+            match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
+            randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
+            cards.remove(ranNum);
+            move.insertNextCardFromInput(match);
+        }
+        else{
+            System.out.println("Move complex from pile " + match.fromPile + " at index " + match.complexIndex + " to pile " + match.toPile);
+            move.moveCard_OrPile(match);
+            match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
+            randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
+            cards.remove(ranNum);
+            move.insertNextCardFromInput(match);
+        }
+        table.printTable();
+
+        for (int i = 0 ; i < 250 ; i++){
+            match = algorithm.checkForAnyMatch();
+            ranNum = randomNumber.getNewNumber();
+            if(!match.match && !match.complex){
+                System.out.println("Turn over card in player pile");
+                //move.moveCard_OrPile(match);
+                match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
+                randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
+                cards.remove(ranNum);
+                move.insertNextCardFromInput(match);
             }
-            else if(match.match){
-                System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile + " to move that card to the foundation pile");
-                move.moveComplexPile(match.fromPile, match.complexIndex, match.toPile);
+            else if(match.match && !match.complex){
+                System.out.println("Move from " + match.fromPile + " to " + match.toPile);
+                move.moveCard_OrPile(match);
+                match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
+                randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
+                cards.remove(ranNum);
+                move.insertNextCardFromInput(match);
             }
             else{
-                System.out.println("Turn over card in player deck");
-                match.setFromPile(11);
+                System.out.println("Move complex from pile " + match.fromPile + " at index " + match.complexIndex + " to pile " + match.toPile);
                 move.moveCard_OrPile(match);
-            }
-            move.insertNextCardFromInput(match);
-            if(randomNumber.getUpperbound() != 0) {
+                match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
                 randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
+                cards.remove(ranNum);
+                move.insertNextCardFromInput(match);
             }
+            table.printTable();
         }
     }
 }
