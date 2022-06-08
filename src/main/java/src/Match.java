@@ -12,7 +12,9 @@ public class Match {
 
     Card nextPlayerCard;
 
-    boolean nextPlayerDeckCardIsKnown;
+    boolean lastCardInPile = false;
+
+    //boolean nextPlayerDeckCardIsKnown;
 
     public Match(boolean match) {
         this.match = match;
@@ -42,15 +44,6 @@ public class Match {
         this.nextPlayerCard = nextPlayerCard;
     }
 
-    public Match(int fromPile, int toPile, boolean match, boolean complex, int complexIndex, Card nextPlayerCard, boolean nextPlayerDeckCardIsKnown) {
-        this.fromPile = fromPile;
-        this.toPile = toPile;
-        this.match = match;
-        this.complex = complex;
-        this.complexIndex = complexIndex;
-        this.nextPlayerCard = nextPlayerCard;
-        this.nextPlayerDeckCardIsKnown = nextPlayerDeckCardIsKnown;
-    }
 
     public int getFromPile() {
         return fromPile;
@@ -74,5 +67,13 @@ public class Match {
 
     public void setMatch(boolean match) {
         this.match = match;
+    }
+
+    public boolean isLastCardInPile() {
+        return lastCardInPile;
+    }
+
+    public void setLastCardInPile(boolean lastCardInPile) {
+        this.lastCardInPile = lastCardInPile;
     }
 }

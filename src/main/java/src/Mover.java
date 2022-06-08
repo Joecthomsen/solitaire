@@ -60,29 +60,16 @@ public class Mover implements Move {
             table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
         }
-    //If we just turn over one card from player pile
-//        else if(match.fromPile == 11 && !match.match)
-//        {
-//            if(!table.getPlayerDeck_FaceUp().get(table.getPlayerDeckIndex()).isFaceUp()) {
-//                if (cardsLeft < 3 && cardsLeft != 0) {
-//                    table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);
-//                } else if (cardsLeft == 0 && table.getPlayerDeck_FaceUp().size() > 3) {
-//                    table.setPlayerDeckIndex(-1);
-//                }
-//            }
-//            //else{table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);}
-//            table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeckIndex()));
-//            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeckIndex());
-//        }
+
     //If we move from player deck to foundation pile
         else if(match.match && match.fromPile == 11){   //If we move from player pile to foundation pile
             table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
             //decrementPlayerDeckIndex();
         }
-        else if(match.match && match.toPile < 7) {   //If we want to move the card to a bottom pile
+    //If we want to move from tablou to tablou
+        else if(match.match && match.toPile < 7) {
             List<Card> cardsToMove = new ArrayList<>(table.getAllFaceUpCards_fromAPile(match.fromPile));
-            //List<Card> cardsToMove = new ArrayList<>(table.getFundamentPiles().get(fromPile - 1));
             for (int i = 0; i < cardsToMove.size(); i++) {
                 cardsToMove.get(i).setBelongToPile(match.toPile);
             }
@@ -91,9 +78,10 @@ public class Mover implements Move {
             table.getPile(match.fromPile).removeAll(table.getAllFaceUpCards_fromAPile(match.fromPile));
             //Set to pile
             table.getPile(match.toPile).get(table.getPile(match.toPile).size() - 1).setBelongToPile(match.toPile);
-            //Turn over new card
-            //turnOverNextCard_inAPile(newCard, fromPile);
+            if(table.getAllPiles().get(match.toPile).isEmpty()){
+                match.setLastCardInPile(true);}
         }
+        //If match from tablou to fundation
         else
         {
             //Copy card to fundamental pile
@@ -102,10 +90,9 @@ public class Mover implements Move {
             table.getTopCard_fromFundamentStack(match.toPile - 7).setBelongToPile(match.toPile);
             //Delete from old pile
             table.getPile(match.fromPile).remove(table.getPile(match.fromPile).size() - 1);
-            //table.getFundamentPiles().get(toPile - 7).remove(table.getFundamentPiles().get(toPile - 7).size() - 1);
-            //turnOverNextCard_inAPile(newCard, fromPile);
+            if(table.getAllPiles().get(match.fromPile).isEmpty()){
+                match.setLastCardInPile(true);}
         }
-
     }
 
     @Override
@@ -133,7 +120,7 @@ public class Mover implements Move {
                         table.getPlayerDeck_FaceDown().remove(0);
                     }
                     if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
-                        System.out.println("Card known: " +table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                        System.out.println("Card known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                     }
                     else{
                         setNewCard(match);;
@@ -163,6 +150,13 @@ public class Mover implements Move {
 
             table.getAllPiles().get(match.fromPile).add(match.nextPlayerCard);
             table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 2);
+        }
+        //Match to foundation pile
+        else if(match.match && match.fromPile < 7){
+            if (!match.lastCardInPile) {
+                table.getFundamentPiles().get(match.toPile - 7).add(match.nextPlayerCard);
+                table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
+            }
         }
 
     //If the match is from the tablou pile to another tablou pile (i think)

@@ -65,10 +65,34 @@ public class Algorithm implements Solver {
         tempPile.addAll(table.getAllFaceUpCards());
         sortedList = sortList(tempPile);
     }
+    @Override
+    public Match checkForAnyMatch() {
+
+        //TODO implement complex match
+
+        if(checkForMatch_TopPile()){
+            return new Match(cardFromPile, cardToPile, true, false);
+        }
+
+        else if(checkForMatchBottomPiles()){
+            return new Match(cardFromPile, cardToPile, true, false);
+        }
+
+        else if(checkForMatch_playerDeck()){
+            return new Match(cardFromPile, cardToPile, true, false);
+        }
+
+        else if(checkForComplexMatch()){
+            return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
+        }
+
+        return new Match(11, -1, false, false);
+    }
+
 
     private boolean checkForMatchBottomPiles() {
 
-        createSortedList_OfCards(); //Re-init the temp pile, so that we get the cards back in it.d
+        createSortedList_OfCards(); //Re-init the temp pile, so that we get the cards back in
         while (!sortedList.isEmpty())
         {
 
@@ -96,39 +120,6 @@ public class Algorithm implements Solver {
         return false;
 
     }
-    @Override
-    public Match checkForAnyMatch() {
-
-        //TODO implement complex match
-
-        if(checkForMatch_TopPile()){
-            return new Match(cardFromPile, cardToPile, true, false);
-        }
-
-        else if(checkForMatchBottomPiles()){
-            return new Match(cardFromPile, cardToPile, true, false);
-        }
-
-        else if(checkForMatch_playerDeck()){
-            return new Match(cardFromPile, cardToPile, true, false);
-        }
-
-        else if(checkForComplexMatch()){
-            return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
-        }
-//        if(isNextPlayerCardKnown()){
-//            return new Match(11, -1, false, false, -1, null, true);
-//        }
-        return new Match(11, -1, false, false);
-    }
-
-//    private boolean isNextPlayerCardKnown() {
-//        if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
-//            return true;
-//        }
-//        else
-//            return false;
-//    }
 
     private boolean checkForMatch_playerDeck() {
 //Check for match in top piles,
