@@ -68,7 +68,7 @@ public class Mover implements Move {
             //decrementPlayerDeckIndex();
         }
     //If we want to move from tablou to tablou
-        else if(match.match && match.toPile < 7) {
+        else if(match.match && match.toPile < 7 && match.fromPile < 7) {
             List<Card> cardsToMove = new ArrayList<>(table.getAllFaceUpCards_fromAPile(match.fromPile));
             for (int i = 0; i < cardsToMove.size(); i++) {
                 cardsToMove.get(i).setBelongToPile(match.toPile);
@@ -136,26 +136,22 @@ public class Mover implements Move {
 
     //If the card from the player deck is a match to the foundation piles, and we want to reveal the card underneath
         else if (match.getFromPile() == 11 && match.match && match.toPile >= 7){
-        //Move the card from player pile to foundation
+    //Move the card from player pile to foundation
             table.getFundamentPiles().get(match.toPile - 7).add(match.nextPlayerCard);
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-
-            //table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
             setNewCard(match);
-
-
         }
-
+    //From tablou
         else if(match.match && match.fromPile < 7 && match.toPile < 7){
-
             table.getAllPiles().get(match.fromPile).add(match.nextPlayerCard);
-            table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 2);
         }
-        //Match to foundation pile
+
+        //Match to foundation pile from tablou
         else if(match.match && match.fromPile < 7){
             if (!match.lastCardInPile) {
-                table.getFundamentPiles().get(match.toPile - 7).add(match.nextPlayerCard);
+                table.getAllPiles().get(match.fromPile).add(table.getAllPiles().get(match.fromPile).size() - 1, match.nextPlayerCard);
                 table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
+
             }
         }
 

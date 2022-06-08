@@ -54,7 +54,8 @@ class RunTest {
         int ranNum;//  = randomNumber.getNewNumber();
     //Runnable
         for (int i = 0 ; i < 250 ; i++) {
-           match = algorithm.checkForAnyMatch();
+
+            match = algorithm.checkForAnyMatch();
 
             if (!match.match & !match.complex) {
                 ranNum = randomNumber.getNewNumber();
@@ -63,16 +64,18 @@ class RunTest {
                 randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
                 cards.remove(ranNum);
                 move.insertNextCardFromInput(match);
-            } else if (match.match && !match.complex) {
+            }
+            else if (match.match && !match.complex) {
                 System.out.println("Move from " + match.fromPile + " to " + match.toPile);
                 ranNum = randomNumber.getNewNumber();
                 move.moveCard_OrPile(match);
-                //Now we need to know which cards that was underneath the card.
+            //Now we need to know which cards that was underneath the card.
                 match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
                 randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
                 cards.remove(ranNum);
                 move.insertNextCardFromInput(match);
-            } else {
+            }
+            else {
                 System.out.println("Move complex from pile " + match.fromPile + " at index " + match.complexIndex + " to pile " + match.toPile);
                 ranNum = randomNumber.getNewNumber();
                 move.moveCard_OrPile(match);

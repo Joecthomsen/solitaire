@@ -225,10 +225,20 @@ class AlgorithmTest {
     void checkFromTablouPile_ToTablouPile() {
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
-        table.initStartTable("H7,S10,H9,S2,K10,S12,R10");
+        Move move = new Mover(table);
+        table.initStartTable("H7,S10,H9,S2,K10,S12,R11");
         Match match = algorithm.checkForAnyMatch();
         assertEquals(2, match.fromPile);
         assertEquals(1, match.toPile);
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("K12");
+        move.insertNextCardFromInput(match);
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match, "Assert that there is a match");
+        assertEquals(1, match.fromPile);
+        assertEquals(6, match.toPile, "Assert that it is the correct toPile");
+        System.out.printf("");
+
     }
     @Test
     void checkFromTablouPile_ToFoundation(){
