@@ -41,4 +41,6 @@ public interface Table {
 
     boolean checkIfNextCardIsKnown();
 
+    public void setPile();
+
 }

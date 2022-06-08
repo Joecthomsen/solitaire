@@ -19,6 +19,13 @@ public class TableIO implements Table {
     private List<Card> cardCounter = new ArrayList<>();                 //List to exploit, that the computer actually can remember which cards have been turned in the player deck;
     private int complexSplitIndex;
 
+    public void setPile() {
+        Card newCard = new Card(1, 5);
+        Card newCardTwo = new Card(3, 11);
+        piles.get(0).add(newCard);
+        piles.get(0).add(newCardTwo);
+    }
+
     public void setComplexSplitIndex(int complexSplitIndex) {
         this.complexSplitIndex = complexSplitIndex;
     }
