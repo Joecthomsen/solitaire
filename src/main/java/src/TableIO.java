@@ -12,8 +12,10 @@ public class TableIO implements Table {
 //    private final ArrayList<Card> playerDeck_FaceDown = new ArrayList<>();       //List to maintain the players deck
 //    private final ArrayList<Card> playerDeck_FaceUp = new ArrayList<>();       //List to maintain the players deck
 
-    private List<Card> playerDeck = new ArrayList<>();
-    int playerDeckIndex = -1;
+    private List<Card> playerDeck_FaceUp = new ArrayList<>();
+    private List<Card> playerDeck_FaceDown = new ArrayList<>();
+
+    //int playerDeckIndex = -1;
 
     //private final ArrayList<Card> newDeck = new ArrayList<>();            //List used to instantiate all the cards
     private List<Card> cardCounter = new ArrayList<>();                 //List to exploit, that the computer actually can remember which cards have been turned in the player deck;
@@ -149,12 +151,12 @@ public class TableIO implements Table {
             System.out.println("Fundamental Cards: " + fundamentPiles.get(i) + " Cards in pile: " + size);
         }
         System.out.println("\n");
-        if (getTopCard_PlayerDeck() != null) {
-            System.out.println("Player deck top card: " + getTopCard_PlayerDeck() + " Cards in pile: " + playerDeck.size()  + "  Currently at index " + getPlayerDeckIndex() + " in the player deck");
+        if (playerDeck_FaceUp.size() != 0) {
+            System.out.println("Player deck top card: " + playerDeck_FaceUp.get(playerDeck_FaceUp.size() - 1) + " Cards in pile: " + playerDeck_FaceUp.size()  + "  Currently at index ");
         }
         else
         {
-            System.out.println("Player deck top card: No cards are turned over   Cards in pile: " + playerDeck.size()  + "  Currently at index " + getPlayerDeckIndex() + " in the player deck");
+            System.out.println("Player deck top card: No cards are turned over   Cards in pile: " + playerDeck_FaceUp.size());
         }
 
         System.out.println("\n************************************************************\n");
@@ -201,7 +203,7 @@ public class TableIO implements Table {
 //INIT PLAYER DECK
         for(int i = 0 ; i < 24 ; i++){
             Card cardToAdd = new Card(-1, -1, -1, false, 11);
-            playerDeck.add(cardToAdd);
+            playerDeck_FaceDown.add(cardToAdd);
 //            playerDeck_FaceDown.add(cardToAdd);
         }
     }
@@ -210,15 +212,15 @@ public class TableIO implements Table {
         return fundamentPiles.get(stack).get(fundamentPiles.get(stack).size() - 1);
     }
 
-    @Override
-    public Card getTopCard_PlayerDeck() {
-        if (playerDeckIndex == -1){return null;}
-        if (playerDeck.get(playerDeckIndex).isFaceUp())
-            return playerDeck.get(playerDeckIndex);
-            //return playerDeck_FaceUp.get(playerDeck_FaceUp.size() - 1);
-        else
-            return null;
-    }
+//    @Override
+//    public Card getTopCard_PlayerDeck() {
+//        if ( == -1){return null;}
+//        if (playerDeck_FaceUp.get(playerDeckIndex).isFaceUp())
+//            return playerDeck_FaceUp.get(playerDeckIndex);
+//            //return playerDeck_FaceUp.get(playerDeck_FaceUp.size() - 1);
+//        else
+//            return null;
+//    }
 
     public List<List<Card>> getAllPiles()
     {
@@ -249,29 +251,21 @@ public class TableIO implements Table {
         return piles;
     }
 
-    public List<Card> getPlayerDeck() {
-        return playerDeck;
+    public List<Card> getPlayerDeck_FaceUp() {
+        return playerDeck_FaceUp;
     }
 
-    public void setPlayerDeck(List<Card> playerDeck) {
-        this.playerDeck = playerDeck;
+    public void setPlayerDeck_FaceUp(List<Card> playerDeck_FaceUp) {
+        this.playerDeck_FaceUp = playerDeck_FaceUp;
     }
 
-    public int getPlayerDeckIndex() {
-        return playerDeckIndex;
+
+    public List<Card> getPlayerDeck_FaceDown() {
+        return playerDeck_FaceDown;
     }
 
-    public void setPlayerDeckIndex(int playerDeckIndex) {
-        this.playerDeckIndex = playerDeckIndex;
-    }
-
-    @Override
-    public boolean checkIfNextCardIsKnown() {
-        if (playerDeckIndex == -1) {
-            return playerDeck.get(2).isFaceUp();
-        }
-        else
-            return playerDeck.get(playerDeckIndex).isFaceUp();
+    public void setPlayerDeck_FaceDown(List<Card> playerDeck_FaceDown) {
+        this.playerDeck_FaceDown = playerDeck_FaceDown;
     }
 
 

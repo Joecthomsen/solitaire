@@ -17,7 +17,7 @@ public interface Table {
 
     Card getTopCard_fromFundamentStack(int i);
 
-    Card getTopCard_PlayerDeck();
+    //Card getTopCard_PlayerDeck();
 
     List<Card> getAllFaceUpCards_fromAPile(int pile);
 
@@ -31,14 +31,20 @@ public interface Table {
 
     public List<List<Card>> getPiles();
 
-    public List<Card> getPlayerDeck();
+    public List<Card> getPlayerDeck_FaceUp();
 
-    public void setPlayerDeck(List<Card> playerDeck);
+    public void setPlayerDeck_FaceUp(List<Card> playerDeck_FaceUp);
 
-    public int getPlayerDeckIndex();
+    public List<Card> getPlayerDeck_FaceDown();
 
-    public void setPlayerDeckIndex(int playerDeckIndex);
+    public void setPlayerDeck_FaceDown(List<Card> playerDeck_FaceUp);
 
-    boolean checkIfNextCardIsKnown();
+    //public int getPlayerDeckIndex();
+
+//    public void setPlayerDeckIndex(int playerDeckIndex);
+
+//    boolean checkIfNextCardIsKnown();
+
+
 
 }

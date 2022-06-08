@@ -5,11 +5,12 @@ import src.Interfaces.Table;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Mover implements Move {
 
     Table table;
-    int cardsLeft;
+    //int cardsLeft;
     Mover(Table table){
         this.table = table;
     }
@@ -24,30 +25,30 @@ public class Mover implements Move {
 
     }
 
-    private void incrementPlayerDeckIndex(){
-        //cardsLeft = table.getPlayerDeck().size() - table.getPlayerDeckIndex();
-            cardsLeft = table.getPlayerDeck().size() - table.getPlayerDeckIndex() - 1;
-            if(cardsLeft < 3 && cardsLeft != 0){
-                List<Card> tempList = new ArrayList<>();
-                for (int i = 0 ; i < cardsLeft ; i++){
-                    tempList.add(table.getPlayerDeck().get(table.getPlayerDeckIndex() + i));
-                }
-                for (int i = cardsLeft ; i >= 0 ; i--){
-                    table.getPlayerDeck().add(0, tempList.get(i));
-                }
-                table.setPlayerDeckIndex(2);
-                //TODO handle end of pile
-            }
-            else if(cardsLeft == 0 && table.getPlayerDeck().size() > 3){
-                table.setPlayerDeckIndex(2);
-            }
-            else{table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);}
-    }
+//    //private void incrementPlayerDeckIndex(){
+//        //cardsLeft = table.getPlayerDeck().size() - table.getPlayerDeckIndex();
+//            //cardsLeft = table.getPlayerDeck_FaceUp().size() - table.getPlayerDeckIndex() - 1;
+//            if(  < 3 && cardsLeft != 0){
+//                List<Card> tempList = new ArrayList<>();
+//                for (int i = 0 ; i < cardsLeft ; i++){
+//                    tempList.add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeckIndex() + i));
+//                }
+//                for (int i = cardsLeft ; i >= 0 ; i--){
+//                    table.getPlayerDeck_FaceUp().add(0, tempList.get(i));
+//                }
+//                table.setPlayerDeckIndex(2);
+//                //TODO handle end of pile
+//            }
+//            else if(cardsLeft == 0 && table.getPlayerDeck_FaceUp().size() > 3){
+//                table.setPlayerDeckIndex(2);
+//            }
+//            else{table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);}
+//    }
 
-    private void decrementPlayerDeckIndex() {
-        table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
-        if(table.getPlayerDeckIndex() == -1){table.setPlayerDeckIndex(0);}
-    }
+//    private void decrementPlayerDeckIndex() {
+//        table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
+//        if(table.getPlayerDeckIndex() == -1){table.setPlayerDeckIndex(0);}
+//    }
 
     @Override
     public void moveCard_OrPile(Match match) {
@@ -56,29 +57,28 @@ public class Mover implements Move {
         if (match.fromPile == 11 && match.toPile < 7 && match.match)
         {
             //incrementPlayerDeckIndex();
-            table.getAllPiles().get(match.toPile).add(table.getPlayerDeck().get(table.getPlayerDeckIndex()));
-            table.getPlayerDeck().remove(table.getPlayerDeckIndex());
-            decrementPlayerDeckIndex();
+            table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
         }
     //If we just turn over one card from player pile
-        else if(match.fromPile == 11 && !match.match)
-        {
-            if(!table.getPlayerDeck().get(table.getPlayerDeckIndex()).isFaceUp()) {
-                if (cardsLeft < 3 && cardsLeft != 0) {
-                    table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);
-                } else if (cardsLeft == 0 && table.getPlayerDeck().size() > 3) {
-                    table.setPlayerDeckIndex(-1);
-                }
-            }
-            //else{table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);}
-            table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck().get(table.getPlayerDeckIndex()));
-            table.getPlayerDeck().remove(table.getPlayerDeckIndex());
-        }
+//        else if(match.fromPile == 11 && !match.match)
+//        {
+//            if(!table.getPlayerDeck_FaceUp().get(table.getPlayerDeckIndex()).isFaceUp()) {
+//                if (cardsLeft < 3 && cardsLeft != 0) {
+//                    table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);
+//                } else if (cardsLeft == 0 && table.getPlayerDeck_FaceUp().size() > 3) {
+//                    table.setPlayerDeckIndex(-1);
+//                }
+//            }
+//            //else{table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);}
+//            table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeckIndex()));
+//            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeckIndex());
+//        }
     //If we move from player deck to foundation pile
         else if(match.match && match.fromPile == 11){   //If we move from player pile to foundation pile
-            table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck().get(table.getPlayerDeckIndex()));
-            table.getPlayerDeck().remove(table.getPlayerDeckIndex());
-            decrementPlayerDeckIndex();
+            table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+            //decrementPlayerDeckIndex();
         }
         else if(match.match && match.toPile < 7) {   //If we want to move the card to a bottom pile
             List<Card> cardsToMove = new ArrayList<>(table.getAllFaceUpCards_fromAPile(match.fromPile));
@@ -111,86 +111,74 @@ public class Mover implements Move {
     @Override
     public void insertNextCardFromInput(Match match) {
 
-//        if(!match.match && match.fromPile == 11){
-//            table.getPlayerDeck().add(table.getPlayerDeckIndex(), match.nextPlayerCard);
-//            incrementPlayerDeckIndex();
-//        }
-//        else if(match.match && match.fromPile == 11 && match.toPile < 7){
-//            table.getAllPiles().get(match.toPile).add(match.nextPlayerCard);
-//            decrementPlayerDeckIndex();
-//        }
-
-        //If there is no match, and we wants to turn a card in the player deck.
+        //If there is no match, and we wants to turn three card in the player deck.
         if (match.getFromPile() == 11 && !match.match){
-            incrementPlayerDeckIndex();
-            cardsLeft = (table.getPlayerDeck().size() - (table.getPlayerDeckIndex() + 1));
-            //Check if there is more than 3 cards left to turn
-            if(cardsLeft < 3 && cardsLeft != 0){
-                List<Card> tempPile = new ArrayList<>();
-                for (int i = 0 ; i < cardsLeft ; i++){
-                    tempPile.add(table.getPlayerDeck().get(table.getPlayerDeckIndex() + i + 1));
+            if(table.getPlayerDeck_FaceDown().size() >= 3) {
+                for (int i = 0; i < 3; i++) {
+                    table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                    table.getPlayerDeck_FaceDown().remove(0);
                 }
-                for (int i = 0 ; i < cardsLeft ; i++){
-                    table.getPlayerDeck().remove(table.getPlayerDeckIndex() + 1);
-                }
-                for (int i = 0 ; i < cardsLeft ; i++){
-                    table.getPlayerDeck().add(i, tempPile.get(i));
-                }
-//                if(table.getPlayerDeckIndex() > 0) {
-//                    table.setPlayerDeckIndex(-1);
-//                    table.setPlayerDeckIndex(table.getPlayerDeckIndex() -1);   //Increment pointer with 3
-//                }
+                setNewCard(match);
             }
-            else if(cardsLeft == 0){
-                //table.setPlayerDeckIndex(-1);
-                //table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);   //Increment pointer with 3
-
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setBelongToPile(11);
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(match.nextPlayerCard.getType());
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(match.nextPlayerCard.getValue());
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(match.nextPlayerCard.getColor());
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
+            else if(table.getPlayerDeck_FaceDown().size() < 3 && table.getPlayerDeck_FaceDown().size() != 0){
+                table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
+                table.getPlayerDeck_FaceUp().clear();
             }
             else{
-                //table.setPlayerDeckIndex(table.getPlayerDeckIndex() + 3);   //Increment pointer with 3
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(match.nextPlayerCard.getColor());
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(match.nextPlayerCard.getValue());
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(match.nextPlayerCard.getType());
-                table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
+                if (table.getPlayerDeck_FaceDown().size() == 0){
+                    table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
+                    table.getPlayerDeck_FaceUp().clear();
+                    for (int i = 0; i < 3; i++) {
+                        table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                        table.getPlayerDeck_FaceDown().remove(0);
+                    }
+                    if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
+                        System.out.println("Card known: " +table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                    }
+                    else{
+                        setNewCard(match);;
+                    }
+                }
             }
         }
-        //If the card from the player deck is a match to the tablou piles, and we want to reveal the card underneath
-        else if (match.getFromPile() == 11 && match.match && match.toPile < 7){
-            //Move the card from player pile to table
-            //table.getPile(match.toPile).add(table.getPlayerDeck().get(table.getPlayerDeckIndex()));
-            table.getAllPiles().get(match.toPile).add(match.nextPlayerCard);
-            table.getPlayerDeck().remove(table.getPlayerDeckIndex());
 
-            if(table.getPlayerDeckIndex() != 0) {
-                table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
-            }
+    //If the card from the player deck is a match to the tablou piles, and we want to reveal the card underneath
+        else if (match.getFromPile() == 11 && match.match && match.toPile < 7){
+            setNewCard(match);
         }
 
     //If the card from the player deck is a match to the foundation piles, and we want to reveal the card underneath
         else if (match.getFromPile() == 11 && match.match && match.toPile >= 7){
         //Move the card from player pile to foundation
             table.getFundamentPiles().get(match.toPile - 7).add(match.nextPlayerCard);
-            table.getPlayerDeck().remove(table.getPlayerDeckIndex());
+            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
 
-            table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
-            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setColor(match.nextPlayerCard.getColor());
-            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setValue(match.nextPlayerCard.getValue());
-            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setType(match.nextPlayerCard.getType());
-            table.getPlayerDeck().get(table.getPlayerDeckIndex()).setFaceUp(true);
+            //table.setPlayerDeckIndex(table.getPlayerDeckIndex() - 1);
+            setNewCard(match);
+
 
         }
+
+        else if(match.match && match.fromPile < 7 && match.toPile < 7){
+
+            table.getAllPiles().get(match.fromPile).add(match.nextPlayerCard);
+            table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 2);
+        }
+
     //If the match is from the tablou pile to another tablou pile (i think)
         else if(!table.getAllPiles().get(match.fromPile).isEmpty()) {
-            table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setColor(match.nextPlayerCard.getColor());
-            table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setType(match.nextPlayerCard.getType());
-            table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setValue(match.nextPlayerCard.getValue());
-            table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1).setFaceUp(true);
+            setNewCard(match);
         }
         else System.out.println("EMPTY PILE!");
+    }
+
+    private void setNewCard(Match match) {
+        if(!table.getPlayerDeck_FaceUp().isEmpty()) {
+            table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).setFaceUp(true);
+            table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).setColor(match.nextPlayerCard.getColor());
+            table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).setValue(match.nextPlayerCard.getValue());
+            table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).setType(match.nextPlayerCard.getType());
+            table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).setBelongToPile(match.nextPlayerCard.getBelongToPile());
+        }
     }
 }

@@ -4,9 +4,7 @@ import src.Interfaces.Solver;
 import src.Interfaces.Table;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Algorithm implements Solver {
 
@@ -118,25 +116,25 @@ public class Algorithm implements Solver {
         else if(checkForComplexMatch()){
             return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
         }
-        if(isNextPlayerCardKnown()){
-            return new Match(11, -1, false, false, -1, null, true);
-        }
+//        if(isNextPlayerCardKnown()){
+//            return new Match(11, -1, false, false, -1, null, true);
+//        }
         return new Match(11, -1, false, false);
     }
 
-    private boolean isNextPlayerCardKnown() {
-        if(table.getPlayerDeck().get(table.getPlayerDeckIndex()).isFaceUp()){
-            return true;
-        }
-        else
-            return false;
-    }
+//    private boolean isNextPlayerCardKnown() {
+//        if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
+//            return true;
+//        }
+//        else
+//            return false;
+//    }
 
     private boolean checkForMatch_playerDeck() {
 //Check for match in top piles,
-        if(table.getTopCard_PlayerDeck() == null){return false;}
+        if(table.getPlayerDeck_FaceUp().size() == 0){return false;}
         for (int i = 0; i < 4; i++) {
-            if (table.getTopCard_PlayerDeck().getValue() == table.getTopCard_fromFundamentStack(i).getValue() + 1 && table.getTopCard_PlayerDeck().getType() == table.getTopCard_fromFundamentStack(i).getType()) {
+            if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue() == table.getTopCard_fromFundamentStack(i).getValue() + 1 && table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getType() == table.getTopCard_fromFundamentStack(i).getType()) {
                 cardFromPile = 11;
                 cardToPile = i + 7;
                 return true;
@@ -145,9 +143,9 @@ public class Algorithm implements Solver {
 //Check for match tablou piles
         for (int i = 0; i < table.getAllPiles().size(); i++) {
            // if(table.getTopCard_PlayerDeck().getValue() == 1) {break;}  //The algorithm don't want to place a two on a tablou pile, as it is then locked
-            if(table.getPlayerDeck().get(table.getPlayerDeckIndex()).getValue() == 1) {break;}
+            if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue() == 1) {break;}
             if(table.getPile(i).size() == 0){continue;}
-            if (table.getTopCard_PlayerDeck().getValue() + 1 == table.getPile(i).get(table.getPile(i).size() - 1).getValue() && table.getTopCard_PlayerDeck().getColor() != table.getPile(i).get(table.getPile(i).size() - 1).getColor()) {
+            if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue() + 1 == table.getPile(i).get(table.getPile(i).size() - 1).getValue() && table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getColor() != table.getPile(i).get(table.getPile(i).size() - 1).getColor()) {
                 cardFromPile = 11;
                 cardToPile = i;
                 return true;
@@ -156,8 +154,8 @@ public class Algorithm implements Solver {
 
 //Check for king to move onto empty pile
         //TODO perhaps check for the dept
-        if(table.getPlayerDeck().get(table.getPlayerDeckIndex()).getValue() == 12 && checkForAnyEmptyPile()) {
-            if(kingHasMatch(table.getPlayerDeck().get(table.getPlayerDeckIndex())))
+        if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue() == 12 && checkForAnyEmptyPile()) {
+            if(kingHasMatch(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1)))
             {
                 cardFromPile = 11;
                 for(int i = 0 ; i < 7 ; i++){
