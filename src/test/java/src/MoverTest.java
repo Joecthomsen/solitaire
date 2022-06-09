@@ -213,8 +213,46 @@ class MoverTest {
 
     @Test
     void moveComplexPile() {
-    }
 
+        Table table = new TableIO();
+        Move move = new Mover(table);
+        Algorithm algorithm = new Algorithm(table);
+        Match match;
+        table.initStartTable("H7,S10,H12,H4,K10,R4,R10");
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match, "Assert that there is no match");
+        match.nextPlayerCard = table.stringToCardConverter("S3");
+        move.insertNextCardFromInput(match);
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match, "Assert that there is a match from the stack");
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("H0");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("H2");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
+        move.moveCard_OrPile(match);
+        match = algorithm.checkForAnyMatch(); //Run again as the pile is now empty
+        match.nextPlayerCard = table.stringToCardConverter("H3");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("S13");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.complex, "Assert that a complex match has been found");
+
+
+
+    }
     @Test
     void moveCard_OrPile() {
     }

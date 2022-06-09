@@ -117,14 +117,28 @@ public class Mover implements Move {
 
     //If the card from the player deck is a match to the tablou piles, and we want to reveal the card underneath
         else if (match.getFromPile() == 11 && match.match && match.toPile < 7){
-            //table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.fromPile);
             setNewCard(match);
-            System.out.printf("Test");
         }
 
     //If the card from the player deck is a match to the foundation piles, and we want to reveal the card underneath
         else if (match.getFromPile() == 11 && match.match && match.toPile >= 7){
-        //Move the card from player pile to foundation
+
+            //Make sure, if the player pile faceUp is empty, that cards are moved over from faceDown
+//            if(table.getPlayerDeck_FaceUp().isEmpty()){
+//                if (table.getPlayerDeck_FaceDown().size() < 3){
+//                    System.out.println("No more cards left...");
+//                    return;
+//                }
+//                List<Card> toMove = new ArrayList<>();
+//                for (int i = 0 ; i < 3 ; i++) {
+//                    toMove.add(table.getPlayerDeck_FaceDown().get(0));
+//                    table.getPlayerDeck_FaceDown().remove(0);
+//                }
+//                table.getPlayerDeck_FaceUp().addAll(toMove);
+//                table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+//                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 2);
+//                return;
+//            }
             table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 2);
             setNewCard(match);
@@ -150,6 +164,10 @@ public class Mover implements Move {
     //If the match is from the tablou pile to another tablou pile (i think)
         else if(!table.getAllPiles().get(match.fromPile).isEmpty()) {
             setNewCard(match);
+        }
+        //If we have a complex move
+        else if(match.complex){
+
         }
         else System.out.println("EMPTY PILE!");
     }

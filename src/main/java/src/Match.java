@@ -7,9 +7,8 @@ public class Match {
     boolean match;
 
     boolean complex = false;
-
     int complexIndex;
-
+    int complexFinalFoundationPile;
     Card nextPlayerCard;
 
     boolean lastCardInPile = false;
@@ -44,7 +43,6 @@ public class Match {
         this.nextPlayerCard = nextPlayerCard;
     }
 
-
     public int getFromPile() {
         return fromPile;
     }
@@ -75,5 +73,13 @@ public class Match {
 
     public void setLastCardInPile(boolean lastCardInPile) {
         this.lastCardInPile = lastCardInPile;
+    }
+
+    public int getComplexFinalFoundationPile() {
+        return complexFinalFoundationPile;
+    }
+
+    public void setComplexFinalFoundationPile(int complexFinalFoundationPile) {
+        this.complexFinalFoundationPile = complexFinalFoundationPile;
     }
 }

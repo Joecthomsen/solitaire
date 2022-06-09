@@ -13,7 +13,7 @@ public class Run {
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
-        table.initStartTable("K13,S12,S8,S2,K10,R10,K6");
+        table.initStartTable("H9,K0,K10,K5,K4,R4,H4");
         table.printTable();
         for (int i = 0 ; i < 250 ; i++) {
             Match match = algorithm.checkForAnyMatch();

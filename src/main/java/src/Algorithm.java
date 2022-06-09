@@ -336,8 +336,10 @@ public class Algorithm implements Solver {
          * */
         for (int i = 0 ; i < 4 ; i++)   //Check all four fundament pile
         {
-            int validValue = table.getTopCard_fromFundamentStack(i).getValue() + 1;
-            int validType = table.getTopCard_fromFundamentStack(i).getType();
+            if(table.getFundamentPiles().get(i).size() < 2){continue;}
+            int validValue = table.getFundamentPiles().get(i).get(table.getFundamentPiles().get(i).size() - 1).getValue() + 1;
+            int validType = table.getFundamentPiles().get(i).get(table.getFundamentPiles().get(i).size() - 1).getType();
+
             for(int j = 0 ; j < table.getAllPiles().size() ; j++)
             {
                 for (int k = 0 ; k < table.getPile(j).size() ; k++)
@@ -345,7 +347,7 @@ public class Algorithm implements Solver {
                     if(!table.getPile(j).get(k).isFaceUp()){continue;}
                     if(table.getPile(j).get(k).getValue() == validValue && table.getPile(j).get(k).getType() == validType)
                     {
-                        if(indexCanSplit(table.getPile(j).get(k+1)) ) //See if we can move the card on top of the indexed card
+                        if(indexCanSplit(table.getPile(j).get(k+1))) //See if we can move the card on top of the indexed card
                         {
                             cardFromPile = j;
                             cardFromComplexPileIndex = k + 1;
@@ -362,5 +364,4 @@ public class Algorithm implements Solver {
         }
         return false;
     }
-
 }
