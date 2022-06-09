@@ -78,15 +78,97 @@ public class Algorithm implements Solver {
             return new Match(cardFromPile, cardToPile, true, false);
         }
 
+        else if(checkForKingMatch_FromTablou_ToEmptyPile()){
+            return new Match(cardFromPile, cardToPile, true, false);
+        }
+
         else if(checkForMatch_playerDeck()){
+            return new Match(cardFromPile, cardToPile, true, false);
+        }
+
+        else if(checkForKingMatch_FromStack_ToEmptyPile()){
             return new Match(cardFromPile, cardToPile, true, false);
         }
 
         else if(checkForComplexMatch()){
             return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
         }
-
         return new Match(11, -1, false, false);
+    }
+
+    private boolean checkForKingMatch_FromStack_ToEmptyPile() {
+        if (!table.getPlayerDeck_FaceUp().isEmpty()) {
+            if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue() == 12) {
+                Card king = table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1);
+                //Find out if there is an empty pile
+                for (int i = 0; i < 7; i++) {
+                    if (table.getAllPiles().get(i).isEmpty()) {
+                        if (findMatchForKing(king)) {
+                            cardFromPile = 11;
+                            cardToPile = i;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean findMatchForKing(Card king) {
+        int validValue = 11;
+        int validColor = 0;
+        if (king.getColor() == 0){
+            validColor = 1;
+        }
+        //Start by looking in the tablou pile for a match
+        for (int i = 0 ; i < 7 ; i++){
+            for (int j = 0 ; j < table.getAllPiles().get(i).size() ; j++){
+                if (!table.getAllPiles().get(i).get(j).isFaceUp()){
+                    continue;
+                }
+                if(table.getAllPiles().get(i).get(j).getValue() != validValue || table.getAllPiles().get(i).get(j).getColor() != validColor){
+                    break;
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        //Now look in the stack if there is a match.
+        for (int i = 0 ; i < table.getPlayerDeck_FaceUp().size() ; i++){
+            if(table.getPlayerDeck_FaceUp().get(i).getValue() == validValue && table.getPlayerDeck_FaceUp().get(i).getColor() == validColor){
+                return true;
+            }
+        }
+        for (int i = 0 ; i < table.getPlayerDeck_FaceUp().size() ; i++){
+            if(table.getPlayerDeck_FaceDown().get(i).getValue() == validValue && table.getPlayerDeck_FaceDown().get(i).getColor() == validColor){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkForKingMatch_FromTablou_ToEmptyPile() {
+
+        //Find out if there is an empty pile
+        for (int i = 0 ; i < 7 ; i++){
+            if (table.getAllPiles().get(i).isEmpty()){
+                //Find if there is a suitable king to move
+                for (int j = 0 ; j < 7 ; j++){
+                    //First look if the bottom faceup card is a king
+                    if(j == i){continue;}
+                    for (int k = 0 ; k < table.getAllPiles().get(j).size() ; k++){
+                        if (table.getAllPiles().get(j).size() < 1){continue;} //If there is no facedown cards underneath the king, we don't move it
+                        if (table.getAllPiles().get(j).get(k).getValue() == 12){
+                            cardFromPile = j;
+                            cardToPile = i;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -95,7 +177,6 @@ public class Algorithm implements Solver {
         createSortedList_OfCards(); //Re-init the temp pile, so that we get the cards back in
         while (!sortedList.isEmpty())
         {
-
 //            if(checkKingCondition()){return true;};
 //            createSortedList_OfCards();
             int validValue = 0;
