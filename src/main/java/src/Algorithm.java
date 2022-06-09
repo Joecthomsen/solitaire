@@ -176,7 +176,14 @@ public class Algorithm implements Solver {
                 return true;
             }
         }
-        //TODO remember the cards in the players pile, and move the king, if there is a match there as well.
+        for (int i = 0 ; i < table.getPlayerDeck_FaceUp().size() ; i++){
+            if(!table.getPlayerDeck_FaceUp().get(i).isFaceUp()){continue;}
+            if(table.getPlayerDeck_FaceUp().get(i).getValue() == validValue && table.getPlayerDeck_FaceUp().get(i).getColor() == validColor){return true;}
+        }
+        for (int i = 0 ; i < table.getPlayerDeck_FaceDown().size() ; i++){
+            if(!table.getPlayerDeck_FaceDown().get(i).isFaceUp()){continue;}
+            if(table.getPlayerDeck_FaceDown().get(i).getValue() == validValue && table.getPlayerDeck_FaceDown().get(i).getColor() == validColor){return true;}
+        }
         return false;
     }
 
@@ -188,7 +195,6 @@ public class Algorithm implements Solver {
         }
         return false;
     }
-
 
     private boolean checkForMatch_TopPile() {
         createSortedList_OfCards();

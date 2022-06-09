@@ -7,9 +7,7 @@ import src.Interfaces.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class RunTest {
+class RunSimulation {
 
     @Test
     void runOneFullGame(){
