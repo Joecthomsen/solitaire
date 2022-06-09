@@ -9,16 +9,11 @@ public class TableIO implements Table {
 
     private final List<List<Card>> piles = new ArrayList<>();           //List to maintain the seven bottom decks
     private final List<List<Card>> fundamentPiles = new ArrayList<>();        //List to maintain the four top decks.
-//    private final ArrayList<Card> playerDeck_FaceDown = new ArrayList<>();       //List to maintain the players deck
-//    private final ArrayList<Card> playerDeck_FaceUp = new ArrayList<>();       //List to maintain the players deck
 
     private List<Card> playerDeck_FaceUp = new ArrayList<>();
     private List<Card> playerDeck_FaceDown = new ArrayList<>();
 
-    //int playerDeckIndex = -1;
-
     //private final ArrayList<Card> newDeck = new ArrayList<>();            //List used to instantiate all the cards
-    private List<Card> cardCounter = new ArrayList<>();                 //List to exploit, that the computer actually can remember which cards have been turned in the player deck;
     private int complexSplitIndex;
 
     public void setComplexSplitIndex(int complexSplitIndex) {
@@ -95,11 +90,16 @@ public class TableIO implements Table {
         }
 
         if(card.length() == 2) {
-            value = card.charAt(1) - 48;
+            if(card.charAt(1)-48 == 0){
+                value = 0;
+            }
+            else {
+                value = (card.charAt(1) - 48) - 1;
+            }
         }
         else
         {
-            value = (card.charAt(1) - 48)*10 + card.charAt(2)-48;
+            value = ((card.charAt(1) - 48)*10 + card.charAt(2)-48) - 1;
         }
     return new Card(convertType, color, value, true);
     }
@@ -190,9 +190,6 @@ public class TableIO implements Table {
             piles.get(i).get(piles.get(i).size() - 1).setFaceUp(true);
         }
 
-//        for (int i = 0; i < 4; i++) {
-//            fundamentPiles.add(new ArrayList<>());
-//        }
 //INIT TOP PILES
         for (int i = 0; i < 4; i++) {
             fundamentPiles.add(i, new ArrayList<>());
@@ -204,7 +201,6 @@ public class TableIO implements Table {
         for(int i = 0 ; i < 24 ; i++){
             Card cardToAdd = new Card(-1, -1, -1, false, 11);
             playerDeck_FaceDown.add(cardToAdd);
-//            playerDeck_FaceDown.add(cardToAdd);
         }
     }
 
@@ -212,15 +208,7 @@ public class TableIO implements Table {
         return fundamentPiles.get(stack).get(fundamentPiles.get(stack).size() - 1);
     }
 
-//    @Override
-//    public Card getTopCard_PlayerDeck() {
-//        if ( == -1){return null;}
-//        if (playerDeck_FaceUp.get(playerDeckIndex).isFaceUp())
-//            return playerDeck_FaceUp.get(playerDeckIndex);
-//            //return playerDeck_FaceUp.get(playerDeck_FaceUp.size() - 1);
-//        else
-//            return null;
-//    }
+
 
     public List<List<Card>> getAllPiles()
     {

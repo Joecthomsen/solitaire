@@ -124,12 +124,12 @@ public class Mover implements Move {
 
     //If the card from the player deck is a match to the foundation piles, and we want to reveal the card underneath
         else if (match.getFromPile() == 11 && match.match && match.toPile >= 7){
-    //Move the card from player pile to foundation
-            table.getFundamentPiles().get(match.toPile - 7).add(match.nextPlayerCard);
-            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+        //Move the card from player pile to foundation
+            table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 2);
             setNewCard(match);
         }
-    //From tablou
+        //From tablou
         else if(match.match && match.fromPile < 7 && match.toPile < 7){
             table.getAllPiles().get(match.fromPile).add(match.nextPlayerCard);
             if(table.getAllPiles().get(match.fromPile).size() > 1) {
