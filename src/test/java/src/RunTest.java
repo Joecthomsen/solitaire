@@ -79,10 +79,12 @@ class RunTest {
                 System.out.println("Move complex from pile " + match.fromPile + " at index " + match.complexIndex + " to pile " + match.toPile);
                 ranNum = randomNumber.getNewNumber();
                 move.moveCard_OrPile(match);
-                match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
-                randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
-                cards.remove(ranNum);
-                move.insertNextCardFromInput(match);
+                if (!match.lastCardInPile) {
+                    match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
+                    randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
+                    cards.remove(ranNum);
+                    move.insertNextCardFromInput(match);
+                }
             }
             table.printTable();
         }

@@ -117,21 +117,26 @@ class MoverTest {
         table.initStartTable("H1,H12,R8,R6,R7,H2,R11");
         Match match = algorithm.checkForAnyMatch();
     //Await next input
-        Card card = table.stringToCardConverter("S0");
+        Card card = table.stringToCardConverter("R12");
     //Insert input into match, and then pass the match object to let the insert function handle it automatic
         match.nextPlayerCard = card;
         move.insertNextCardFromInput(match);
     //Check if there is any match in the new game state and move it.
         match = algorithm.checkForAnyMatch();
-    //Move that new match
+        match.nextPlayerCard = table.stringToCardConverter("H12");
+    //Move new card to player pile
+        move.insertNextCardFromInput(match);
+    //Check if there is any match in the new game state and move it.
+        match = algorithm.checkForAnyMatch();
+        match.nextPlayerCard = table.stringToCardConverter("S0");
+    //Move new card to player pile
+        move.insertNextCardFromInput(match);
+        match = algorithm.checkForAnyMatch();
         move.moveCard_OrPile(match);
-    //Test if it is moved is correctly
-        int actual = table.getFundamentPiles().get(3).get(table.getFundamentPiles().get(3).size() - 1).getValue();
-        assertEquals(0, actual, "Assert that the card is moved to the foundation pile");
-        actual = table.getPlayerDeck_FaceUp().size();
-        assertEquals(2, actual, "Assert that the size of the player deck is decremented after moving a card to foundation pile");
-        actual = table.getPlayerDeck_FaceDown().size();
-        assertEquals(21, actual, "Assert that the player deck index is decremented correctly, when a card is moved to the foundation pile");
+        match.nextPlayerCard = table.stringToCardConverter("R9");
+        move.insertNextCardFromInput(match);
+        System.out.println("");
+
     }
 
     @Test
@@ -152,18 +157,18 @@ class MoverTest {
         assertEquals(-1, actual, "Assert that the card has been deleted in the 'move from' pile");
         match.nextPlayerCard = table.stringToCardConverter("K12");
         move.insertNextCardFromInput(match);
+        assertEquals(3, table.getAllPiles().get(3).size(), "Assert that the size of pile 3 has not increased by one after flipping");
         assertEquals(12, table.getAllPiles().get(3).get(table.getAllPiles().get(3).size() - 1).getValue(), "Assert that the face down card has been flipped");
     }
 
     @Test
     void moveFromTablou_ToFoundation(){
-        //TODO checkup on this test
         //Test that all the aces can be moved to a pile
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
     //Init start table with one ace
-        table.initStartTable("H0,S0,K0,R0,S7,H2,R11");
+        table.initStartTable("H0,S0,H1,H3,S7,H2,R11");
         Match match = algorithm.checkForAnyMatch();
         int actual = match.fromPile;
         assertEquals(0, actual, "Assert that the algorithm finds the correct match");
@@ -177,33 +182,33 @@ class MoverTest {
         match.nextPlayerCard = table.stringToCardConverter("K12");
         move.insertNextCardFromInput(match);
         assertEquals(12, table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).getValue(), "Assert that the king has been flipped");
+    //Try with next ace
+        match = algorithm.checkForAnyMatch();
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("K12");
+        move.insertNextCardFromInput(match);
+    //Put more cards from player to fundament pile
+        match = algorithm.checkForAnyMatch();
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("H2");
+        move.insertNextCardFromInput(match);
+        match = algorithm.checkForAnyMatch();   //TODO Algoritmen fejler her.
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("K12");
         System.out.println("");
+    }
 
-
-//        actual = table.getFundamentPiles().get(9-8).get(table.getFundamentPiles().get(9-8).size() - 1).getValue();
-//        assertEquals(0, actual, "Check if the ace has been moved to pile 8 (or pile 8 in the foundation list)");
-//        actual = table.getAllPiles().get(0).size();
-//        assertEquals(6, actual, "Assert that the size of the tablou pile has been deducted");
-//        actual = table.getAllPiles().get(0).get(table.getAllPiles().get(3).size() - 1).getValue();
-//        assertEquals(-1, actual, "Assert that the value of the not yet revealed card is -1");
-//    //Turn over next card
-//        match.nextPlayerCard = table.stringToCardConverter("S12");
-//        move.insertNextCardFromInput(match);
-//        match = algorithm.checkForAnyMatch();
-//        actual = match.fromPile;
-//        assertEquals(2, actual, "Assert that the correct match has been found");
-//        move.moveCard_OrPile(match);
-//    //Turn over next card
-//        match.nextPlayerCard = table.stringToCardConverter("S12");
-//        move.insertNextCardFromInput(match);
-//        match = algorithm.checkForAnyMatch();
-//        actual = match.fromPile;
-//        assertEquals(3, actual, "Assert that the correct match has been found");
-//        move.moveCard_OrPile(match);
-//        actual = table.getFundamentPiles().get(0).get(1).getValue();
-//        assertEquals(0, actual);
-//        System.out.printf("");
-//    //Turn over next card
+    @Test
+    void checkIfEmptyPile(){
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        Move move = new Mover(table);
+        table.initStartTable("H1,K12,S8,S6,S7,H2,R11");
+        Match match = algorithm.checkForAnyMatch();
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("K2");
+        move.insertNextCardFromInput(match);
+        System.out.println("");
     }
 
     @Test
