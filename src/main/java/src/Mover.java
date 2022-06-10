@@ -36,10 +36,7 @@ public class Mover implements Move {
             table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
 
-            if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
-                match.setNoNextInput(true);
-                System.out.println("Next card is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).toString());
-            }
+            checkIfNextCardIsKnown(match);
         }
 
     //If we move from player deck to foundation pile
@@ -48,10 +45,7 @@ public class Mover implements Move {
             table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
 
-            if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
-                match.setNoNextInput(true);
-                System.out.println("Next card is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).toString());
-            }
+            checkIfNextCardIsKnown(match);
         }
     //If we want to move from tablou to tablou
         else if(match.match && match.toPile < 7 && match.fromPile < 7) {
@@ -98,6 +92,15 @@ public class Mover implements Move {
         }
     }
 
+    private void checkIfNextCardIsKnown(Match match) {
+        if (table.getPlayerDeck_FaceUp().size() > 0) {
+            if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()) {
+                match.setNoNextInput(true);
+                System.out.println("Next card is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).toString());
+            }
+        }
+    }
+
     @Override
     public void insertNextCardFromInput(Match match) {
 
@@ -122,8 +125,10 @@ public class Mover implements Move {
                         table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                         table.getPlayerDeck_FaceDown().remove(0);
                     }
-                    if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
-                        System.out.println("Card known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                    if (table.getPlayerDeck_FaceUp().size() > 0) {
+                        if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()) {
+                            System.out.println("Card known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                        }
                     }
                     else{
                         setNewCard(match);;

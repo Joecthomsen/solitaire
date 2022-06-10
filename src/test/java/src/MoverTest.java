@@ -258,4 +258,40 @@ class MoverTest {
     void insertNextCardFromInput() {
     }
 
+//    @Test
+//    void noNextInput(){
+//        Table table = new TableIO();
+//        Algorithm algorithm = new Algorithm(table);
+//        Move move = new Mover(table);
+//        Match match;
+//        table.initStartTable("K4,H8,H8,S8,H8,H8,K8");
+//        match = algorithm.checkForAnyMatch();
+//        assertFalse(match.match);
+//        match.nextPlayerCard = table.stringToCardConverter("H3");
+//        move.insertNextCardFromInput(match);
+//        match = algorithm.checkForAnyMatch();
+//        assertTrue(match.match);
+//        move.moveCard_OrPile(match);
+//        match.nextPlayerCard = table.stringToCardConverter("H0");
+//        move.insertNextCardFromInput(match);
+//
+//        match = algorithm.checkForAnyMatch();
+//        assertTrue(match.match);
+//        assertEquals(8, match.toPile, "Assert correct toPile");
+//        assertEquals(11, match.fromPile, "Assert correct fromPile");
+//
+//        move.moveCard_OrPile(match);
+//        match.nextPlayerCard = table.stringToCardConverter("H2");
+//        move.insertNextCardFromInput(match);
+//
+//        match = algorithm.checkForAnyMatch();
+//        assertTrue(match.match);
+//
+//        move.moveCard_OrPile(match);
+//
+//        match = algorithm.checkForAnyMatch();
+//        move.moveCard_OrPile(match);
+//        assertTrue(match.isNoNextInput());
+//    }
+
 }

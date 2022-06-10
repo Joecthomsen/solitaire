@@ -442,7 +442,8 @@ class AlgorithmTest {
         assertTrue(match.complex, "Assert that a complex match has been found");
     }
     @Test
-    void checkThatNoNextInputFlag(){
+
+    void checkNoNextInputFlag_TablouToTablou(){
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
@@ -475,6 +476,41 @@ class AlgorithmTest {
         match = algorithm.checkForAnyMatch();
         move.moveCard_OrPile(match);
         assertTrue(match.isNoNextInput());
+    }
+    @Test
+    void testForNoNextInputFlag_StockToTablou(){
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        Move move = new Mover(table);
+        Match match;
+        table.initStartTable("H8,H8,H8,H8,H8,H8,H8");
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match);
 
+        match.nextPlayerCard = table.stringToCardConverter("K13");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match);
+        match.nextPlayerCard = table.stringToCardConverter("S7");
+        move.insertNextCardFromInput(match);
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
+
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("H6");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("S5");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        move.moveCard_OrPile(match);
+        assertTrue(match.noNextInput);
+
+        System.out.printf("");
     }
 }
