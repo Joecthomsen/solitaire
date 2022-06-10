@@ -93,10 +93,12 @@ class RunSimulation {
 
     @Test
     void testManyGames() {
+        String lastMove = "";
+        int amountOfGamesToRun = 250;
         int totalMovesTaken = 0;
         int gamesWon = 0;
 
-        for (int k = 0; k < 250; k++) {
+        for (int k = 0; k < amountOfGamesToRun; k++) {
             Table table = new TableIO();
             Algorithm algorithm = new Algorithm(table);
             Move move = new Mover(table);
@@ -156,6 +158,7 @@ class RunSimulation {
                 for (int j = 0; j < 4; j++) total += table.getFundamentPiles().get(j).size();
                 if (total >= 52) {
                     gamesWon++;
+                    break;
                 }
                 totalMovesTaken++;
 
@@ -193,7 +196,6 @@ class RunSimulation {
                 */
 
                 int cardRemoved = 0;
-
                 for (int j = 0; j < table.getAllPiles().size(); j++) {
                     if (table.getPile(j).size() != 0 && table.getPile(j).get(table.getPile(j).size()-1).getValue() == -1) {
                         table.getPile(j).get(table.getPile(j).size()-1).setValue(cards.get(0).getValue());
@@ -282,8 +284,11 @@ class RunSimulation {
                     }
                 }
                 System.out.println("");
+                lastMove = "FromPile: " + Integer.toString(match.fromPile) + ", " + "ToPile: " + Integer.toString(match.toPile);
             }
         }
+        System.out.println("Total games won: " + gamesWon + " out of: " + amountOfGamesToRun + " games.");
+        System.out.println("Total moves taken: " + totalMovesTaken);
     }
 
 }
