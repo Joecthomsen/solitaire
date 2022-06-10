@@ -28,6 +28,18 @@ public class Mover implements Move {
 
     @Override
     public void moveCard_OrPile(Match match) {
+        if(match.complex){
+            //First step tablou to tablou
+            table.getAllPiles().get(match.toPile).add(table.getAllPiles().get(match.fromPile).get(match.complexIndex));
+            table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
+            //Second step tablou to foundation
+            table.getFundamentPiles().get(match.getComplexFinalFoundationPile()).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
+            table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
+            //Check if we need the next input
+            if(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).isFaceUp()){
+                match.setNoNextInput(true);
+            }
+        }
 
     //If we move from player pile to tablou pile
         if (match.fromPile == 11 && match.toPile < 7 && match.match)
@@ -116,22 +128,31 @@ public class Mover implements Move {
             else if(table.getPlayerDeck_FaceDown().size() < 3 && table.getPlayerDeck_FaceDown().size() != 0){
                 table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
                 table.getPlayerDeck_FaceUp().clear();
+                for (int i = 0 ; i < 2 ; i++){
+                    table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                    table.getPlayerDeck_FaceDown().remove(0);
+                }
+                table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+                table.getPlayerDeck_FaceDown().remove(0);
+                setNewCard(match);
             }
             else{
                 if (table.getPlayerDeck_FaceDown().size() == 0){
                     table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
                     table.getPlayerDeck_FaceUp().clear();
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 2; i++) {
                         table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                         table.getPlayerDeck_FaceDown().remove(0);
                     }
-                    if (table.getPlayerDeck_FaceUp().size() > 0) {
-                        if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()) {
-                            System.out.println("Card known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
-                        }
+                    if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()) {
+                        match.setNoNextInput(true);
+                        System.out.println("Card known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                        table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                        table.getPlayerDeck_FaceDown().remove(0);
                     }
-                    else{
-                        setNewCard(match);;
+                    else {
+                        table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+                        table.getPlayerDeck_FaceDown().remove(0);
                     }
                 }
             }

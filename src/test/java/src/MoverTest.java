@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MoverTest {
 
-    //TODO Test belongsTo and other changeble variables.
-
     @Test
     void turnOverNewCard_PlayerDeck() {
 
@@ -17,72 +15,77 @@ class MoverTest {
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
-        table.initStartTable("H1,H12,KH,R8,R7,H2,R11");
+        table.initStartTable("H2,H12,KH,R8,R7,H3,R11");
         Match match = algorithm.checkForAnyMatch();
         assertFalse(match.match, "Confirms that the algorithm found that there is no match, and therefor must turn over a card from the player deck");
         assertEquals(11, match.fromPile, "Confirms that the algorithm found that there is no match, and therefor must turn over a card from the player deck");
-    //Check when divisible by 3
+//Check when divisible by 3
     //Insert next card into match object, which then automatically insert it into the player pile
         for (int i = 0 ; i < 8 ; i++) {
             match = algorithm.checkForAnyMatch();
-            match.nextPlayerCard = table.stringToCardConverter("R12");
+            match.nextPlayerCard = table.stringToCardConverter("S12");
             move.insertNextCardFromInput(match);
             actual = table.getPlayerDeck_FaceUp().size();
             assertEquals(3 + 3*i, actual);
             actual = table.getPlayerDeck_FaceDown().size();
             assertEquals(24-(3*(i+1)), actual);
             actual = table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue();
-            assertEquals(12, actual);
+            assertEquals(11, actual);
         }
         //Add one more card, and check if the pile is flipped over
-            match = algorithm.checkForAnyMatch();
-            match.nextPlayerCard = table.stringToCardConverter("S12");
+            for (int i = 0 ; i < 6 ; i++) {
+                if(match.noNextInput) {
+                    match.nextPlayerCard = table.stringToCardConverter("S11");
+            }
             move.insertNextCardFromInput(match);
             actual = table.getPlayerDeck_FaceUp().size();
-            assertEquals(3, actual);
+            assertEquals(3 + (3 * i), actual);
             actual = table.getPlayerDeck_FaceDown().size();
-            assertEquals(21, actual);
+            assertEquals(21 - (3 * i), actual);
+        }
 
         //Check when NOT divisible with 3
             table = new TableIO();
             algorithm = new Algorithm(table);
             move = new Mover(table);
-            table.initStartTable("H1,H12,KH,R8,R7,H2,R11");
+            table.initStartTable("H2,H13,K13,R2,R2,H2,S13");
             match = algorithm.checkForAnyMatch();
-            match.nextPlayerCard = table.stringToCardConverter("S10");
+            match.nextPlayerCard = table.stringToCardConverter("S12");
             move.insertNextCardFromInput(match);
             match = algorithm.checkForAnyMatch();
             move.moveCard_OrPile(match);
             actual = table.getAllPiles().get(6).get(table.getAllPiles().get(6).size() - 1).getValue();
-            assertEquals(10, actual);
-            match.nextPlayerCard = table.stringToCardConverter("R12");
+            assertEquals(12, actual);
+            match.nextPlayerCard = table.stringToCardConverter("R13");
             move.insertNextCardFromInput(match);
         for (int i = 0 ; i < 7 ; i++) {
             match = algorithm.checkForAnyMatch();
-            match.nextPlayerCard = table.stringToCardConverter("R12");
+            match.nextPlayerCard = table.stringToCardConverter("R13");
             move.insertNextCardFromInput(match);
             actual = table.getPlayerDeck_FaceUp().size();
             assertEquals(5 + 3*i, actual);
             actual = table.getPlayerDeck_FaceDown().size();
             assertEquals(18-(3*(i)), actual);
         }
-        //TODO assert this.
         for (int i = 0 ; i < 7 ; i++) {
             match = algorithm.checkForAnyMatch();
             match.nextPlayerCard = table.stringToCardConverter("S12");
             move.insertNextCardFromInput(match);
-            //actual = table.getPlayerDeck_FaceUp().size();
-            //assertEquals(5 + 3*i, actual);
-            //actual = table.getPlayerDeck_FaceDown().size();
-            //assertEquals(18-(3*(i)), actual);
         }
-        System.out.printf("");
+        for (int i = 0 ; i < 7 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            if (!match.noNextInput) {
+                match.nextPlayerCard = table.stringToCardConverter("H10");
+                move.insertNextCardFromInput(match);
+            }
+        }
         match = algorithm.checkForAnyMatch();
-        match.nextPlayerCard = table.stringToCardConverter("H12");
-        move.insertNextCardFromInput(match);
-        System.out.printf("");
+        if (!match.noNextInput) {
+            match.nextPlayerCard = table.stringToCardConverter("H9");
+            move.insertNextCardFromInput(match);
+        }
+        assertTrue(match.noNextInput);
     }
-
     @Test
     void moveFromPlayerDeck_ToTablouPile(){
         Table table = new TableIO();
@@ -108,7 +111,6 @@ class MoverTest {
         actual = table.getAllPiles().get(2).get(table.getAllPiles().get(2).size() - 1).getValue();
         assertEquals(7, actual);
     }
-
     @Test
     void moveFromPlayerDeck_ToFoundation(){
         Table table = new TableIO();
@@ -138,7 +140,6 @@ class MoverTest {
         System.out.println("");
 
     }
-
     @Test
     void moveFromTablou_ToTablou(){
         Table table = new TableIO();
@@ -160,7 +161,6 @@ class MoverTest {
         assertEquals(3, table.getAllPiles().get(3).size(), "Assert that the size of pile 3 has not increased by one after flipping");
         assertEquals(12, table.getAllPiles().get(3).get(table.getAllPiles().get(3).size() - 1).getValue(), "Assert that the face down card has been flipped");
     }
-
     @Test
     void moveFromTablou_ToFoundation(){
         //Test that all the aces can be moved to a pile
@@ -197,7 +197,6 @@ class MoverTest {
         match.nextPlayerCard = table.stringToCardConverter("K12");
         System.out.println("");
     }
-
     @Test
     void checkIfEmptyPile(){
         Table table = new TableIO();
@@ -210,7 +209,6 @@ class MoverTest {
         move.insertNextCardFromInput(match);
         System.out.println("");
     }
-
     @Test
     void moveComplexPile() {
 
@@ -249,49 +247,63 @@ class MoverTest {
 
         match = algorithm.checkForAnyMatch();
         assertTrue(match.complex, "Assert that a complex match has been found");
+        move.moveCard_OrPile(match);
+        assertFalse(match.noNextInput, "Assert the noNextInput flag is false");
+    //Check if next input flag is deactivated, when we don't need it.
+        table = new TableIO();
+        move = new Mover(table);
+        algorithm = new Algorithm(table);
+        table.initStartTable("H7,S10,H12,H5,K10,H5,R10");
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match, "Assert that there is no match");
+        match.nextPlayerCard = table.stringToCardConverter("S4");
+        move.insertNextCardFromInput(match);
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match, "Assert that there is a match from the stack");
+        move.moveCard_OrPile(match);
+
+        match.nextPlayerCard = table.stringToCardConverter("H3");
+        move.insertNextCardFromInput(match);
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match, "Assert that there is a match from the stack");
+        move.moveCard_OrPile(match);
+
+        match.nextPlayerCard = table.stringToCardConverter("S0");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("S2");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
+        move.moveCard_OrPile(match);
+        match = algorithm.checkForAnyMatch(); //Run again as the pile is now empty
+        match.nextPlayerCard = table.stringToCardConverter("S3");
+        move.insertNextCardFromInput(match);
+
+
+        match = algorithm.checkForAnyMatch();
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("K4");
+        move.insertNextCardFromInput(match);
+
+        match = algorithm.checkForAnyMatch();
+        move.moveCard_OrPile(match);
+
+        match = algorithm.checkForAnyMatch();
+
+        assertTrue(match.complex, "Assert that a complex match has been found");
+        move.moveCard_OrPile(match);
+        assertTrue(match.noNextInput, "Assert that noInputFlag is raised in 'match'");
+        System.out.printf("");
     }
     @Test
     void moveCard_OrPile() {
     }
-
     @Test
     void insertNextCardFromInput() {
     }
-
-//    @Test
-//    void noNextInput(){
-//        Table table = new TableIO();
-//        Algorithm algorithm = new Algorithm(table);
-//        Move move = new Mover(table);
-//        Match match;
-//        table.initStartTable("K4,H8,H8,S8,H8,H8,K8");
-//        match = algorithm.checkForAnyMatch();
-//        assertFalse(match.match);
-//        match.nextPlayerCard = table.stringToCardConverter("H3");
-//        move.insertNextCardFromInput(match);
-//        match = algorithm.checkForAnyMatch();
-//        assertTrue(match.match);
-//        move.moveCard_OrPile(match);
-//        match.nextPlayerCard = table.stringToCardConverter("H0");
-//        move.insertNextCardFromInput(match);
-//
-//        match = algorithm.checkForAnyMatch();
-//        assertTrue(match.match);
-//        assertEquals(8, match.toPile, "Assert correct toPile");
-//        assertEquals(11, match.fromPile, "Assert correct fromPile");
-//
-//        move.moveCard_OrPile(match);
-//        match.nextPlayerCard = table.stringToCardConverter("H2");
-//        move.insertNextCardFromInput(match);
-//
-//        match = algorithm.checkForAnyMatch();
-//        assertTrue(match.match);
-//
-//        move.moveCard_OrPile(match);
-//
-//        match = algorithm.checkForAnyMatch();
-//        move.moveCard_OrPile(match);
-//        assertTrue(match.isNoNextInput());
-//    }
-
 }

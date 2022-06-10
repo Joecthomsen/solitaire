@@ -36,13 +36,13 @@ public class Match {
         this.complex = complex;
     }
 
-    public Match(int fromPile, int toPile, boolean match, boolean complex, int complexIndex, Card nextPlayerCard) {
+    public Match(int fromPile, int toPile, boolean match, boolean complex, int complexIndex, int complexFinalFoundationPile) {
         this.fromPile = fromPile;
         this.toPile = toPile;
         this.match = match;
         this.complex = complex;
         this.complexIndex = complexIndex;
-        this.nextPlayerCard = nextPlayerCard;
+        this.complexFinalFoundationPile = complexFinalFoundationPile;
     }
 
     public int getFromPile() {
@@ -92,4 +92,6 @@ public class Match {
     public void setNoNextInput(boolean noNextInput) {
         this.noNextInput = noNextInput;
     }
+
+
 }

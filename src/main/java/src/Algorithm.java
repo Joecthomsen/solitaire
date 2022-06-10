@@ -15,6 +15,8 @@ public class Algorithm implements Solver {
     private  boolean printTable;
     private boolean turnOverCard_playerDeck = false;
     private boolean firstTurn = true;
+    //private boolean noNeedNextInput_algoritmClass = false;
+    private int finalComplexPile;
     List<List<Card>> tempPile = new ArrayList<>();
     List<List<Card>> sortedList = new ArrayList<>();
 
@@ -82,18 +84,45 @@ public class Algorithm implements Solver {
             return new Match(cardFromPile, cardToPile, true, false);
         }
 
-        else if(checkForMatch_playerDeck()){
+        else if(checkForMatch_playerDeck()) {
             return new Match(cardFromPile, cardToPile, true, false);
         }
+
 
         else if(checkForKingMatch_FromStack_ToEmptyPile()){
             return new Match(cardFromPile, cardToPile, true, false);
         }
-
+//    public Match(int fromPile, int toPile, boolean match, boolean complex, int complexIndex, Card nextPlayerCard, int complexFinalFoundationPile) {
         else if(checkForComplexMatch()){
-            return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex);
+            return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex, finalComplexPile);
         }
-        return new Match(11, -1, false, false);
+
+        else if(nextStockCardIsKnown()){
+            System.out.println("next card is known!");
+            Match match = new Match(11, -1, false, false);
+            match.noNextInput = true;
+            return match;
+        }
+        else
+            return new Match(11, -1, false, false);
+    }
+
+    private boolean nextStockCardIsKnown() {
+        if (table.getPlayerDeck_FaceDown().size() > 2) {
+            if (table.getPlayerDeck_FaceDown().get(2).isFaceUp()) {
+                return true;
+            }
+        }
+        else if (table.getPlayerDeck_FaceDown().size() == 2) {
+            return !table.getPlayerDeck_FaceUp().get(0).isFaceUp();
+        }
+        else if (table.getPlayerDeck_FaceDown().size() == 1) {
+            return !table.getPlayerDeck_FaceUp().get(1).isFaceUp();
+        }
+        else if (table.getPlayerDeck_FaceDown().size() == 0) {
+            return !table.getPlayerDeck_FaceUp().get(2).isFaceUp();
+        }
+        return false;
     }
 
     private boolean checkForKingMatch_FromStack_ToEmptyPile() {
@@ -350,13 +379,14 @@ public class Algorithm implements Solver {
                     {
                         if(indexCanSplit(table.getPile(j).get(k+1))) //See if we can move the card on top of the indexed card
                         {
+                            finalComplexPile = i;
                             cardFromPile = j;
                             cardFromComplexPileIndex = k + 1;
-                            //cardHandler.setComplexMatch(true);  //This is a flag, telling the card handler, that it has to split piles
                             table.setComplexSplitIndex(cardFromComplexPileIndex);
                             complexMatch = true;
-                            //if (printTable)
-                                //System.out.println("SPLIT PILE " + cardFromPile + " at card value: " + cardHandler.getPile(j).get(k+1).getValue() + " type: " + cardHandler.getPile(j).get(k+1).getType() + " to pile: " + cardToPile );
+//                            if(table.getAllPiles().get(j).get(k).isFaceUp()){
+//                                noNeedNextInput_algoritmClass = true;
+//                            }
                             return true;
                         }
                     }
