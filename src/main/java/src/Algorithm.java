@@ -106,6 +106,7 @@ public class Algorithm implements Solver {
                         if (findMatchForKing(king)) {
                             cardFromPile = 11;
                             cardToPile = i;
+                            return true;
                         }
                     }
                 }
@@ -160,6 +161,7 @@ public class Algorithm implements Solver {
                     for (int k = 0 ; k < table.getAllPiles().get(j).size() ; k++){
                         if (table.getAllPiles().get(j).size() < 1){continue;} //If there is no facedown cards underneath the king, we don't move it
                         if (table.getAllPiles().get(j).get(k).getValue() == 12){
+                            if(k == 0){continue;}
                             cardFromPile = j;
                             cardToPile = i;
                             return true;
@@ -225,19 +227,18 @@ public class Algorithm implements Solver {
         }
 
 //Check for king to move onto empty pile
-        //TODO perhaps check for the dept
-        if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue() == 12 && checkForAnyEmptyPile()) {
-            if(kingHasMatch(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1)))
-            {
-                cardFromPile = 11;
-                for(int i = 0 ; i < 7 ; i++){
-                    if(table.getAllPiles().get(i).isEmpty()){
-                        cardToPile = i;
-                    }
-                }
-                return true;
-            }
-        }
+//        if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue() == 12 && checkForAnyEmptyPile()) {
+//            if(kingHasMatch(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1)))
+//            {
+//                cardFromPile = 11;
+//                for(int i = 0 ; i < 7 ; i++){
+//                    if(table.getAllPiles().get(i).isEmpty()){
+//                        cardToPile = i;
+//                    }
+//                }
+//                return true;
+//            }
+//        }
         return false;
     }
 

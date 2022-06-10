@@ -13,6 +13,8 @@ public class Match {
 
     boolean lastCardInPile = false;
 
+    boolean noNextInput = false;
+
     //boolean nextPlayerDeckCardIsKnown;
 
     public Match(boolean match) {
@@ -81,5 +83,13 @@ public class Match {
 
     public void setComplexFinalFoundationPile(int complexFinalFoundationPile) {
         this.complexFinalFoundationPile = complexFinalFoundationPile;
+    }
+
+    public boolean isNoNextInput() {
+        return noNextInput;
+    }
+
+    public void setNoNextInput(boolean noNextInput) {
+        this.noNextInput = noNextInput;
     }
 }

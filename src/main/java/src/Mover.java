@@ -65,7 +65,11 @@ public class Mover implements Move {
             }
             table.getAllPiles().get(match.toPile).addAll(cardsToMove);
             if(table.getAllPiles().get(match.fromPile).isEmpty()){
-                match.setLastCardInPile(true);}
+                match.setLastCardInPile(true);
+            }
+            else if(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).isFaceUp()){
+                match.setNoNextInput(true);
+            }
         }
         //If match from tablou to fundation
         else
@@ -77,7 +81,11 @@ public class Mover implements Move {
             //Delete from old pile
             table.getPile(match.fromPile).remove(table.getPile(match.fromPile).size() - 1);
             if(table.getAllPiles().get(match.fromPile).isEmpty()){
-                match.setLastCardInPile(true);}
+                match.setLastCardInPile(true);
+            }
+            else if(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() -1 ).isFaceUp()){
+                match.setNoNextInput(true);
+            }
         }
     }
 
@@ -122,28 +130,13 @@ public class Mover implements Move {
 
     //If the card from the player deck is a match to the foundation piles, and we want to reveal the card underneath
         else if (match.getFromPile() == 11 && match.match && match.toPile >= 7){
-
-            //Make sure, if the player pile faceUp is empty, that cards are moved over from faceDown
-//            if(table.getPlayerDeck_FaceUp().isEmpty()){
-//                if (table.getPlayerDeck_FaceDown().size() < 3){
-//                    System.out.println("No more cards left...");
-//                    return;
-//                }
-//                List<Card> toMove = new ArrayList<>();
-//                for (int i = 0 ; i < 3 ; i++) {
-//                    toMove.add(table.getPlayerDeck_FaceDown().get(0));
-//                    table.getPlayerDeck_FaceDown().remove(0);
-//                }
-//                table.getPlayerDeck_FaceUp().addAll(toMove);
-//                table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
-//                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 2);
-//                return;
-//            }
             table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
-            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 2);
+            if(table.getPlayerDeck_FaceUp().size() > 1) {
+                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 2);
+            }
             setNewCard(match);
         }
-        //From tablou
+    //From tablou to tablou
         else if(match.match && match.fromPile < 7 && match.toPile < 7){
             table.getAllPiles().get(match.fromPile).add(match.nextPlayerCard);
             if(table.getAllPiles().get(match.fromPile).size() > 1) {
@@ -152,12 +145,17 @@ public class Mover implements Move {
             table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).setBelongToPile(match.fromPile);
         }
 
-        //Match to foundation pile from tablou
+    //Match to foundation pile from tablou
         else if(match.match && match.fromPile < 7){
             if (!match.lastCardInPile) {
                 table.getAllPiles().get(match.fromPile).add(table.getAllPiles().get(match.fromPile).size() - 1, match.nextPlayerCard);
                 table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
                 table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).setBelongToPile(match.fromPile);
+            }
+            if(table.getAllPiles().get(match.fromPile).size() > 1){
+                if (table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
             }
         }
 

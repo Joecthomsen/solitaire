@@ -13,22 +13,38 @@ public class Run {
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
-        table.initStartTable("H9,K0,K10,K5,K4,R4,H4");
+        Match match;
+        table.initStartTable("R12,R13,H10,H0,S11,K0,H2");
         table.printTable();
         for (int i = 0 ; i < 250 ; i++) {
-            Match match = algorithm.checkForAnyMatch();
+            match = algorithm.checkForAnyMatch();
             if (match.match && !match.complex) {
                 System.out.println("Move from pile " + match.fromPile + " to pile " + match.toPile);
                 move.moveCard_OrPile(match);
-                System.out.println("Enter next card");
-                String income = scanner.next();
-                match.nextPlayerCard = table.stringToCardConverter(income);
-                move.insertNextCardFromInput(match);
-                table.printTable();
+                if(!match.lastCardInPile) {
+                    System.out.println("Enter next card");
+                    String income = scanner.next();
+                    match.nextPlayerCard = table.stringToCardConverter(income);
+                    move.insertNextCardFromInput(match);
+                    table.printTable();
+                }
+                else{
+                    System.out.println("Pile empty..");
+                }
             }
             else if(match.match){
                 System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile + " to move that card to the foundation pile");
                 move.moveComplexPile(match.fromPile, match.complexIndex, match.toPile);
+                if(!match.lastCardInPile) {
+                    System.out.println("Enter next card");
+                    String income = scanner.next();
+                    match.nextPlayerCard = table.stringToCardConverter(income);
+                    move.insertNextCardFromInput(match);
+                    table.printTable();
+                }
+                else{
+                    System.out.println("Pile empty..");
+                }
             }
             else {
                 System.out.println("Turn over card in player deck");
