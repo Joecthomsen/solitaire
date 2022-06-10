@@ -35,6 +35,11 @@ public class Mover implements Move {
             table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
             table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+
+            if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
+                match.setNoNextInput(true);
+                System.out.println("Next card is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).toString());
+            }
         }
 
     //If we move from player deck to foundation pile
@@ -42,7 +47,11 @@ public class Mover implements Move {
             table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
             table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-            //decrementPlayerDeckIndex();
+
+            if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
+                match.setNoNextInput(true);
+                System.out.println("Next card is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).toString());
+            }
         }
     //If we want to move from tablou to tablou
         else if(match.match && match.toPile < 7 && match.fromPile < 7) {

@@ -78,7 +78,6 @@ class AlgorithmTest {
         assertEquals(12, actualValue);
 
     }
-
     @Test
     void endOfPlayerPileTest(){
     //Test when the player deck is divisible with 3
@@ -156,7 +155,6 @@ class AlgorithmTest {
         System.out.println("test");
 
     }
-
     @Test
     void checkForEmptyTablouPile(){
 
@@ -173,7 +171,6 @@ class AlgorithmTest {
         assertTrue(match.lastCardInPile, "Assert that the boolean lastCardInPile from Match object is set to true");
         assertEquals(0, table.getAllPiles().get(6).size(), "Assert that the pile is still empty, after trying to insert a card in it");
     }
-
     @Test
     void checkFromTablouPile_ToTablouPile() {
         Table table = new TableIO();
@@ -291,7 +288,6 @@ class AlgorithmTest {
         assertEquals(6, match.toPile, "Assert that the match is to the correct pile");
         assertFalse(match.complex, "Assert that the match is NOT a complex match");
     }
-
     @Test
     void testForKingMatch_FromTablouPile_ToEmptyTablouPile(){
 
@@ -342,7 +338,6 @@ class AlgorithmTest {
         System.out.printf("");
 
     }
-
     @Test
     void testForKingMatch_FromStack_ToEmptyTablouPile(){
         Table table = new TableIO();
@@ -408,7 +403,6 @@ class AlgorithmTest {
 
 
     }
-
     @Test
     void checkForComplexMatch(){
         Table table = new TableIO();
@@ -447,7 +441,6 @@ class AlgorithmTest {
         match = algorithm.checkForAnyMatch();
         assertTrue(match.complex, "Assert that a complex match has been found");
     }
-
     @Test
     void checkThatNoNextInputFlag(){
         Table table = new TableIO();
@@ -478,9 +471,6 @@ class AlgorithmTest {
         assertTrue(match.match);
 
         move.moveCard_OrPile(match);
-
-//        match.nextPlayerCard = table.stringToCardConverter("K13");
-//        move.insertNextCardFromInput(match);
 
         match = algorithm.checkForAnyMatch();
         move.moveCard_OrPile(match);

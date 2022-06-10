@@ -249,9 +249,6 @@ class MoverTest {
 
         match = algorithm.checkForAnyMatch();
         assertTrue(match.complex, "Assert that a complex match has been found");
-
-
-
     }
     @Test
     void moveCard_OrPile() {
@@ -260,4 +257,5 @@ class MoverTest {
     @Test
     void insertNextCardFromInput() {
     }
+
 }
