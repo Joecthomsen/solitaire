@@ -91,7 +91,7 @@ class MoverTest {
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
-        table.initStartTable("H1,H12,R8,R12,R7,H2,R11");
+        table.initStartTable("H2,H13,R9,R13,R8,H3,R12");
         Match match = algorithm.checkForAnyMatch();
     //Await next input
         Card card = table.stringToCardConverter("S7");
@@ -145,21 +145,20 @@ class MoverTest {
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
-        table.initStartTable("H1,H12,R8,R6,S7,H2,R11");
+        table.initStartTable("H2,H13,R9,R6,S8,H3,R12");
         Match match = algorithm.checkForAnyMatch();
         move.moveCard_OrPile(match);
         int actual = table.getAllPiles().get(4).size();
-        assertEquals(4, actual, "Assert that the size of pile 4 has increased with one");
-        actual = table.getAllPiles().get(3).size();
-        assertEquals(3, actual, "Assert that the size of pile 3 has decreased with one");
+        assertEquals(2, actual, "Assert that the size of pile 2 has increased with one");
+        actual = table.getAllPiles().get(2).size();
+        assertEquals(6, actual, "Assert that the size of pile 4 has decreased with one");
+        actual = table.getAllPiles().get(2).get(table.getAllPiles().get(2).size() - 1).getValue();
+        assertEquals(7, actual, "Assert that it is the correct card that has been moved");
         actual = table.getAllPiles().get(4).get(table.getAllPiles().get(4).size() - 1).getValue();
-        assertEquals(6, actual, "Assert that it is the correct card that has been moved");
-        actual = table.getAllPiles().get(3).get(table.getAllPiles().get(3).size() - 1).getValue();
         assertEquals(-1, actual, "Assert that the card has been deleted in the 'move from' pile");
         match.nextPlayerCard = table.stringToCardConverter("K12");
         move.insertNextCardFromInput(match);
-        assertEquals(3, table.getAllPiles().get(3).size(), "Assert that the size of pile 3 has not increased by one after flipping");
-        assertEquals(12, table.getAllPiles().get(3).get(table.getAllPiles().get(3).size() - 1).getValue(), "Assert that the face down card has been flipped");
+        assertEquals(2, table.getAllPiles().get(4).size(), "Assert that the size of pile 4 has not increased by one after flipping");
     }
     @Test
     void moveFromTablou_ToFoundation(){

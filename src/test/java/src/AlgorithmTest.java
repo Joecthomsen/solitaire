@@ -448,17 +448,23 @@ class AlgorithmTest {
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
         Match match;
-        table.initStartTable("K4,H8,H8,S8,H8,H8,K8");
-        match = algorithm.checkForAnyMatch();
-        assertFalse(match.match);
-        match.nextPlayerCard = table.stringToCardConverter("H3");
-        move.insertNextCardFromInput(match);
+        table.initStartTable("K5,H8,H8,S8,H8,H8,H4");
         match = algorithm.checkForAnyMatch();
         assertTrue(match.match);
         move.moveCard_OrPile(match);
-        match.nextPlayerCard = table.stringToCardConverter("H0");
-        move.insertNextCardFromInput(match);
-
+        assertTrue(match.lastCardInPile);
+        if(!match.lastCardInPile || !match.noNextInput) {
+            match.nextPlayerCard = table.stringToCardConverter("H0");
+            move.insertNextCardFromInput(match);
+        }
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
+        move.moveCard_OrPile(match);
+        assertTrue(match.lastCardInPile);
+        if(!match.lastCardInPile || !match.noNextInput) {
+            match.nextPlayerCard = table.stringToCardConverter("H12");
+            move.insertNextCardFromInput(match);
+        }
         match = algorithm.checkForAnyMatch();
         assertTrue(match.match);
         assertEquals(8, match.toPile, "Assert correct toPile");
