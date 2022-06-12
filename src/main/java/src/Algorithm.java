@@ -186,8 +186,8 @@ public class Algorithm implements Solver {
             }
         }
         //Now look in the stack if there is a match.
-        for (int i = 0 ; i < table.getPlayerDeck_FaceUp().size() ; i++){
-            if(table.getPlayerDeck_FaceUp().get(i).getValue() == validValue && table.getPlayerDeck_FaceUp().get(i).getColor() == validColor){
+        for (int i = 0 ; i < table.getPlayerDeck_FaceDown().size() ; i++){
+            if(table.getPlayerDeck_FaceDown().get(i).getValue() == validValue && table.getPlayerDeck_FaceDown().get(i).getColor() == validColor){
                 return true;
             }
         }

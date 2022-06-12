@@ -127,7 +127,10 @@ public class Mover implements Move {
             }
             else if(table.getPlayerDeck_FaceDown().size() < 3 && table.getPlayerDeck_FaceDown().size() != 0){
                 table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
-                table.getPlayerDeck_FaceUp().clear();
+                while (table.getPlayerDeck_FaceUp().size() != 0) {
+                    table.getPlayerDeck_FaceUp().remove(0);
+                }
+                //table.getPlayerDeck_FaceUp().clear();
                 for (int i = 0 ; i < 2 ; i++){
                     table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                     table.getPlayerDeck_FaceDown().remove(0);
