@@ -192,7 +192,7 @@ public class Algorithm implements Solver {
             }
         }
         for (int i = 0 ; i < table.getPlayerDeck_FaceUp().size() ; i++){
-            if(table.getPlayerDeck_FaceDown().get(i).getValue() == validValue && table.getPlayerDeck_FaceDown().get(i).getColor() == validColor){
+            if(table.getPlayerDeck_FaceUp().get(i).getValue() == validValue && table.getPlayerDeck_FaceUp().get(i).getColor() == validColor){
                 return true;
             }
         }
