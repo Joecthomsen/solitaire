@@ -14,7 +14,7 @@ public class Run {
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
         Match match;
-        table.initStartTable("R8,K3,R4,H12,S11,S0,S2");
+        table.initStartTable("K6,R9,K12,H13,S0,R0,K8");
         table.printTable();
         for (int i = 0 ; i < 250 ; i++) {
             match = algorithm.checkForAnyMatch();
@@ -59,7 +59,7 @@ public class Run {
                 else{
                     System.out.println("MULTIPLE MOVES DETECTED!!!");
                     System.out.println("*** Turn over card in player deck ***");
-                    System.out.println("Test, card may be: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                    //System.out.println("Test, card may be: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                     //move.moveCard_OrPile(match);
                 }
             }
