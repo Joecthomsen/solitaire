@@ -84,7 +84,11 @@ class MoverTest {
             match.nextPlayerCard = table.stringToCardConverter("H9");
             move.insertNextCardFromInput(match);
         }
-        assertTrue(match.noNextInput);
+        for (int i = 0 ; i < 7 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            assertTrue(match.noNextInput);
+            //TODO de 3 kort skal stadigvæk rykkes, selvom det er et kendt kort.
+        }
     }
     @Test
     void moveFromPlayerDeck_ToTablouPile(){
