@@ -97,6 +97,7 @@ class RunSimulation {
         String lastMove = "";
         int amountOfGamesToRun = 1000;
         int totalMovesTaken = 0;
+        int currentMovesTaken = 0;
         int gamesWon = 0;
 
         for (int k = 0; k < amountOfGamesToRun; k++) {
@@ -130,7 +131,6 @@ class RunSimulation {
                     cards.add(newCard);
                 }
             }
-            System.out.println("Cards remaining before start table: " + cards.size());
             Collections.shuffle(cards);
             String startTable = "";
             for (int i = 0; i < 7; i++) {
@@ -147,13 +147,13 @@ class RunSimulation {
                         break;
                 }
                 startTable += card.getValue();
-                startTable += ",";
+                if (i != 6) startTable += ",";
                 cards.remove(0);
             }
             table.initStartTable(startTable);
-            System.out.println("Cards remaining after start table: " + cards.size());
 
 
+            currentMovesTaken = 0;
             for (int i = 0 ; i < 250 ; i++) {
                 int total = 0;
                 for (int j = 0; j < 4; j++) total += table.getFundamentPiles().get(j).size();
@@ -161,8 +161,14 @@ class RunSimulation {
                     gamesWon++;
                     break;
                 }
-                totalMovesTaken++;
+                currentMovesTaken++;
 
+                for (int j = 0; j < table.getAllPiles().size(); j++) {
+                    if (table.getAllPiles().get(j).size() != 0 && !table.getAllPiles().get(j).get(table.getAllPiles().get(j).size() - 1).isFaceUp() && table.getAllPiles().get(j).get(table.getAllPiles().get(j).size() - 1).getValue() != -1) {
+                        table.getAllPiles().get(j).get(table.getAllPiles().get(j).size() - 1).setFaceUp(true);
+                    }
+                }
+                if (table.getPlayerDeck_FaceUp().size() != 0 && table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).getValue() != -1 && !table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).isFaceUp()) table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).setFaceUp(true);
 
             /*
             Card cardM = cards.get(0);
@@ -232,7 +238,12 @@ class RunSimulation {
                     if (!table.getPlayerDeck_FaceUp().get(j).isFaceUp()) unknownCards++;
                 }
 
+                if (unknownCards != cards.size()) {
+                    System.out.println("");
+                }
+
                 //assertEquals(cards.size(), unknownCards);
+
 
 /*
             List<List<Card>> allFaceUp = table.getAllFaceUpCards();
@@ -274,7 +285,7 @@ class RunSimulation {
                     //System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile);
                     //System.out.println("Then move newly freed card in pile " + match.fromPile + "to foundation pile " + (match.complexFinalFoundationPile - 1));
                     move.moveComplexPile(match.fromPile, match.complexIndex, match.toPile);
-                    if(!match.lastCardInPile && !match.noNextInput && cards.size() != 0) {
+                    if(!match.lastCardInPile && !match.noNextInput) {
                         match.nextPlayerCard = cards.get(0);
                         cards.remove(0);
                         move.insertNextCardFromInput(match);
@@ -304,14 +315,15 @@ class RunSimulation {
                     if (table.getFundamentPiles().get(0).size() == 14) pilesCompleted++;
                 }
                 if (pilesCompleted == 4) {
-                    System.out.println("GAME WON!");
+                    System.out.println("GAME WON! " + currentMovesTaken + " moves taken for this win.");
                     break;
                 }
                 if (i == 249) {
-                    System.out.println("Game lost :(");
+                    System.out.println("Game lost: " + table.getFundamentPiles().get(0).size() + ", " + table.getFundamentPiles().get(1).size() + ", " + table.getFundamentPiles().get(2).size() + ", " + table.getFundamentPiles().get(3).size() + ".");
                     break;
                 }
             }
+            totalMovesTaken += currentMovesTaken;
         }
         System.out.println("Total games won: " + gamesWon + " out of: " + amountOfGamesToRun + " games.");
         System.out.println("Total moves taken: " + totalMovesTaken);
