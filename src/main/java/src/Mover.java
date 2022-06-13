@@ -28,8 +28,14 @@ public class Mover implements Move {
     public void moveCard_OrPile(Match match) {
         if(match.complex){
             //First step tablou to tablou
-            table.getAllPiles().get(match.toPile).add(table.getAllPiles().get(match.fromPile).get(match.complexIndex));
-            table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
+            List<Card> cardsToMove = new ArrayList<>();
+
+            for (int i = match.complexIndex ; i < table.getAllPiles().get(match.fromPile).size() ; i++){
+                cardsToMove.add(table.getAllPiles().get(match.fromPile).get(i));
+                table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
+            }
+//            table.getAllPiles().get(match.toPile).add(table.getAllPiles().get(match.fromPile).get(match.complexIndex));
+//            table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
             //Second step tablou to foundation
             table.getFundamentPiles().get(match.getComplexFinalFoundationPile()).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
             table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
