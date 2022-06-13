@@ -66,12 +66,14 @@ public class Mover implements Move {
                     }
                     table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
                     table.getPlayerDeck_FaceDown().remove(0);
+                    checkIfNextCard_InStockPile_IsKnown(match);
                 }
                 else{
                     for (int i = 0 ; i < 3 ; i++){
                         table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                         table.getPlayerDeck_FaceDown().remove(0);
                     }
+                    checkIfNextCard_InStockPile_IsKnown(match);
                 }
             }
         }
@@ -110,7 +112,7 @@ public class Mover implements Move {
             //Set new pile number for card
             table.getTopCard_fromFundamentStack(match.toPile - 7).setBelongToPile(match.toPile);
             //Delete from old pile
-            table.getPile(match.fromPile).remove(table.getPile(match.fromPile).size() - 1);
+            table.getAllPiles().get(match.fromPile).remove(table.getPile(match.fromPile).size() - 1);
             if(table.getAllPiles().get(match.fromPile).isEmpty()){
                 match.setLastCardInPile(true);
             }
