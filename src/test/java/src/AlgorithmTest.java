@@ -176,18 +176,23 @@ class AlgorithmTest {
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
-        table.initStartTable("H7,S10,H9,S2,K10,S12,R11");
+        table.initStartTable("H7,S10,H9,S2,K10,S13,R13");
         Match match = algorithm.checkForAnyMatch();
         assertEquals(2, match.fromPile);
         assertEquals(1, match.toPile);
         move.moveCard_OrPile(match);
-        match.nextPlayerCard = table.stringToCardConverter("K12");
+        match.nextPlayerCard = table.stringToCardConverter("H11");
         move.insertNextCardFromInput(match);
         match = algorithm.checkForAnyMatch();
         assertTrue(match.match, "Assert that there is a match");
         assertEquals(1, match.fromPile);
-        assertEquals(6, match.toPile, "Assert that it is the correct toPile");
+        assertEquals(2, match.toPile, "Assert that it is the correct toPile");
+        move.moveCard_OrPile(match);
         System.out.printf("");
+
+    //Check a complicated match
+
+
 
     }
     @Test

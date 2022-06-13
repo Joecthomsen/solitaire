@@ -47,17 +47,35 @@ public class Mover implements Move {
             table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
             table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-
             checkIfNextCardIsKnown(match);
         }
 
     //If we move from player deck to foundation pile
         else if(match.match && match.fromPile == 11){   //If we move from player pile to foundation pile
-            table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
-            table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
-            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-
-            checkIfNextCardIsKnown(match);
+            if(table.getPlayerDeck_FaceUp().size() > 1) {
+                table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
+                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+                checkIfNextCardIsKnown(match);
+            }
+            else{
+                System.out.println("Turn over 3 new cards in stock.");
+                checkIfNextCardIsKnown(match);
+                if(!match.noNextInput){
+                    for (int i = 0 ; i < 2 ; i++){
+                        table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                        table.getPlayerDeck_FaceDown().remove(0);
+                    }
+                    table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+                    table.getPlayerDeck_FaceDown().remove(0);
+                }
+                else{
+                    for (int i = 0 ; i < 3 ; i++){
+                        table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                        table.getPlayerDeck_FaceDown().remove(0);
+                    }
+                }
+            }
         }
     //If we want to move from tablou to tablou
         else if(match.match && match.toPile < 7 && match.fromPile < 7) {
@@ -109,6 +127,11 @@ public class Mover implements Move {
             if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()) {
                 match.setNoNextInput(true);
                 //System.out.println("Next card is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).toString());
+            }
+            else if(table.getPlayerDeck_FaceDown().size() > 2){
+                if (table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
             }
         }
     }
@@ -179,7 +202,9 @@ public class Mover implements Move {
 
     //If the card from the player deck is a match to the tablou piles, and we want to reveal the card underneath
         else if (match.getFromPile() == 11 && match.match && match.toPile < 7){
-            setNewCard(match);
+            if(table.getPlayerDeck_FaceUp().size() != 0) {
+                setNewCard(match);
+            }
         }
 
     //If the card from the player deck is a match to the foundation piles, and we want to reveal the card underneath
