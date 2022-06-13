@@ -116,6 +116,7 @@ public class Algorithm implements Solver {
             }
             else {
                 table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
+                table.getPlayerDeck_FaceUp().clear();   //TODO Her lige tilføjet denne
                 for (int i = 0 ; i < 3 ; i++){
                     table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                     table.getPlayerDeck_FaceDown().remove(0);
