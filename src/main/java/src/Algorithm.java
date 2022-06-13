@@ -261,6 +261,11 @@ public class Algorithm implements Solver {
             if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getValue() == table.getTopCard_fromFundamentStack(i).getValue() + 1 && table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).getType() == table.getTopCard_fromFundamentStack(i).getType()) {
                 cardFromPile = 11;
                 cardToPile = i + 7;
+                if(table.getPlayerDeck_FaceUp().size() > 1){
+                    if(!table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2).isFaceUp()){
+                        //TODO implement noNextInput here
+                    }
+                }
                 return true;
             }
         }

@@ -4,9 +4,7 @@ import src.Interfaces.Move;
 import src.Interfaces.Table;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Mover implements Move {
 
@@ -47,7 +45,7 @@ public class Mover implements Move {
             table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
             table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
             table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-            checkIfNextCardIsKnown(match);
+            checkIfNextCard_InStockPile_IsKnown(match);
         }
 
     //If we move from player deck to foundation pile
@@ -56,11 +54,11 @@ public class Mover implements Move {
                 table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                 table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
                 table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                checkIfNextCardIsKnown(match);
+                checkIfNextCard_InStockPile_IsKnown(match);
             }
             else{
                 System.out.println("Turn over 3 new cards in stock.");
-                checkIfNextCardIsKnown(match);
+                checkIfNextCard_InStockPile_IsKnown(match);
                 if(!match.noNextInput){
                     for (int i = 0 ; i < 2 ; i++){
                         table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
@@ -122,7 +120,7 @@ public class Mover implements Move {
         }
     }
 
-    private void checkIfNextCardIsKnown(Match match) {
+    private void checkIfNextCard_InStockPile_IsKnown(Match match) {
         if (table.getPlayerDeck_FaceUp().size() > 0) {
             if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()) {
                 match.setNoNextInput(true);
@@ -230,6 +228,7 @@ public class Mover implements Move {
                 table.getAllPiles().get(match.fromPile).add(table.getAllPiles().get(match.fromPile).size() - 1, match.nextPlayerCard);
                 table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
                 table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).setBelongToPile(match.fromPile);
+                table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).setFaceUp(true);
             }
             if(table.getAllPiles().get(match.fromPile).size() > 1){
                 if (table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).isFaceUp()){
