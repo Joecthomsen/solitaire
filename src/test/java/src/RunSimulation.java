@@ -170,60 +170,6 @@ class RunSimulation {
                 }
                 if (table.getPlayerDeck_FaceUp().size() != 0 && table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).getValue() != -1 && !table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).isFaceUp()) table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).setFaceUp(true);
 
-            /*
-            Card cardM = cards.get(0);
-            for (int j = 0; j < table.getAllPiles().size(); j++) {
-                for (int l = 0; l < table.getAllPiles().get(j).size(); l++) {
-                    Card card = table.getAllPiles().get(j).get(l);
-                    if (card.getValue() == cardM.getValue() && card.getType() == cardM.getType()){
-                        cards.remove(0);
-                    }
-                }
-            }
-            for (int j = 0; j < table.getPlayerDeck_FaceUp().size(); j++) {
-                Card card = table.getPlayerDeck_FaceUp().get(j);
-                if (card.getValue() == cardM.getValue() && card.getType() == cardM.getType()) {
-                    cards.remove(0);
-                }
-            }
-            for (int j = 0; j < table.getPlayerDeck_FaceDown().size(); j++) {
-                Card card = table.getPlayerDeck_FaceDown().get(j);
-                if (card.getValue() == cardM.getValue() && card.getType() == cardM.getType()) {
-                    cards.remove(0);
-                }
-            }
-            for (int j = 0; j < table.getFundamentPiles().size(); j++) {
-                for (int l = 0; l < table.getFundamentPiles().get(j).size(); l++) {
-                    Card card = table.getFundamentPiles().get(j).get(l);
-                    if (card.getValue() == cardM.getValue() && card.getType() == cardM.getType()){
-                        cards.remove(0);
-                    }
-                }
-            }
-            */
-
-                int cardRemoved = 0;
-                /*
-                for (int j = 0; j < table.getAllPiles().size(); j++) {
-                    if (table.getPile(j).size() != 0 && table.getPile(j).get(table.getPile(j).size()-1).getValue() == -1) {
-                        table.getPile(j).get(table.getPile(j).size()-1).setValue(cards.get(0).getValue());
-                        table.getPile(j).get(table.getPile(j).size()-1).setColor(cards.get(0).getColor());
-                        table.getPile(j).get(table.getPile(j).size()-1).setType(cards.get(0).getType());
-                        table.getPile(j).get(table.getPile(j).size()-1).setFaceUp(true);
-                        cards.remove(0);
-                        cardRemoved++;
-                    }
-                }
-                if (table.getPlayerDeck_FaceUp().size() != 0 && table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).getValue() == -1) {
-                    table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).setValue(cards.get(0).getValue());
-                    table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).setColor(cards.get(0).getColor());
-                    table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).setType(cards.get(0).getType());
-                    table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size()-1).setFaceUp(true);
-                    cards.remove(0);
-                    cardRemoved++;
-                }
-
-                 */
 
                 int unknownCards = 0;
                 for (int j = 0; j < 7; j++) {
@@ -244,31 +190,6 @@ class RunSimulation {
 
                 //assertEquals(cards.size(), unknownCards);
 
-
-/*
-            List<List<Card>> allFaceUp = table.getAllFaceUpCards();
-            List<List<Card>> fundamentPiles = table.getFundamentPiles();
-            List<Card> deck = table.getPlayerDeck_FaceUp();
-            int amountOfFaceUp = 0;
-            for (int j = 0; j < allFaceUp.size(); j++) amountOfFaceUp += allFaceUp.get(j).size();
-            for (int j = 0; j < deck.size(); j++) {
-                if (deck.get(j).getValue() != -1) amountOfFaceUp += 1;
-            }
-            for (int j = 0; j < fundamentPiles.size(); j++) amountOfFaceUp += fundamentPiles.get(j).size();
- */
-
-            //System.out.println("-----------------------------------------");
-            //System.out.println("Amount of known cards: " + amountOfFaceUp);
-
-
-                //System.out.println("Amount of unknown cards: " + cards.size());
-
-
-                //System.out.println("-----------------------------------------");
-                //assertEquals(52, amountOfFaceUp+cards.size());
-
-
-
                 Match match = algorithm.checkForAnyMatch();
                 if (match.match && !match.complex) {
                     move.moveCard_OrPile(match);
@@ -277,21 +198,13 @@ class RunSimulation {
                         cards.remove(0);
                         move.insertNextCardFromInput(match);
                     }
-                    else{
-                        //System.out.println("Pile empty..");
-                    }
                 }
                 else if(match.match){
-                    //System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile);
-                    //System.out.println("Then move newly freed card in pile " + match.fromPile + "to foundation pile " + (match.complexFinalFoundationPile - 1));
                     move.moveComplexPile(match.fromPile, match.complexIndex, match.toPile);
                     if(!match.lastCardInPile && !match.noNextInput) {
                         match.nextPlayerCard = cards.get(0);
                         cards.remove(0);
                         move.insertNextCardFromInput(match);
-                    }
-                    else{
-                        //System.out.println("Pile empty..");
                     }
                 }
                 else {
@@ -300,15 +213,8 @@ class RunSimulation {
                         cards.remove(0);
                         move.insertNextCardFromInput(match);
                     }
-                    else{
-                        //System.out.println("MULTIPLE MOVES DETECTED!!!");
-                        //System.out.println("*** Turn over card in player deck ***");
-                        //System.out.println("Test, card may be: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
-                        //move.moveCard_OrPile(match);
-                    }
                 }
 
-                //System.out.println("");
                 lastMove = "FromPile: " + Integer.toString(match.fromPile) + ", " + "ToPile: " + Integer.toString(match.toPile);
                 int pilesCompleted = 0;
                 for (int l = 0; l < 4; l++) {
