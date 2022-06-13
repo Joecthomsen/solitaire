@@ -124,8 +124,9 @@ public class Algorithm implements Solver {
             }
             return match;
         }
-        else
+        else {
             return new Match(11, -1, false, false);
+        }
     }
 
     private boolean nextStockCardIsKnown() {
@@ -242,6 +243,7 @@ public class Algorithm implements Solver {
             for (int j = 0 ; j < sortedList.size(); j++)
             {
                 if(sortedList.get(j).isEmpty()){continue;}
+                if (sortedList.get(0).isEmpty()){continue;}
                 if(sortedList.get(j).get(sortedList.get(j).size() - 1).getColor() == validColor && sortedList.get(j).get(sortedList.get(j).size() - 1).getValue() == validValue){
                     cardFromPile = sortedList.get(0).get(0).getBelongToPile();
                     cardToPile = sortedList.get(j).get(0).getBelongToPile();

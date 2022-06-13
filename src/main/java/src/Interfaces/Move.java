@@ -11,5 +11,4 @@ public interface Move {
 
     void insertNextCardFromInput(Match match);
 
-    
 }

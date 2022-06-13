@@ -152,11 +152,11 @@ public class TableIO implements Table {
         }
         System.out.println("\n");
         if (playerDeck_FaceUp.size() != 0) {
-            System.out.println("Player deck top card: " + playerDeck_FaceUp.get(playerDeck_FaceUp.size() - 1) + " Cards in pile: " + playerDeck_FaceUp.size()  + "  Currently at index ");
+            System.out.println("Player deck top card: " + playerDeck_FaceUp.get(playerDeck_FaceUp.size() - 1) + " Cards in faceUp pile: " + playerDeck_FaceUp.size()  + "  cards in faceDown pile " + playerDeck_FaceDown.size());
         }
         else
         {
-            System.out.println("Player deck top card: No cards are turned over   Cards in pile: " + playerDeck_FaceUp.size());
+            System.out.println("Player deck top card: No cards are turned over   Cards in pile face pile: " + playerDeck_FaceUp.size() + " cards in faceDown pile: " + playerDeck_FaceDown.size());
         }
 
         System.out.println("\n************************************************************\n");

@@ -34,9 +34,6 @@ public class Mover implements Move {
                 cardsToMove.add(table.getAllPiles().get(match.fromPile).get(i));
                 table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
             }
-//            table.getAllPiles().get(match.toPile).add(table.getAllPiles().get(match.fromPile).get(match.complexIndex));
-//            table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
-            //Second step tablou to foundation
             table.getFundamentPiles().get(match.getComplexFinalFoundationPile()).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
             table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
             //Check if we need the next input
@@ -48,10 +45,19 @@ public class Mover implements Move {
     //If we move from player pile to tablou pile
         if (match.fromPile == 11 && match.toPile < 7 && match.match)
         {
-            table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
-            table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
-            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-            checkIfNextCard_InStockPile_IsKnown(match);
+            if(table.getPlayerDeck_FaceUp().size() > 1) {
+                table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
+                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+                checkIfNextCard_InStockPile_IsKnown(match);
+            }
+            else{
+                if(!table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+                table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(0));
+                table.getPlayerDeck_FaceUp().remove(0);
+            }
         }
 
     //If we move from player deck to foundation pile
@@ -63,24 +69,11 @@ public class Mover implements Move {
                 checkIfNextCard_InStockPile_IsKnown(match);
             }
             else{
-                System.out.println("Turn over 3 new cards in stock.");
-                checkIfNextCard_InStockPile_IsKnown(match);
-                if(!match.noNextInput){
-                    for (int i = 0 ; i < 2 ; i++){
-                        table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
-                        table.getPlayerDeck_FaceDown().remove(0);
-                    }
-                    table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
-                    table.getPlayerDeck_FaceDown().remove(0);
-                    checkIfNextCard_InStockPile_IsKnown(match);
+                if(!table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
+                    match.setNoNextInput(true);
                 }
-                else{
-                    for (int i = 0 ; i < 3 ; i++){
-                        table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
-                        table.getPlayerDeck_FaceDown().remove(0);
-                    }
-                    checkIfNextCard_InStockPile_IsKnown(match);
-                }
+                table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(0));
+                table.getPlayerDeck_FaceUp().remove(0);
             }
         }
     //If we want to move from tablou to tablou
@@ -126,7 +119,7 @@ public class Mover implements Move {
                 match.setNoNextInput(true);
             }
         }
-    }
+     }
 
     private void checkIfNextCard_InStockPile_IsKnown(Match match) {
         if (table.getPlayerDeck_FaceUp().size() > 0) {
