@@ -274,7 +274,7 @@ class RunSimulation {
                     //System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile);
                     //System.out.println("Then move newly freed card in pile " + match.fromPile + "to foundation pile " + (match.complexFinalFoundationPile - 1));
                     move.moveComplexPile(match.fromPile, match.complexIndex, match.toPile);
-                    if(!match.lastCardInPile && !match.noNextInput) {
+                    if(!match.lastCardInPile && !match.noNextInput && cards.size() != 0) {
                         match.nextPlayerCard = cards.get(0);
                         cards.remove(0);
                         move.insertNextCardFromInput(match);
