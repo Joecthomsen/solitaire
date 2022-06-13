@@ -197,6 +197,7 @@ class RunSimulation {
             */
 
                 int cardRemoved = 0;
+                /*
                 for (int j = 0; j < table.getAllPiles().size(); j++) {
                     if (table.getPile(j).size() != 0 && table.getPile(j).get(table.getPile(j).size()-1).getValue() == -1) {
                         table.getPile(j).get(table.getPile(j).size()-1).setValue(cards.get(0).getValue());
@@ -216,6 +217,8 @@ class RunSimulation {
                     cardRemoved++;
                 }
 
+                 */
+
                 int unknownCards = 0;
                 for (int j = 0; j < 7; j++) {
                     for (int l = 0; l < table.getPile(j).size(); l++) {
@@ -228,9 +231,10 @@ class RunSimulation {
                 for (int j = 0; j < table.getPlayerDeck_FaceUp().size(); j++) {
                     if (!table.getPlayerDeck_FaceUp().get(j).isFaceUp()) unknownCards++;
                 }
-                assertEquals(cards.size(), unknownCards);
 
-            /*
+                //assertEquals(cards.size(), unknownCards);
+
+/*
             List<List<Card>> allFaceUp = table.getAllFaceUpCards();
             List<List<Card>> fundamentPiles = table.getFundamentPiles();
             List<Card> deck = table.getPlayerDeck_FaceUp();
@@ -240,63 +244,73 @@ class RunSimulation {
                 if (deck.get(j).getValue() != -1) amountOfFaceUp += 1;
             }
             for (int j = 0; j < fundamentPiles.size(); j++) amountOfFaceUp += fundamentPiles.get(j).size();
+ */
+
+            //System.out.println("-----------------------------------------");
+            //System.out.println("Amount of known cards: " + amountOfFaceUp);
 
 
-            System.out.println("-----------------------------------------");
-            System.out.println("Amount of known cards: " + amountOfFaceUp);
-            */
-
-                System.out.println("Amount of unknown cards: " + cards.size());
+                //System.out.println("Amount of unknown cards: " + cards.size());
 
 
-                System.out.println("-----------------------------------------");
+                //System.out.println("-----------------------------------------");
                 //assertEquals(52, amountOfFaceUp+cards.size());
 
 
-                Card card = new Card();
-                card.setValue(-1);
-                card.setType(-1);
-                card.setBelongToPile(-1);
-                card.setFaceUp(false);
 
                 Match match = algorithm.checkForAnyMatch();
                 if (match.match && !match.complex) {
                     move.moveCard_OrPile(match);
                     if(!match.lastCardInPile && !match.noNextInput) {
-                        match.nextPlayerCard = card;
+                        match.nextPlayerCard = cards.get(0);
+                        cards.remove(0);
                         move.insertNextCardFromInput(match);
                     }
                     else{
-                        System.out.println("Pile empty..");
+                        //System.out.println("Pile empty..");
                     }
                 }
                 else if(match.match){
-                    System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile);
-                    System.out.println("Then move newly freed card in pile " + match.fromPile + "to foundation pile " + (match.complexFinalFoundationPile - 1));
+                    //System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile);
+                    //System.out.println("Then move newly freed card in pile " + match.fromPile + "to foundation pile " + (match.complexFinalFoundationPile - 1));
                     move.moveComplexPile(match.fromPile, match.complexIndex, match.toPile);
                     if(!match.lastCardInPile && !match.noNextInput) {
-                        match.nextPlayerCard = card;
+                        match.nextPlayerCard = cards.get(0);
+                        cards.remove(0);
                         move.insertNextCardFromInput(match);
                     }
                     else{
-                        System.out.println("Pile empty..");
+                        //System.out.println("Pile empty..");
                     }
                 }
                 else {
                     if (!match.noNextInput) {
-                        match.nextPlayerCard = card;
+                        match.nextPlayerCard = cards.get(0);
+                        cards.remove(0);
                         move.insertNextCardFromInput(match);
                     }
                     else{
-                        System.out.println("MULTIPLE MOVES DETECTED!!!");
-                        System.out.println("*** Turn over card in player deck ***");
-                        System.out.println("Test, card may be: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                        //System.out.println("MULTIPLE MOVES DETECTED!!!");
+                        //System.out.println("*** Turn over card in player deck ***");
+                        //System.out.println("Test, card may be: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                         //move.moveCard_OrPile(match);
                     }
                 }
 
-                System.out.println("");
+                //System.out.println("");
                 lastMove = "FromPile: " + Integer.toString(match.fromPile) + ", " + "ToPile: " + Integer.toString(match.toPile);
+                int pilesCompleted = 0;
+                for (int l = 0; l < 4; l++) {
+                    if (table.getFundamentPiles().get(0).size() == 14) pilesCompleted++;
+                }
+                if (pilesCompleted == 4) {
+                    System.out.println("GAME WON!");
+                    break;
+                }
+                if (i == 249) {
+                    System.out.println("Game lost :(");
+                    break;
+                }
             }
         }
         System.out.println("Total games won: " + gamesWon + " out of: " + amountOfGamesToRun + " games.");

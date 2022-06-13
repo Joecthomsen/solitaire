@@ -108,7 +108,7 @@ public class Mover implements Move {
         if (table.getPlayerDeck_FaceUp().size() > 0) {
             if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()) {
                 match.setNoNextInput(true);
-                System.out.println("Next card is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).toString());
+                //System.out.println("Next card is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).toString());
             }
         }
     }
@@ -135,21 +135,37 @@ public class Mover implements Move {
                     table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                     table.getPlayerDeck_FaceDown().remove(0);
                 }
+                if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()) {
+                    match.setNoNextInput(true);
+                    //System.out.println("Card known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                    table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                    table.getPlayerDeck_FaceDown().remove(0);
+                }
+                else {
+                    table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+                    table.getPlayerDeck_FaceDown().remove(0);
+                }
+                /*
                 table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
                 table.getPlayerDeck_FaceDown().remove(0);
                 setNewCard(match);
+
+                 */
             }
             else{
                 if (table.getPlayerDeck_FaceDown().size() == 0){
                     table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
-                    table.getPlayerDeck_FaceUp().clear();
+                    while (table.getPlayerDeck_FaceUp().size() != 0) {
+                        table.getPlayerDeck_FaceUp().remove(0);
+                    }
+                    //table.getPlayerDeck_FaceUp().clear();
                     for (int i = 0; i < 2; i++) {
                         table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                         table.getPlayerDeck_FaceDown().remove(0);
                     }
                     if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()) {
                         match.setNoNextInput(true);
-                        System.out.println("Card known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                        //System.out.println("Card known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                         table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                         table.getPlayerDeck_FaceDown().remove(0);
                     }
@@ -205,7 +221,7 @@ public class Mover implements Move {
         else if(match.complex){
 
         }
-        else System.out.println("EMPTY PILE!");
+        //else System.out.println("EMPTY PILE!");
     }
 
     private void setNewCard(Match match) {

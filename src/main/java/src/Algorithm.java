@@ -98,7 +98,7 @@ public class Algorithm implements Solver {
         }
 
         else if(nextStockCardIsKnown()){
-            System.out.println("next card is known!");
+            //System.out.println("next card is known!");
             Match match = new Match(11, -1, false, false);
             match.noNextInput = true;
             if(table.getPlayerDeck_FaceDown().size() > 2){
@@ -109,7 +109,8 @@ public class Algorithm implements Solver {
             }
             else if(table.getPlayerDeck_FaceDown().size() <= 2 && table.getPlayerDeck_FaceDown().size() != 0){
                 table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
-                table.getPlayerDeck_FaceUp().clear();
+                while (table.getPlayerDeck_FaceUp().size() != 0) table.getPlayerDeck_FaceUp().remove(0);
+                //table.getPlayerDeck_FaceUp().clear();
                 for (int i = 0 ; i < 3 ; i++){
                     table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                     table.getPlayerDeck_FaceDown().remove(0);
