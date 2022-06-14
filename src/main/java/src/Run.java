@@ -49,7 +49,7 @@ public class Run {
                 }
             }
             else {
-                if (!match.noNextInput && !match.lastCardInPile) {
+                if (!match.noNextInput && !match.lastCardInPile && !move.getIsStockPileIsEmpty()) {
                     System.out.println("Turn over card in player deck");
                     System.out.println("Enter next player card");
                     String income = scanner.next();
@@ -57,11 +57,14 @@ public class Run {
                     move.insertNextCardFromInput(match);
                     table.printTable();
                 }
-                else{
+                else if(!move.getIsStockPileIsEmpty()){
                     System.out.println("MULTIPLE MOVES DETECTED!!!");
                     System.out.println("*** Turn over card in player deck and find: "  + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                     //System.out.println("Test, card may be: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                     //move.moveCard_OrPile(match);
+                }
+                else {
+                    System.out.println("Stock pile is empty!");
                 }
             }
         }

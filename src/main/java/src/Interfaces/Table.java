@@ -39,6 +39,7 @@ public interface Table {
 
     public void setPlayerDeck_FaceDown(List<Card> playerDeck_FaceUp);
 
+
     //public int getPlayerDeckIndex();
 
 //    public void setPlayerDeckIndex(int playerDeckIndex);

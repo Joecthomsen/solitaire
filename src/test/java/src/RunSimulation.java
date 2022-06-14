@@ -239,7 +239,7 @@ class RunSimulation {
                 }
 
                 if (unknownCards != cards.size()) {
-                    System.out.println("");
+                    System.out.print("");
                 }
 
                 //assertEquals(cards.size(), unknownCards);
@@ -295,7 +295,7 @@ class RunSimulation {
                     }
                 }
                 else {
-                    if (!match.noNextInput) {
+                    if (!match.noNextInput && !match.lastCardInPile) {
                         match.nextPlayerCard = cards.get(0);
                         cards.remove(0);
                         move.insertNextCardFromInput(match);
@@ -324,6 +324,9 @@ class RunSimulation {
                 }
             }
             totalMovesTaken += currentMovesTaken;
+            if(table.getFundamentPiles().get(0).size() > 13 && table.getFundamentPiles().get(1).size() > 13 && table.getFundamentPiles().get(2).size() > 13 && table.getFundamentPiles().get(3).size() > 13){
+                System.out.println("");
+            }
         }
         System.out.println("Total games won: " + gamesWon + " out of: " + amountOfGamesToRun + " games.");
         System.out.println("Total moves taken: " + totalMovesTaken);

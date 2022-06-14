@@ -11,4 +11,6 @@ public interface Move {
 
     void insertNextCardFromInput(Match match);
 
+    public boolean getIsStockPileIsEmpty();
+
 }

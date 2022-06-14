@@ -24,6 +24,8 @@ public class Mover implements Move {
 
     }
 
+    private boolean stockPileIsEmpty = false;
+
     @Override
     public void moveCard_OrPile(Match match) {
         if(match.complex){
@@ -37,27 +39,69 @@ public class Mover implements Move {
             table.getFundamentPiles().get(match.getComplexFinalFoundationPile()).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
             table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
             //Check if we need the next input
-            if(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).isFaceUp()){
-                match.setNoNextInput(true);
+            if(table.getAllPiles().get(match.fromPile).size() > 0) {
+                if (table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).isFaceUp()) {
+                    match.setNoNextInput(true);
+                }
             }
         }
 
     //If we move from player pile to tablou pile
         if (match.fromPile == 11 && match.toPile < 7 && match.match)
         {
-            if(table.getPlayerDeck_FaceUp().size() > 1) {
-                table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
-                table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
-                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                checkIfNextCard_InStockPile_IsKnown(match);
+            // Hvis face up er større end en, så skal det næste kort bare indputtes - hvis det ikke er kendt.
+            if(table.getPlayerDeck_FaceUp().size() > 1){
+                if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2).isFaceUp()){
+                    match.setNoNextInput(true);
+                    table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+                }
             }
-            else{
-                if(!table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() > 2) {
+                if (table.getPlayerDeck_FaceDown().get(2).isFaceUp()) {
                     match.setNoNextInput(true);
                 }
-                table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(0));
                 table.getPlayerDeck_FaceUp().remove(0);
+                for (int i = 0; i < 3; i++) {
+                    table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                    table.getPlayerDeck_FaceDown().remove(0);
+                }
             }
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 2){
+                if(table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+                table.getPlayerDeck_FaceUp().addAll(table.getPlayerDeck_FaceDown());
+                table.getPlayerDeck_FaceDown().clear();
+            }
+            else if (table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 1){
+                if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+                table.getPlayerDeck_FaceUp().remove(0);
+                table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                table.getPlayerDeck_FaceDown().remove(0);
+            }
+        //WIN CONDITION!!!!!
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 0){
+                stockPileIsEmpty = true;
+            }
+
+           // else
+//            if(table.getPlayerDeck_FaceUp().size() > 1) {
+//                table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+//                table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
+//                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+//                checkIfNextCard_InStockPile_IsKnown(match);
+//            }
+//            else{
+//                if(table.getPlayerDeck_FaceUp().size() > 2) {
+//                    if (!table.getPlayerDeck_FaceDown().get(2).isFaceUp()) {
+//                        match.setNoNextInput(true);
+//                    }
+//                }
+//                table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(0));
+//                table.getPlayerDeck_FaceUp().remove(0);
+//            }
         }
 
     //If we move from player deck to foundation pile
@@ -104,9 +148,10 @@ public class Mover implements Move {
             }
         }
         //If match from tablou to fundation
-        else
+        else if(match.fromPile < 7 && match.toPile >= 7)
         {
             //Copy card to fundamental pile
+            table.getFundamentPiles().get(match.toPile - 7).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
             table.getFundamentPiles().get(match.toPile - 7).add(table.getPile(match.fromPile).get(table.getPile(match.fromPile).size() - 1));
             //Set new pile number for card
             table.getTopCard_fromFundamentStack(match.toPile - 7).setBelongToPile(match.toPile);
@@ -247,6 +292,11 @@ public class Mover implements Move {
 
         }
         //else System.out.println("EMPTY PILE!");
+    }
+
+    @Override
+    public boolean getIsStockPileIsEmpty() {
+        return stockPileIsEmpty;
     }
 
     private void setNewCard(Match match) {

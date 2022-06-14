@@ -138,7 +138,7 @@ public class Algorithm implements Solver {
         else if (table.getPlayerDeck_FaceDown().size() == 2) {
             return table.getPlayerDeck_FaceUp().get(0).isFaceUp();
         }
-        else if (table.getPlayerDeck_FaceDown().size() == 1) {
+        else if (table.getPlayerDeck_FaceDown().size() == 1 && table.getPlayerDeck_FaceUp().size() > 1) {
             return table.getPlayerDeck_FaceUp().get(1).isFaceUp();
         }
         else if (table.getPlayerDeck_FaceDown().size() == 0) {
