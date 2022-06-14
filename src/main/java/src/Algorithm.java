@@ -83,20 +83,45 @@ public class Algorithm implements Solver {
         }
 
         else if(checkForMatch_playerDeck()) {
-            return new Match(cardFromPile, cardToPile, true, false);
-        }
+            Match match = new Match(cardFromPile, cardToPile, true, false);
+            if(table.getPlayerDeck_FaceUp().size() > 1){
+                if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() > 2){
+                if (table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
 
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 2){
+                if (table.getPlayerDeck_FaceDown().get(1).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+
+            else if (table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 1){
+                if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+
+            //WIN CONDITION!!!!!
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 0){
+                //TODO Implement this
+            }
+            return match;
+        }
 
         else if(checkForKingMatch_FromStack_ToEmptyPile()){
             return new Match(cardFromPile, cardToPile, true, false);
         }
-//    public Match(int fromPile, int toPile, boolean match, boolean complex, int complexIndex, Card nextPlayerCard, int complexFinalFoundationPile) {
         else if(checkForComplexMatch()){
             return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex, finalComplexPile);
         }
 
         else if(nextStockCardIsKnown()){
-            //System.out.println("next card is known!");
             Match match = new Match(11, -1, false, false);
             match.noNextInput = true;
             if(table.getPlayerDeck_FaceDown().size() > 2){

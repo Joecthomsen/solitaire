@@ -14,7 +14,7 @@ public class Run {
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
         Match match;
-        table.initStartTable("K5,H11,H7,H4,S5,H13,H8");
+        table.initStartTable("H2,K0,H5,S8,K3,R12,K2");
         table.printTable();
         for (int i = 0 ; i < 250 ; i++) {
             match = algorithm.checkForAnyMatch();
@@ -30,6 +30,7 @@ public class Run {
                 }
                 else{
                     System.out.println("Pile is empty...");
+                    move.moveCard_OrPile(match);
                 }
             }
             else if(match.match){
@@ -46,6 +47,7 @@ public class Run {
                 }
                 else{
                     System.out.println("No input needed...");
+                    move.moveCard_OrPile(match);
                 }
             }
             else {

@@ -47,79 +47,16 @@ public class Mover implements Move {
         }
 
     //If we move from player pile to tablou pile
-        if (match.fromPile == 11 && match.toPile < 7 && match.match)
+        else if (match.fromPile == 11 && match.toPile < 7 && match.match)
         {
-            // Hvis face up er større end en, så skal det næste kort bare indputtes - hvis det ikke er kendt.
-            if(table.getPlayerDeck_FaceUp().size() > 1){
-                if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2).isFaceUp()){
-                    match.setNoNextInput(true);
-                    table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                }
-            }
-            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() > 2) {
-                if (table.getPlayerDeck_FaceDown().get(2).isFaceUp()) {
-                    match.setNoNextInput(true);
-                }
-                table.getPlayerDeck_FaceUp().remove(0);
-                for (int i = 0; i < 3; i++) {
-                    table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
-                    table.getPlayerDeck_FaceDown().remove(0);
-                }
-            }
-            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 2){
-                if(table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
-                    match.setNoNextInput(true);
-                }
-                table.getPlayerDeck_FaceUp().addAll(table.getPlayerDeck_FaceDown());
-                table.getPlayerDeck_FaceDown().clear();
-            }
-            else if (table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 1){
-                if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
-                    match.setNoNextInput(true);
-                }
-                table.getPlayerDeck_FaceUp().remove(0);
-                table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
-                table.getPlayerDeck_FaceDown().remove(0);
-            }
-        //WIN CONDITION!!!!!
-            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 0){
-                stockPileIsEmpty = true;
-            }
-
-           // else
-//            if(table.getPlayerDeck_FaceUp().size() > 1) {
-//                table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
-//                table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
-//                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-//                checkIfNextCard_InStockPile_IsKnown(match);
-//            }
-//            else{
-//                if(table.getPlayerDeck_FaceUp().size() > 2) {
-//                    if (!table.getPlayerDeck_FaceDown().get(2).isFaceUp()) {
-//                        match.setNoNextInput(true);
-//                    }
-//                }
-//                table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(0));
-//                table.getPlayerDeck_FaceUp().remove(0);
-//            }
+            table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+        }
+        else if (match.fromPile == 11 && match.toPile > 7 && match.match){
+            table.getFundamentPiles().get(match.fromPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+            table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
         }
 
-    //If we move from player deck to foundation pile
-        else if(match.match && match.fromPile == 11){   //If we move from player pile to foundation pile
-            if(table.getPlayerDeck_FaceUp().size() > 1) {
-                table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
-                table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
-                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                checkIfNextCard_InStockPile_IsKnown(match);
-            }
-            else{
-                if(!table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
-                    match.setNoNextInput(true);
-                }
-                table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(0));
-                table.getPlayerDeck_FaceUp().remove(0);
-            }
-        }
     //If we want to move from tablou to tablou
         else if(match.match && match.toPile < 7 && match.fromPile < 7) {
 

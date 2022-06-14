@@ -82,7 +82,15 @@ class MoverTest {
         for (int i = 0 ; i < 7 ; i++) {
             match = algorithm.checkForAnyMatch();
             match.nextPlayerCard = table.stringToCardConverter("S12");
-            move.insertNextCardFromInput(match);
+            if(match.noNextInput) {
+                move.moveCard_OrPile(match);
+            }
+            else {
+                move.insertNextCardFromInput(match);
+            }
+            move.moveCard_OrPile(match);
+            assertFalse(match.noNextInput);
+            //move.insertNextCardFromInput(match);
         }
         for (int i = 0 ; i < 7 ; i++) {
             match = algorithm.checkForAnyMatch();
