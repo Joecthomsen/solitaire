@@ -115,7 +115,7 @@ public class Mover implements Move {
             if(table.getAllPiles().get(match.fromPile).isEmpty()){
                 match.setLastCardInPile(true);
             }
-            else if(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() -1 ).isFaceUp()){
+            else if(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() -1).isFaceUp()){
                 match.setNoNextInput(true);
             }
         }
