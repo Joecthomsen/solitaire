@@ -93,5 +93,18 @@ public class Match {
         this.noNextInput = noNextInput;
     }
 
-
+    @Override
+    public String toString() {
+        return "Match{" +
+                "fromPile=" + fromPile +
+                ", toPile=" + toPile +
+                ", match=" + match +
+                ", complex=" + complex +
+                ", complexIndex=" + complexIndex +
+                ", complexFinalFoundationPile=" + complexFinalFoundationPile +
+                ", nextPlayerCard=" + nextPlayerCard +
+                ", lastCardInPile=" + lastCardInPile +
+                ", noNextInput=" + noNextInput +
+                '}';
+    }
 }
