@@ -82,7 +82,7 @@ public class Algorithm implements Solver {
             return match;
         }
 
-        else if(checkForMatchBottomPiles()){
+        else if(checkForMatchBottomPiles()){    //TODO denne funktions skaber lidt problemer
             int index = 0;
             Match match = new Match(cardFromPile, cardToPile, true, false);
             if(table.getAllPiles().get(cardFromPile).size() < 2){
@@ -168,6 +168,12 @@ public class Algorithm implements Solver {
                     match.setNoNextInput(true);
                 }
             }
+            else if(table.getPlayerDeck_FaceDown().size() == 0 && table.getPlayerDeck_FaceUp().size() > 2){
+                if(table.getPlayerDeck_FaceUp().get(2).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            //Lav for facedown = 2, 1 og 0
             return match;
         }
     }

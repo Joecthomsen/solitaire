@@ -64,7 +64,7 @@ class RunSimulation {
                 match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
                 randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
                 cards.remove(ranNum);
-                move.insertNextCardFromInput(match);
+                //move.insertNextCardFromInput(match);
             }
             else if (match.match && !match.complex) {
                 System.out.println("Move from " + match.fromPile + " to " + match.toPile);
@@ -74,7 +74,7 @@ class RunSimulation {
                 match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
                 randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
                 cards.remove(ranNum);
-                move.insertNextCardFromInput(match);
+                //move.insertNextCardFromInput(match);
             }
             else {
                 System.out.println("Move complex from pile " + match.fromPile + " at index " + match.complexIndex + " to pile " + match.toPile);
@@ -84,7 +84,7 @@ class RunSimulation {
                     match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
                     randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
                     cards.remove(ranNum);
-                    move.insertNextCardFromInput(match);
+                    //move.insertNextCardFromInput(match);
                 }
             }
             table.printTable();
@@ -154,6 +154,7 @@ class RunSimulation {
 
 
             currentMovesTaken = 0;
+            table.printTable();
             for (int i = 0 ; i < 250 ; i++) {
                 int total = 0;
                 for (int j = 0; j < 4; j++) total += table.getFundamentPiles().get(j).size();
@@ -267,49 +268,116 @@ class RunSimulation {
                 //System.out.println("-----------------------------------------");
                 //assertEquals(52, amountOfFaceUp+cards.size());
 
-
-
+                System.out.println("Round: " + i);
                 Match match = algorithm.checkForAnyMatch();
-                if (match.match && !match.complex) {
+                //No match - Turn card from player pile
+                if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("No match on the table, turn three cards from the stock pile over and enter the next card");
+                    Card card = cards.get(0);
+                    card.setFaceUp(true);
+                    match.nextPlayerCard = card;
                     move.moveCard_OrPile(match);
-                    if(!match.lastCardInPile && !match.noNextInput) {
-                        match.nextPlayerCard = cards.get(0);
-                        cards.remove(0);
-                        move.insertNextCardFromInput(match);
-                    }
-                    else{
-                        //System.out.println("Pile empty..");
-                    }
+                    table.printTable();
                 }
-                else if(match.match){
-                    //System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile);
-                    //System.out.println("Then move newly freed card in pile " + match.fromPile + "to foundation pile " + (match.complexFinalFoundationPile - 1));
+                //Match from player pile to tablou - next input
+                else if(match.fromPile == 11 && match.toPile < 7 && match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("There is a match from the player pile top tablou pile " + match.toPile);
+                    System.out.println("Move that and enter the next card in the player pile");
+                    Card card = cards.get(0);
+                    card.setFaceUp(true);
+                    match.nextPlayerCard = card;
                     move.moveCard_OrPile(match);
-                    if(!match.lastCardInPile && !match.noNextInput) {
-                        match.nextPlayerCard = cards.get(0);
-                        cards.remove(0);
-                        move.insertNextCardFromInput(match);
-                    }
-                    else{
-                        //System.out.println("Pile empty..");
-                    }
+                    table.printTable();
                 }
-                else {
-                    if (!match.noNextInput && !match.lastCardInPile && !move.getIsStockPileIsEmpty()) {
-                        match.nextPlayerCard = cards.get(0);
-                        cards.remove(0);
-                        move.insertNextCardFromInput(match);
-                    }
-                    else if (!move.getIsStockPileIsEmpty()){
-                        //System.out.println("MULTIPLE MOVES DETECTED!!!");
-                        //System.out.println("*** Turn over card in player deck ***");
-                        //System.out.println("Test, card may be: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
-                        move.moveCard_OrPile(match);
-                    }
-                    else{
-                        System.out.println("Stock pile is empty");
-                    }
+                //Match from stock to foundation - next input
+                else if(match.fromPile == 11 && match.toPile >= 7 && match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("There is a match from the stock pile to foundation pile " + (match.toPile - 7));
+                    System.out.println("Move that and enter the next card in the player pile");
+                    Card card = cards.get(0);
+                    card.setFaceUp(true);
+                    match.nextPlayerCard = card;
+                    move.moveCard_OrPile(match);
                 }
+                //Match from stock to foundation - no next input
+                else if(match.fromPile == 11 && match.toPile < 7 && match.match && match.noNextInput){
+                    System.out.println("Take the last card in the face up stock pile, and move it to tablou pile: " + match.toPile);
+                    move.moveCard_OrPile(match);
+                    //TODO evt placeres stoppere her, så man får ét move af gangen
+                }
+                //Match from tablou to foundation - no next input
+                else if(match.fromPile < 7 && match.toPile > 6 && match.match && match.noNextInput && !match.lastCardInPile){
+                    System.out.println("Move match from tablou pile pile: " + match.fromPile + " to foundation pile: " + (match.toPile - 7));
+                    System.out.println("That is the last card in the tablou pile number " + match.fromPile);
+                    move.moveCard_OrPile(match);
+                }
+                //Match from tablou to foundation - next input
+                else if(match.fromPile < 7 && match.toPile > 6 && match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("Move match from tabou pile: " + match.fromPile + " to foundation pile: " + (match.toPile - 7));
+                    System.out.println("Then turn over the face down card in pile: " + match.fromPile + " and enter the input.");
+                    Card card = cards.get(0);
+                    card.setFaceUp(true);
+                    match.nextPlayerCard = card;
+                    move.moveCard_OrPile(match);
+                }
+                //Match from tablou to toblou - next input
+                else if(match.fromPile < 7 && match.toPile < 7 && match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("Move match from tablou pile: " + match.fromPile + " to tablou pile: " + match.toPile);
+                    System.out.println("After that, turn over the face down card in tablou pile: " + match.fromPile + " and enter the new cards");
+                    Card card = cards.get(0);
+                    card.setFaceUp(true);
+                    match.nextPlayerCard = card;
+                    move.moveCard_OrPile(match);
+                    table.printTable();
+                }
+                //Match from tablou to tablou - no next input
+                else if(match.fromPile < 7 && match.toPile < 7 && match.match && match.noNextInput && !match.lastCardInPile){
+                    System.out.println("Move match from tablou pile: " + match.fromPile + " to tablou pile: " + match.toPile);
+                    System.out.println("The pile is empty after that...");
+                    move.moveCard_OrPile(match);
+                }
+
+
+//                Match match = algorithm.checkForAnyMatch();
+//                if (match.match && !match.complex) {
+//                    move.moveCard_OrPile(match);
+//                    if(!match.lastCardInPile && !match.noNextInput) {
+//                        match.nextPlayerCard = cards.get(0);
+//                        cards.remove(0);
+//                        move.insertNextCardFromInput(match);
+//                    }
+//                    else{
+//                        //System.out.println("Pile empty..");
+//                    }
+//                }
+//                else if(match.match){
+//                    //System.out.println("Complex match, split pile " + match.fromPile + " at index " + match.complexIndex + " and move to " + match.toPile);
+//                    //System.out.println("Then move newly freed card in pile " + match.fromPile + "to foundation pile " + (match.complexFinalFoundationPile - 1));
+//                    move.moveCard_OrPile(match);
+//                    if(!match.lastCardInPile && !match.noNextInput) {
+//                        match.nextPlayerCard = cards.get(0);
+//                        cards.remove(0);
+//                        move.insertNextCardFromInput(match);
+//                    }
+//                    else{
+//                        //System.out.println("Pile empty..");
+//                    }
+//                }
+//                else {
+//                    if (!match.noNextInput && !match.lastCardInPile && !move.getIsStockPileIsEmpty()) {
+//                        match.nextPlayerCard = cards.get(0);
+//                        cards.remove(0);
+//                        move.insertNextCardFromInput(match);
+//                    }
+//                    else if (!move.getIsStockPileIsEmpty()){
+//                        //System.out.println("MULTIPLE MOVES DETECTED!!!");
+//                        //System.out.println("*** Turn over card in player deck ***");
+//                        //System.out.println("Test, card may be: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+//                        move.moveCard_OrPile(match);
+//                    }
+//                    else{
+//                        System.out.println("Stock pile is empty");
+//                    }
+//                }
 
                 //System.out.println("");
                 lastMove = "FromPile: " + Integer.toString(match.fromPile) + ", " + "ToPile: " + Integer.toString(match.toPile);
