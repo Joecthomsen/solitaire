@@ -87,16 +87,12 @@ public class Algorithm implements Solver {
             Match match = new Match(cardFromPile, cardToPile, true, false);
             if(table.getAllPiles().get(cardFromPile).size() < 2){
                 match.setNoNextInput(true);
+                match.lastCardInPile = true;
                 return match;
             }
-            for (int i = 0 ; i < table.getAllPiles().get(cardFromPile).size() ; i++){       //TODO Get buttom faceup cards, perhaps make a funsction
-                if (table.getAllPiles().get(cardFromPile).get(i).isFaceUp()){
-                    index = i;
-                    break;
-                }
-            }
-            if(table.getAllPiles().get(cardFromPile).get(index - 1).isFaceUp()){
+            else if(table.getAllPiles().get(cardFromPile).get(0).isFaceUp()){
                 match.setNoNextInput(true);
+                match.setLastCardInPile(true);
             }
             return match;
         }
@@ -108,7 +104,7 @@ public class Algorithm implements Solver {
         else if(checkForMatch_playerDeck()) {
             Match match = new Match(cardFromPile, cardToPile, true, false);
             if(table.getPlayerDeck_FaceUp().size() > 1){
-                if (table.getPlayerDeck_FaceDown().get(table.getPlayerDeck_FaceUp().size() -1 ).isFaceUp()){
+                if (table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2 ).isFaceUp()){
                     match.setNoNextInput(true);
                 }
             }
@@ -159,12 +155,12 @@ public class Algorithm implements Solver {
                 }
             }
             else if (table.getPlayerDeck_FaceDown().size() == 2){
-                if (table.getPlayerDeck_FaceDown().get(1).isFaceUp()){
+                if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
                     match.setNoNextInput(true);
                 }
             }
             else if(table.getPlayerDeck_FaceDown().size() == 1){
-                if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
+                if (table.getPlayerDeck_FaceUp().get(1).isFaceUp()){
                     match.setNoNextInput(true);
                 }
             }

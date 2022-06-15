@@ -26,7 +26,81 @@ class MoverTest {
         match = algorithm.checkForAnyMatch();
         assertFalse(match.match, "Assert no match");
         assertTrue(match.noNextInput);
+        System.out.printf("");
+    //Check when 2 cards left at the end
+        table = new TableIO();
+        algorithm = new Algorithm(table);
+        move = new Mover(table);
+        table.initStartTable("H13,H13,K13,R13,R13,H13,R13");
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match, "Assert no match");
+        match.nextPlayerCard = table.stringToCardConverter("K12");
+        move.moveCard_OrPile(match);
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
         match.nextPlayerCard = table.stringToCardConverter("K13");
+        move.moveCard_OrPile(match);
+        for(int i = 0 ; i < 7 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            assertFalse(match.match, "Assert no match");
+            match.nextPlayerCard = table.stringToCardConverter("K13");
+            move.moveCard_OrPile(match);
+        }
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match, "Assert no match");
+        match.nextPlayerCard = table.stringToCardConverter("K9");
+        move.moveCard_OrPile(match);
+        assertEquals(8,table.getPlayerDeck_FaceUp().get(2).getValue(), "Assert the correct cards has been inserted");
+        assertEquals(3, table.getPlayerDeck_FaceUp().size(), "Assert the size of stock is correct");
+        for(int i = 0 ; i < 6 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            assertFalse(match.match, "Assert no match");
+            match.nextPlayerCard = table.stringToCardConverter("K9");
+            move.moveCard_OrPile(match);
+        }
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match, "Assert no match");
+        match.nextPlayerCard = table.stringToCardConverter("K8");
+        move.moveCard_OrPile(match);
+        assertEquals(-1, table.getPlayerDeck_FaceUp().get(0).getValue() , "Assert first card is still facedown");
+        assertEquals(12, table.getPlayerDeck_FaceUp().get(1).getValue(), "Assert that second card is moved correctly");
+        assertEquals(7, table.getPlayerDeck_FaceUp().get(2).getValue(), "Assert third card is moved correctly");
+        System.out.printf("");
+    //Another test, with 1 card left at the end
+        table = new TableIO();
+        algorithm = new Algorithm(table);
+        move = new Mover(table);
+        table.initStartTable("H13,H13,K13,R13,R13,H13,R13");
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match, "Assert no match");
+        match.nextPlayerCard = table.stringToCardConverter("K12");
+        move.moveCard_OrPile(match);
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match);
+        match.nextPlayerCard = table.stringToCardConverter("H11");
+        move.moveCard_OrPile(match);
+        match.nextPlayerCard = table.stringToCardConverter("K13");
+        move.moveCard_OrPile(match);
+        for (int i = 0 ; i < 7 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            assertFalse(match.match, "Assert that there is no match");
+            match.nextPlayerCard = table.stringToCardConverter("K13");
+            move.moveCard_OrPile(match);
+        }
+//        match = algorithm.checkForAnyMatch();
+//        assertFalse(match.match, "Assert that there is no match");
+//        match.nextPlayerCard = table.stringToCardConverter("K9");
+//        move.moveCard_OrPile(match);
+//        System.out.printf("");
+        for (int i = 0 ; i < 7 ; i++) {
+            match = algorithm.checkForAnyMatch();
+            assertFalse(match.match, "Assert that there is no match");
+            match.nextPlayerCard = table.stringToCardConverter("K9");
+            move.moveCard_OrPile(match);
+        }
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.match, "Assert that there is no match");
+        match.nextPlayerCard = table.stringToCardConverter("K9");
         move.moveCard_OrPile(match);
         System.out.printf("");
     }

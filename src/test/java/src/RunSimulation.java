@@ -274,6 +274,7 @@ class RunSimulation {
                 if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
                     System.out.println("No match on the table, turn three cards from the stock pile over and enter the next card");
                     Card card = cards.get(0);
+                    cards.remove(0);
                     card.setFaceUp(true);
                     match.nextPlayerCard = card;
                     move.moveCard_OrPile(match);
@@ -284,6 +285,7 @@ class RunSimulation {
                     System.out.println("There is a match from the player pile top tablou pile " + match.toPile);
                     System.out.println("Move that and enter the next card in the player pile");
                     Card card = cards.get(0);
+                    cards.remove(0);
                     card.setFaceUp(true);
                     match.nextPlayerCard = card;
                     move.moveCard_OrPile(match);
@@ -294,6 +296,7 @@ class RunSimulation {
                     System.out.println("There is a match from the stock pile to foundation pile " + (match.toPile - 7));
                     System.out.println("Move that and enter the next card in the player pile");
                     Card card = cards.get(0);
+                    cards.remove(0);
                     card.setFaceUp(true);
                     match.nextPlayerCard = card;
                     move.moveCard_OrPile(match);
@@ -315,6 +318,7 @@ class RunSimulation {
                     System.out.println("Move match from tabou pile: " + match.fromPile + " to foundation pile: " + (match.toPile - 7));
                     System.out.println("Then turn over the face down card in pile: " + match.fromPile + " and enter the input.");
                     Card card = cards.get(0);
+                    cards.remove(0);
                     card.setFaceUp(true);
                     match.nextPlayerCard = card;
                     move.moveCard_OrPile(match);
@@ -324,6 +328,7 @@ class RunSimulation {
                     System.out.println("Move match from tablou pile: " + match.fromPile + " to tablou pile: " + match.toPile);
                     System.out.println("After that, turn over the face down card in tablou pile: " + match.fromPile + " and enter the new cards");
                     Card card = cards.get(0);
+                    cards.remove(0);
                     card.setFaceUp(true);
                     match.nextPlayerCard = card;
                     move.moveCard_OrPile(match);

@@ -113,7 +113,7 @@ public class Mover implements Move {
                     table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
                     if (!table.getPlayerDeck_FaceUp().isEmpty()) {
                         table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                        match.nextPlayerCard.setBelongToPile(match.toPile);
+                        match.nextPlayerCard.setBelongToPile(match.fromPile);
                         table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
                     }
                 }
@@ -121,7 +121,7 @@ public class Mover implements Move {
                     table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                     table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
                     table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                    match.nextPlayerCard.setBelongToPile(match.toPile);
+                    match.nextPlayerCard.setBelongToPile(match.fromPile);
                     table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
 
                 }
