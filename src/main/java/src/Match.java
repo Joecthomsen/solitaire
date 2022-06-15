@@ -15,6 +15,8 @@ public class Match {
 
     boolean noNextInput = false;
 
+    boolean stockPileIsEmpty = false;
+
     //boolean nextPlayerDeckCardIsKnown;
 
     public Match(boolean match) {
@@ -106,5 +108,13 @@ public class Match {
                 ", lastCardInPile=" + lastCardInPile +
                 ", noNextInput=" + noNextInput +
                 '}';
+    }
+
+    public boolean isStockPileIsEmpty() {
+        return stockPileIsEmpty;
+    }
+
+    public void setStockPileIsEmpty(boolean stockPileIsEmpty) {
+        this.stockPileIsEmpty = stockPileIsEmpty;
     }
 }

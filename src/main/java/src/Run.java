@@ -16,12 +16,16 @@ public class Run {
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
         Match match;
-        table.initStartTable("K13,K13,R13,R13,H13,K13,H12");
+        table.initStartTable("S10,R9,S3,S5,H11,H4,H6");
         table.printTable();
         for (int i = 0 ; i < 250 ; i++) {
             System.out.println("Round: " + i);
             match = algorithm.checkForAnyMatch();
             //No match - Turn card from player pile
+            if(!match.match && match.stockPileIsEmpty){
+                System.out.println("*************** Game Over!!! ***************");
+                break;
+            }
             if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
                 System.out.println("No match on the table, turn three cards from the stock pile over and enter the next card");
                 String input = scanner.next();
@@ -57,6 +61,12 @@ public class Run {
                 System.out.println("Take the last card in the face up stock pile, and move it to tablou pile: " + match.toPile);
                 move.moveCard_OrPile(match);
                 //TODO evt placeres stoppere her, så man får ét move af gangen
+            }
+            //If we turn three new cards in the player deck and know the next card
+            else if(match.fromPile == 11 && !match.match && match.noNextInput){
+                System.out.println("Turn over three new cards in stock pile");
+                move.moveCard_OrPile(match);
+                System.out.printf("The card is already known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
             }
             //Match from tablou to foundation - no next input
             else if(match.fromPile < 7 && match.toPile > 6 && match.match && match.noNextInput && !match.lastCardInPile){

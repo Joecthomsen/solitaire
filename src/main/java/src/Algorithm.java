@@ -164,12 +164,14 @@ public class Algorithm implements Solver {
                     match.setNoNextInput(true);
                 }
             }
-            else if(table.getPlayerDeck_FaceDown().size() == 0 && table.getPlayerDeck_FaceUp().size() > 2){
+            else if(table.getPlayerDeck_FaceDown().size() == 0 && table.getPlayerDeck_FaceUp().size() > 3){
                 if(table.getPlayerDeck_FaceUp().get(2).isFaceUp()){
                     match.setNoNextInput(true);
                 }
             }
-            //Lav for facedown = 2, 1 og 0
+            else if(table.getPlayerDeck_FaceDown().size() == 0 && table.getPlayerDeck_FaceUp().size() <= 3){
+                match.setStockPileIsEmpty(true);
+            }
             return match;
         }
     }

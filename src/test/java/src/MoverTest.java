@@ -84,6 +84,7 @@ class MoverTest {
         for (int i = 0 ; i < 7 ; i++) {
             match = algorithm.checkForAnyMatch();
             assertFalse(match.match, "Assert that there is no match");
+            assertFalse(match.stockPileIsEmpty);
             match.nextPlayerCard = table.stringToCardConverter("K13");
             move.moveCard_OrPile(match);
         }
@@ -95,6 +96,7 @@ class MoverTest {
         for (int i = 0 ; i < 7 ; i++) {
             match = algorithm.checkForAnyMatch();
             assertFalse(match.match, "Assert that there is no match");
+            assertFalse(match.stockPileIsEmpty);
             match.nextPlayerCard = table.stringToCardConverter("K9");
             move.moveCard_OrPile(match);
         }
@@ -102,6 +104,42 @@ class MoverTest {
         assertFalse(match.match, "Assert that there is no match");
         match.nextPlayerCard = table.stringToCardConverter("K9");
         move.moveCard_OrPile(match);
+        System.out.printf("");
+    //Test near game-end (small stock pile)
+        table = new TableIO();
+        algorithm = new Algorithm(table);
+        move = new Mover(table);
+        table.initStartTable("H13,H13,K13,R13,R13,H13,R13");
+        for (int i = 0 ; i < 21 ; i++){
+            table.getPlayerDeck_FaceDown().remove(0);
+        }
+        for (int i = 0 ; i < 3 ; i++) {
+            table.getPlayerDeck_FaceDown().get(i).setFaceUp(true);
+            table.getPlayerDeck_FaceDown().get(i).setBelongToPile(11);
+            table.getPlayerDeck_FaceDown().get(i).setColor(1);
+            table.getPlayerDeck_FaceDown().get(i).setValue((i+1)*3);
+            table.getPlayerDeck_FaceDown().get(i).setType(i);
+        }
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.noNextInput, "Assert that next input is known");
+        move.moveCard_OrPile(match);
+        match = algorithm.checkForAnyMatch();
+        System.out.printf("");
+    }
+
+    @Test
+    void moveFromTablouToFoundation_withInput(){
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        Move move = new Mover(table);
+        Match match;
+        table.initStartTable("H13,H13,K13,R0,R13,H13,R13");
+        match = algorithm.checkForAnyMatch();
+        assertFalse(match.noNextInput);
+        match.nextPlayerCard = table.stringToCardConverter("H9");
+        move.moveCard_OrPile(match);
+        assertEquals(3, table.getAllPiles().get(3).size(), "Assert correct size of pile");
+        assertEquals(8, table.getAllPiles().get(3).get(2).getValue(), "Assert that the correct card is inserted");
         System.out.printf("");
     }
 }

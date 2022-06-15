@@ -271,6 +271,10 @@ class RunSimulation {
                 System.out.println("Round: " + i);
                 Match match = algorithm.checkForAnyMatch();
                 //No match - Turn card from player pile
+                if(!match.match && match.stockPileIsEmpty){
+                    System.out.println("*************** Game Over!!! ***************");
+                    break;
+                }
                 if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
                     System.out.println("No match on the table, turn three cards from the stock pile over and enter the next card");
                     Card card = cards.get(0);
@@ -306,6 +310,17 @@ class RunSimulation {
                     System.out.println("Take the last card in the face up stock pile, and move it to tablou pile: " + match.toPile);
                     move.moveCard_OrPile(match);
                     //TODO evt placeres stoppere her, så man får ét move af gangen
+                }
+                //If we turn three new cards in the player deck and know the next card
+                else if(match.fromPile == 11 && !match.match && match.noNextInput){
+                    System.out.println("Turn over three new cards in stock pile");
+                    move.moveCard_OrPile(match);
+                    if(!table.getPlayerDeck_FaceUp().isEmpty()) {
+                        System.out.printf("The card is already known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                    }
+                    else{
+                        System.out.println("Stock pile is empty..");
+                    }
                 }
                 //Match from tablou to foundation - no next input
                 else if(match.fromPile < 7 && match.toPile > 6 && match.match && match.noNextInput && !match.lastCardInPile){
