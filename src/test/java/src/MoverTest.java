@@ -142,6 +142,27 @@ class MoverTest {
         assertEquals(8, table.getAllPiles().get(3).get(2).getValue(), "Assert that the correct card is inserted");
         System.out.printf("");
     }
+
+    @Test
+    void moveKing_fromStock_ToEmptyPile(){
+        Table table = new TableIO();
+        Algorithm algorithm = new Algorithm(table);
+        Move move = new Mover(table);
+        Match match;
+        table.initStartTable("K12,H12,K6,R12,R6,H6,R6");
+        table.getAllPiles().get(4).clear();
+        match = algorithm.checkForAnyMatch();
+        match.nextPlayerCard = table.stringToCardConverter("K13");
+        move.moveCard_OrPile(match);
+        match = algorithm.checkForAnyMatch();
+        assertTrue(match.match, "Assert match");
+        assertEquals(4, match.toPile, "Assert to pile");
+        assertEquals(11, match.fromPile, "Assert from pile");
+        match.nextPlayerCard = table.stringToCardConverter("K6");
+        move.moveCard_OrPile(match);
+        System.out.println("");
+
+    }
 }
 
 

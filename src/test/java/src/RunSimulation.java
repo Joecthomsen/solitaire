@@ -194,14 +194,20 @@ class RunSimulation {
 
                 Match match = algorithm.checkForAnyMatch();
                 System.out.println("");
-                //No match - Turn card from player pile
+                //No match - Turn card from player pile - next input
                 if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
-                    System.out.println("Take next stock card!");
+                    System.out.println("Turn over three new cards in the stock pile");
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
                     match.nextPlayerCard = card;
                     move.moveCard_OrPile(match);
+                }
+                //No match - Turn card from player pile - no next input
+                else if(match.fromPile == 11 && !match.match && match.noNextInput && !match.lastCardInPile){
+                    System.out.println("Turn over three new cards in the stock pile");
+                    move.moveCard_OrPile(match);
+                    //System.out.printf("The next card you turn over is known and is: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                 }
                 //Match from player pile to tablou - next input
                 else if(match.fromPile == 11 && match.toPile < 7 && match.match && !match.noNextInput && !match.lastCardInPile){
@@ -222,10 +228,20 @@ class RunSimulation {
                     move.moveCard_OrPile(match);
                 }
                 //Match from stock to foundation - no next input
-                else if(match.fromPile == 11 && match.toPile < 7 && match.match && match.noNextInput){
+                else if(match.fromPile == 11 && match.toPile > 6 && match.match && match.noNextInput){
                     System.out.println("move from " + match.fromPile + " to " + match.toPile);
                     move.moveCard_OrPile(match);
-                    //TODO evt placeres stoppere her, så man får ét move af gangen
+                }
+                //Match from stock to tablou - next input
+                else if(match.fromPile == 11 && match.toPile < 7 && match.match && !match.noNextInput){
+                    System.out.println("Move from stock to tablou pile: " + match.toPile);
+                    move.moveCard_OrPile(match);
+                }
+                //Match from stock to tablou - no next input
+                else if(match.fromPile == 11 && match.toPile < 7 && match.match){
+                    System.out.println("Move from stock to tablou pile: " + match.toPile);
+                    move.moveCard_OrPile(match);
+                    //System.out.println("The next card in stock pile is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                 }
                 //Match from tablou to foundation - no next input
                 else if(match.fromPile < 7 && match.toPile > 6 && match.match && match.noNextInput && !match.lastCardInPile){

@@ -162,6 +162,10 @@ public class Mover implements Move {
         else if (match.match) {
             //Match from player deck
             if (match.fromPile == 11 && match.toPile < 7) {
+                if(table.getPlayerDeck_FaceUp().size() > 1){
+                    table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                    table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+                }
                 if (table.getPlayerDeck_FaceUp().size() == 1) {
                     table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(0));
                     table.getPlayerDeck_FaceUp().clear();
@@ -176,6 +180,12 @@ public class Mover implements Move {
             else if(match.fromPile < 7){
                 table.getAllPiles().get(match.toPile).addAll(table.getAllPiles().get(match.fromPile));
                 table.getAllPiles().get(match.fromPile).clear();
+            }
+            //Stock to foundation
+            else{
+                table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
+                table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
             }
         }
     }
@@ -192,7 +202,6 @@ public class Mover implements Move {
             }
         }
     }
-
 
     @Override
     public boolean getIsStockPileIsEmpty() {

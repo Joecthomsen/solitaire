@@ -134,7 +134,11 @@ public class Algorithm implements Solver {
 
         else if(checkForKingMatch_FromStack_ToEmptyPile()){
             Match match = new Match(cardFromPile, cardToPile, true, false);
-            if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).isFaceUp()){
+            if(table.getPlayerDeck_FaceUp().size() == 1){
+                match.setLastCardInPile(true);
+                match.setNoNextInput(true);
+            }
+            if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2).isFaceUp()){
                 match.setNoNextInput(true);
             }
             return match;
