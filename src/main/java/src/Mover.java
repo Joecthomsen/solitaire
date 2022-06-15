@@ -109,6 +109,7 @@ public class Mover implements Move {
             //If match from stock pile
             if (match.fromPile == 11) {
                 if (match.toPile < 7) {
+                    table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).setBelongToPile(match.toPile);
                     table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                     table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
                     if (!table.getPlayerDeck_FaceUp().isEmpty()) {

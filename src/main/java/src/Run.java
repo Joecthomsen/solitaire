@@ -16,7 +16,7 @@ public class Run {
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
         Match match;
-        table.initStartTable("S10,R9,S3,S5,H11,H4,H6");
+        table.initStartTable("S10,R9,S7,R8,H11,H10,H6");
         table.printTable();
         for (int i = 0 ; i < 250 ; i++) {
             System.out.println("Round: " + i);
@@ -96,7 +96,7 @@ public class Run {
                 table.printTable();
             }
             //Match from tablou to tablou - no next input
-            else if(match.fromPile < 7 && match.toPile < 7 && match.match && match.noNextInput && !match.lastCardInPile){
+            else if(match.fromPile < 7 && match.toPile < 7 && match.match &&  match.lastCardInPile){
                 System.out.println("Move match from tablou pile: " + match.fromPile + " to tablou pile: " + match.toPile);
                 System.out.println("The pile is empty after that...");
                 move.moveCard_OrPile(match);

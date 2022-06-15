@@ -28,5 +28,7 @@ public class TestGames {
         match = algorithm.checkForAnyMatch();
         match.nextPlayerCard = table.stringToCardConverter("R9");
         move.moveCard_OrPile(match);
+
+        System.out.printf("");
     }
 }

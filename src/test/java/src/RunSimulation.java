@@ -95,7 +95,7 @@ class RunSimulation {
     @Test
     void testManyGames() {
         String lastMove = "";
-        int amountOfGamesToRun = 1000;
+        int amountOfGamesToRun = 1;
         int totalMovesTaken = 0;
         int currentMovesTaken = 0;
         int gamesWon = 0;
@@ -155,7 +155,9 @@ class RunSimulation {
 
 
             currentMovesTaken = 0;
-            for (int i = 0 ; i < 1000 ; i++) {
+            for (int i = 0 ; i < 200 ; i++) {
+                table.printTable();
+                System.out.println("**** Round " + (i+1) + " ****");
                 int total = 0;
                 for (int j = 0; j < 4; j++) total += table.getFundamentPiles().get(j).size();
                 if (total >= 52) {
@@ -191,8 +193,10 @@ class RunSimulation {
                 //assertEquals(cards.size(), unknownCards);
 
                 Match match = algorithm.checkForAnyMatch();
+                System.out.println("");
                 //No match - Turn card from player pile
                 if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("Take next stock card!");
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -201,6 +205,7 @@ class RunSimulation {
                 }
                 //Match from player pile to tablou - next input
                 else if(match.fromPile == 11 && match.toPile < 7 && match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -209,6 +214,7 @@ class RunSimulation {
                 }
                 //Match from stock to foundation - next input
                 else if(match.fromPile == 11 && match.toPile >= 7 && match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -217,15 +223,18 @@ class RunSimulation {
                 }
                 //Match from stock to foundation - no next input
                 else if(match.fromPile == 11 && match.toPile < 7 && match.match && match.noNextInput){
+                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
                     move.moveCard_OrPile(match);
                     //TODO evt placeres stoppere her, så man får ét move af gangen
                 }
                 //Match from tablou to foundation - no next input
                 else if(match.fromPile < 7 && match.toPile > 6 && match.match && match.noNextInput && !match.lastCardInPile){
+                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
                     move.moveCard_OrPile(match);
                 }
                 //Match from tablou to foundation - next input
                 else if(match.fromPile < 7 && match.toPile > 6 && match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -234,6 +243,7 @@ class RunSimulation {
                 }
                 //Match from tablou to toblou - next input
                 else if(match.fromPile < 7 && match.toPile < 7 && match.match && !match.noNextInput && !match.lastCardInPile){
+                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -241,8 +251,8 @@ class RunSimulation {
                     move.moveCard_OrPile(match);
                 }
                 //Match from tablou to tablou - no next input
-                else if(match.fromPile < 7 && match.toPile < 7 && match.match && match.noNextInput && !match.lastCardInPile){
-
+                else if(match.fromPile < 7 && match.toPile < 7 && match.match && match.noNextInput && match.lastCardInPile){
+                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
                     move.moveCard_OrPile(match);
                 }
 
