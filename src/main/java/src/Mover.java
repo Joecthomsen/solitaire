@@ -37,9 +37,7 @@ public class Mover implements Move {
             for (int i = match.complexIndex ; i < table.getAllPiles().get(match.fromPile).size(); i++) {
                 cardsToMove.add(table.getAllPiles().get(match.fromPile).get(i));
             }
-            if(cardsToMove.size() > 2) {
-                System.out.println("");
-            }
+
 
             for (int i = 0 ; i < cardsToMove.size() ; i++){
                 table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
@@ -52,9 +50,6 @@ public class Mover implements Move {
             table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
 
             int type = table.getFundamentPiles().get(match.complexFinalFoundationPile).get(table.getFundamentPiles().get(match.complexFinalFoundationPile).size() - 1).getType();
-            if(type != match.complexFinalFoundationPile){
-                System.out.printf("");
-            }
         }
         else if(match.complex){
             //First step tablou to tablou
@@ -184,7 +179,7 @@ public class Mover implements Move {
                 table.getPlayerDeck_FaceDown().clear();
             }
             else if (table.getPlayerDeck_FaceDown().size() == 0 && table.getPlayerDeck_FaceUp().size() == 0){
-                System.out.println("Stock pile empty");
+  //              System.out.println("Stock pile empty");
                 //TODO implement this
             }
 

@@ -16,9 +16,11 @@ class RunSimulation {
     void testManyGames() {
         String lastMove = "";
         int amountOfGamesToRun = 1000;
+        int maximumHandsPrGame = 500;
         int totalMovesTaken = 0;
         int currentMovesTaken = 0;
         int gamesWon = 0;
+        int gamesLost = 0;
         boolean printTable = false;
 
         for (int k = 0; k < amountOfGamesToRun; k++) {
@@ -73,12 +75,9 @@ class RunSimulation {
                 cards.remove(0);
             }
             table.initStartTable(startTable);
-
-
-
             Match match;
             currentMovesTaken = 0;
-            for (int i = 0 ; i < 999 ; i++) {
+            for (int i = 0 ; i < maximumHandsPrGame ; i++) {
 
                 if(printTable) {
                     table.printTable();
@@ -114,15 +113,14 @@ class RunSimulation {
                     if (!table.getPlayerDeck_FaceUp().get(j).isFaceUp()) unknownCards++;
                 }
 
-                if (unknownCards != cards.size()) {
-                    System.out.print("");
-                }
+//                if (unknownCards != cards.size()) {
+//                    System.out.print("");
+//                }
+//
+//                if (cards.size() == 0) {
+//                    System.out.printf("");
+//                }
 
-                if (cards.size() == 0) {
-                    System.out.printf("");
-                }
-
-                //assertEquals(cards.size(), unknownCards);
                 int totalCardsInTablou = table.getAllPiles().get(0).size() + table.getAllPiles().get(1).size() + table.getAllPiles().get(2).size() + table.getAllPiles().get(3).size() + table.getAllPiles().get(4).size() + table.getAllPiles().get(5).size() + table.getAllPiles().get(6).size();
                 int totalCardsInFoundation = table.getFundamentPiles().get(0).size() + table.getFundamentPiles().get(1).size() + table.getFundamentPiles().get(2).size() + table.getFundamentPiles().get(3).size() - 4;
                 int totalCardsInStock = table.getPlayerDeck_FaceUp().size() + table.getPlayerDeck_FaceDown().size();
@@ -130,26 +128,26 @@ class RunSimulation {
                 int totalCardsInGame = totalCardsInFoundation + totalCardsInStock + totalCardsInTablou;
 
                 if (totalCardsInGame != 52){
-                    System.out.printf("");
+                    //              System.out.printf("");
                 }
-                if(table.getFundamentPiles().get(0).get(table.getFundamentPiles().get(0).size() - 1).getBelongToPile() < 7 ||
-                        table.getFundamentPiles().get(1).get(table.getFundamentPiles().get(1).size() - 1).getBelongToPile() < 7 ||
-                        table.getFundamentPiles().get(2).get(table.getFundamentPiles().get(2).size() - 1).getBelongToPile() < 7 ||
-                        table.getFundamentPiles().get(3).get(table.getFundamentPiles().get(3).size() - 1).getBelongToPile() < 7){
-                    System.out.printf("");
-                }
+//                if(table.getFundamentPiles().get(0).get(table.getFundamentPiles().get(0).size() - 1).getBelongToPile() < 7 ||
+//                        table.getFundamentPiles().get(1).get(table.getFundamentPiles().get(1).size() - 1).getBelongToPile() < 7 ||
+//                        table.getFundamentPiles().get(2).get(table.getFundamentPiles().get(2).size() - 1).getBelongToPile() < 7 ||
+//                        table.getFundamentPiles().get(3).get(table.getFundamentPiles().get(3).size() - 1).getBelongToPile() < 7){
+//                    System.out.printf("");
+//                }
 
                 match = algorithm.checkForAnyMatch();
                 if(match.toPile == 11){
-                    System.out.println("");
+        //            System.out.println("");
                 }
                 if (cards.size() == 0){
-                    System.out.printf("");
+   //                 System.out.printf("");
                 }
                 if (!match.match){
-                    System.out.printf("");
+      //              System.out.printf("");
                 }
-                System.out.println("");
+      //          System.out.println("");
 
                 int cardsBefore = cards.size();
 
@@ -277,42 +275,20 @@ class RunSimulation {
                     System.out.printf("Meeeh");
                 }
 
-                //DEBUGGING IF STATEMENT
-                if(table.getFundamentPiles().get(0).get(table.getFundamentPiles().get(0).size() - 1).getType() != 0 ||
-                        table.getFundamentPiles().get(1).get(table.getFundamentPiles().get(1).size() - 1).getType() != 1 ||
-                        table.getFundamentPiles().get(2).get(table.getFundamentPiles().get(2).size() - 1).getType() != 2 ||
-                        table.getFundamentPiles().get(3).get(table.getFundamentPiles().get(3).size() - 1).getType() != 3){
-                    System.out.printf("");
-                }
-
-                lastMove = "FromPile: " + Integer.toString(match.fromPile) + ", " + "ToPile: " + Integer.toString(match.toPile);
-                int pilesCompleted = 0;
-                for (int l = 0; l < 4; l++) {
-                    if (table.getFundamentPiles().get(0).size() == 14) pilesCompleted++;
-                }
-                if (pilesCompleted == 4) {
-                    System.out.println("GAME WON! " + currentMovesTaken + " moves taken for this win.");
-                    break;
-                }
-                if (i == 999) {
-                    System.out.println("Game lost: " + table.getFundamentPiles().get(0).size() + ", " + table.getFundamentPiles().get(1).size() + ", " + table.getFundamentPiles().get(2).size() + ", " + table.getFundamentPiles().get(3).size() + ".");
-                    break;
-                }
-                //System.out.println("CARDS TOTAL: " +totalCardsInGame);
-                int cardsAfter = cardsBefore - cards.size();
-                if(cardsAfter > 1){
-                    System.out.printf("");
-                }
-                if (i > 250){
-                    System.out.printf("");
-                }
+            if (table.getFundamentPiles().get(0).size() == 14 && table.getFundamentPiles().get(1).size() == 14 && table.getFundamentPiles().get(2).size() == 14 && table.getFundamentPiles().get(3).size() == 14) {
+                gamesWon++;
+                break;
             }
-            totalMovesTaken += currentMovesTaken;
-            if(table.getFundamentPiles().get(0).size() > 13 && table.getFundamentPiles().get(1).size() > 13 && table.getFundamentPiles().get(2).size() > 13 && table.getFundamentPiles().get(3).size() > 13){
-                System.out.println("");
+            if (i == maximumHandsPrGame - 1){
+                gamesLost++;}
             }
         }
-        System.out.println("Total games won: " + gamesWon + " out of: " + amountOfGamesToRun + " games.");
-        System.out.println("Total moves taken: " + totalMovesTaken);
+        System.out.println("******************************************************************************************************\n");
+        System.out.println("Test result in " + amountOfGamesToRun + " games there was " + (int) gamesWon + " games won " + (int) gamesLost + " games lost");
+//        System.out.println("That is a win rate on " + df.format(winRatio) + "%\n");
+//        System.out.println("Average hands needed for a win: " + df.format(averageMovesForAWin));
+//        System.out.println("Maximum hands for a win is: " + maximumMovesForAWin + " hands");
+//        System.out.println("Minimum hands for a win is: " + minimumMovesForAWin + " hands\n");
+//        System.out.println("******************************************************************************************************\n");
     }
 }

@@ -16,7 +16,7 @@ public class Run {
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
         Match match;
-        table.initStartTable("S6,R3,K3,H6,K5,H11,K10");
+        table.initStartTable("H3,H4,S3,K4,K8,R5,S5");
         table.printTable();
         boolean printTable = true;
         for (int i = 0 ; i < 250 ; i++) {
