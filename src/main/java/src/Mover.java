@@ -30,24 +30,46 @@ public class Mover implements Move {
     public void moveCard_OrPile(Match match) {
 
     //If there is a complex match
-        if (match.complex) {
+        if (match.complex && (match.noNextInput || match.lastCardInPile)) {
             //First step tablou to tablou
             List<Card> cardsToMove = new ArrayList<>();
 
-            for (int i = match.complexIndex; i < table.getAllPiles().get(match.fromPile).size(); i++) {
+            for (int i = match.complexIndex ; i < table.getAllPiles().get(match.fromPile).size(); i++) {
                 cardsToMove.add(table.getAllPiles().get(match.fromPile).get(i));
+                //table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
+            }
+            for (int i = match.complexIndex ; i < table.getAllPiles().get(match.fromPile).size() + 1; i++) {
                 table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
             }
+            table.getAllPiles().get(match.toPile).addAll(cardsToMove);
             table.getFundamentPiles().get(match.getComplexFinalFoundationPile()).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
+            table.getFundamentPiles().get(match.complexFinalFoundationPile).get(table.getFundamentPiles().get(match.complexFinalFoundationPile).size() - 1).setBelongToPile(match.complexFinalFoundationPile + 7);
             table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
-            //Check if we need the next input
-            if (table.getAllPiles().get(match.fromPile).size() > 0) {
-                if (table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1).isFaceUp()) {
-                    match.setNoNextInput(true);
-                }
-            }
         }
-    //If there is no match, and we need 3 new cards - next input
+        else if(match.complex){
+            //First step tablou to tablou
+            List<Card> cardsToMove = new ArrayList<>();
+
+            for (int i = match.complexIndex ; i < table.getAllPiles().get(match.fromPile).size(); i++) {
+                cardsToMove.add(table.getAllPiles().get(match.fromPile).get(i));
+            }
+            table.getAllPiles().get(match.fromPile).removeAll(cardsToMove);
+
+            for (int i = 0 ; i < cardsToMove.size() ; i++){
+                cardsToMove.get(i).setBelongToPile(match.complexFinalFoundationPile + 7);
+            }
+            table.getAllPiles().get(match.toPile).addAll(cardsToMove);
+            table.getFundamentPiles().get(match.getComplexFinalFoundationPile()).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
+            table.getFundamentPiles().get(match.complexFinalFoundationPile).get(table.getFundamentPiles().get(match.complexFinalFoundationPile).size() - 1).setBelongToPile(match.complexFinalFoundationPile + 7);
+            table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
+
+            //Insert new card
+            match.nextPlayerCard.setBelongToPile(match.fromPile);
+            table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
+            table.getAllPiles().get(match.fromPile).add(match.nextPlayerCard);
+        }
+
+//IF THERE IS NO MATCH, AND WE NEED 3 NEW CARDS - WITH INPUT
         else if (!match.match && !match.noNextInput) {
             if (table.getPlayerDeck_FaceDown().size() > 2) {
                 for (int i = 0; i < 2; i++) {
@@ -58,10 +80,13 @@ public class Mover implements Move {
                 table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
                 table.getPlayerDeck_FaceDown().remove(0);
             }
-            else if (table.getPlayerDeck_FaceDown().size() < 3) {
+            else if ((table.getPlayerDeck_FaceUp().size() > 2 && table.getPlayerDeck_FaceDown().size() < 3) ||
+                     (table.getPlayerDeck_FaceUp().size() == 2 && table.getPlayerDeck_FaceDown().size() > 0) ||
+                     (table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() > 1))
+            {
                 table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
                 table.getPlayerDeck_FaceUp().clear();
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 2 ; i++) {
                     table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
                     table.getPlayerDeck_FaceDown().remove(0);
                 }
@@ -69,9 +94,59 @@ public class Mover implements Move {
                 table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
                 table.getPlayerDeck_FaceDown().remove(0);
             }
+            //DENNE DOBBELT
+//            else if ((table.getPlayerDeck_FaceUp().size() > 2 && table.getPlayerDeck_FaceDown().size() < 3){
+//                table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
+//                table.getPlayerDeck_FaceUp().clear();
+//                for (int i = 0; i < 2 ; i++) {
+//                    table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+//                    table.getPlayerDeck_FaceDown().remove(0);
+//                }
+//                match.nextPlayerCard.setBelongToPile(match.fromPile);
+//                table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+//                table.getPlayerDeck_FaceDown().remove(0);
+//            }
+
+
+//            else if(table.getPlayerDeck_FaceUp().size() == 2 && table.getPlayerDeck_FaceDown().size() > 0){
+//                table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
+//                table.getPlayerDeck_FaceUp().clear();
+//                for (int i = 0; i < 2 ; i++) {
+//                    table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+//                    table.getPlayerDeck_FaceDown().remove(0);
+//                }
+//                match.nextPlayerCard.setBelongToPile(match.fromPile);
+//                table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+//                table.getPlayerDeck_FaceDown().remove(0);
+//            }
+//            else if (table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() > 1){
+//                table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
+//                table.getPlayerDeck_FaceUp().clear();
+//                for (int i = 0; i < 2 ; i++) {
+//                    table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+//                    table.getPlayerDeck_FaceDown().remove(0);
+//                }
+//                match.nextPlayerCard.setBelongToPile(match.fromPile);
+//                table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+//                table.getPlayerDeck_FaceDown().remove(0);
+//            }
+            else if (table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 1){
+                table.getPlayerDeck_FaceDown().addAll(table.getPlayerDeck_FaceUp());
+                table.getPlayerDeck_FaceUp().clear();
+                table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                table.getPlayerDeck_FaceDown().remove(0);
+                match.nextPlayerCard.setBelongToPile(match.fromPile);
+                table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+                table.getPlayerDeck_FaceDown().remove(0);
+            }
+            else if (table.getPlayerDeck_FaceUp().size() == 0 && table.getPlayerDeck_FaceDown().size() == 1){
+                table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
+                table.getPlayerDeck_FaceDown().clear();
+            }
         }
-    //If there is no match, and we need 3 new cards - no next input
+//If there is no match, and we need 3 new cards - no next input
         else if(!match.lastCardInPile && match.noNextInput && !match.match){
+            //TODO NOT FUCKING WORKING
             if (table.getPlayerDeck_FaceDown().size() > 2) {
                 for (int i = 0; i < 3; i++) {
                     table.getPlayerDeck_FaceUp().add(table.getPlayerDeck_FaceDown().get(0));
@@ -109,20 +184,28 @@ public class Mover implements Move {
             //If match from stock pile
             if (match.fromPile == 11) {
                 if (match.toPile < 7) {
+
+                    //
                     table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1).setBelongToPile(match.toPile);
                     table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                     table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                    if (!table.getPlayerDeck_FaceUp().isEmpty()) {
-                        table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                        match.nextPlayerCard.setBelongToPile(match.fromPile);
-                        table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
-                    }
+
+                    table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+                    match.nextPlayerCard.setBelongToPile(match.fromPile);
+                    table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+
+//                    if (!table.getPlayerDeck_FaceUp().isEmpty()) {
+//                        table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
+//                        match.nextPlayerCard.setBelongToPile(match.fromPile);
+//                        table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
+//                    }
                 }
                 else {
                     table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                     table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
                     table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
-                    match.nextPlayerCard.setBelongToPile(match.fromPile);
+                    table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
+                    match.nextPlayerCard.setBelongToPile(match.toPile);
                     table.getPlayerDeck_FaceUp().add(match.nextPlayerCard);
 
                 }
@@ -151,6 +234,7 @@ public class Mover implements Move {
             else if(match.fromPile < 7){
                 //Copy from tablou to foundation
                 table.getFundamentPiles().get(match.toPile - 7).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
+                table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
                 //Remove the two next cards (we know that we need an input)
                 table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
                 table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
@@ -160,13 +244,15 @@ public class Mover implements Move {
         }
     //If there is a match and the next input is NOT needed
         else if (match.match) {
-            //Match from player deck
+            //Match from stock to tablou
             if (match.fromPile == 11 && match.toPile < 7) {
                 if(table.getPlayerDeck_FaceUp().size() > 1){
                     table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                    table.getAllPiles().get(match.toPile).get(table.getAllPiles().get(match.toPile).size() - 1).setBelongToPile(match.toPile);
                     table.getPlayerDeck_FaceUp().remove(table.getPlayerDeck_FaceUp().size() - 1);
                 }
-                if (table.getPlayerDeck_FaceUp().size() == 1) {
+                else if  (table.getPlayerDeck_FaceUp().size() == 1) {
+                    table.getPlayerDeck_FaceUp().get(0).setBelongToPile(match.toPile);
                     table.getAllPiles().get(match.toPile).add(table.getPlayerDeck_FaceUp().get(0));
                     table.getPlayerDeck_FaceUp().clear();
                 }
@@ -175,12 +261,17 @@ public class Mover implements Move {
             else if(match.fromPile < 7 && match.toPile > 6){
                 table.getFundamentPiles().get(match.toPile - 7).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
                 table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
+                table.getFundamentPiles().get(match.toPile - 7).get(table.getFundamentPiles().get(match.toPile - 7).size() - 1).setBelongToPile(match.toPile);
             }
             //Match from tablou to tablou
             else if(match.fromPile < 7){
+                for(int i = 0 ; i < table.getAllPiles().get(match.fromPile).size() ; i++) {
+                    table.getAllPiles().get(match.fromPile).get(i).setBelongToPile(match.toPile);
+                }
                 table.getAllPiles().get(match.toPile).addAll(table.getAllPiles().get(match.fromPile));
                 table.getAllPiles().get(match.fromPile).clear();
             }
+            //Stock to tablou
             //Stock to foundation
             else{
                 table.getFundamentPiles().get(match.toPile - 7).add(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));

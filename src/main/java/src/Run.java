@@ -16,17 +16,30 @@ public class Run {
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
         Match match;
-        table.initStartTable("S10,R9,S7,R8,H11,H10,H6");
+        table.initStartTable("S6,R3,K3,H6,K5,H11,K10");
         table.printTable();
+        boolean printTable = true;
         for (int i = 0 ; i < 250 ; i++) {
             System.out.println("Round: " + i);
             match = algorithm.checkForAnyMatch();
             //No match - Turn card from player pile
-            if(!match.match && match.stockPileIsEmpty){
-                System.out.println("*************** Game Over!!! ***************");
-                break;
+
+            if (match.complex && (match.noNextInput || match.lastCardInPile)){
+                System.out.println("Complex match, first move from pile " + match.fromPile + " at index " + match.complexIndex + " to tablou pile " + match.toPile);
+                System.out.println("After that, move the card at tablou pile " + match.fromPile + " to foundation pile " + match.complexFinalFoundationPile);
+                move.moveCard_OrPile(match);
             }
-            if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
+            else if (match.complex){
+                System.out.println("Complex match, first move from pile " + match.fromPile + " at index " + match.complexIndex + " to tablou pile " + match.toPile);
+                System.out.println("After that, move the card at tablou pile " + match.fromPile + " to foundation pile " + match.complexFinalFoundationPile);
+                System.out.println("Last trun over the facedown card in tablou " + match.fromPile + " and enter value:");
+                String input = scanner.next();
+                Card card = table.stringToCardConverter(input);
+                card.setFaceUp(true);
+                move.moveCard_OrPile(match);
+                table.printTable();
+            }
+            else if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
                 System.out.println("No match on the table, turn three cards from the stock pile over and enter the next card");
                 String input = scanner.next();
                 Card card = table.stringToCardConverter(input);
@@ -101,6 +114,16 @@ public class Run {
                 System.out.println("The pile is empty after that...");
                 move.moveCard_OrPile(match);
             }
+            else {
+                System.out.printf("Meeeh");
+            }
+
+
+
+
+
+
+
 
 //            //If nothing applies, turn over three cards in stock, if possible
 //            else {move.moveCard_OrPile(match); table.printTable();}

@@ -13,92 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RunSimulation {
 
     @Test
-    void runOneFullGame(){
-
-        List<String> cards = new ArrayList<>();
-        Table table = new TableIO();
-        Algorithm algorithm = new Algorithm(table);
-        Move move = new Mover(table);
-        RandomNumber randomNumber = new RandomNumber(52);
-
-        for (int i = 0 ; i < 4 ;  i++){
-            for (int j = 0 ; j < 13 ; j++){
-                switch (i)
-                {
-                    case 0 : cards.add("K" + j);
-                    break;
-                    case 1 : cards.add("H" + j);
-                    break;
-                    case 2 : cards.add("R" + j);
-                    break;
-                    case 3 : cards.add("S" + j);
-                    break;
-                }
-            }
-        }
-
-        int initString = randomNumber.getNewNumber();
-        String initTable = cards.get(initString);
-        cards.remove(initString);
-        randomNumber.setUpperbound(51);
-
-        for (int i = 0 ; i < 6 ; i++){
-            int ranNum = randomNumber.getNewNumber();
-            initTable = initTable.concat("," + cards.get(ranNum));
-            cards.remove(ranNum);
-            randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
-        }
-        System.out.println(initTable);
-        table.initStartTable(initTable);
-        table.printTable();
-        Match match; // = algorithm.checkForAnyMatch();
-        int ranNum;//  = randomNumber.getNewNumber();
-    //Runnable
-        for (int i = 0 ; i < 250 ; i++) {
-
-            match = algorithm.checkForAnyMatch();
-
-            if (!match.match & !match.complex) {
-                ranNum = randomNumber.getNewNumber();
-                System.out.println("Turn over card in player pile");
-                match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
-                randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
-                cards.remove(ranNum);
-                //move.insertNextCardFromInput(match);
-            }
-            else if (match.match && !match.complex) {
-                System.out.println("Move from " + match.fromPile + " to " + match.toPile);
-                ranNum = randomNumber.getNewNumber();
-                move.moveCard_OrPile(match);
-            //Now we need to know which cards that was underneath the card.
-                match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
-                randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
-                cards.remove(ranNum);
-                //move.insertNextCardFromInput(match);
-            }
-            else {
-                System.out.println("Move complex from pile " + match.fromPile + " at index " + match.complexIndex + " to pile " + match.toPile);
-                ranNum = randomNumber.getNewNumber();
-                move.moveCard_OrPile(match);
-                if (!match.lastCardInPile) {
-                    match.nextPlayerCard = table.stringToCardConverter(cards.get(ranNum));
-                    randomNumber.setUpperbound(randomNumber.getUpperbound() - 1);
-                    cards.remove(ranNum);
-                    //move.insertNextCardFromInput(match);
-                }
-            }
-            table.printTable();
-        }
-    }
-
-
-    @Test
     void testManyGames() {
         String lastMove = "";
-        int amountOfGamesToRun = 1;
+        int amountOfGamesToRun = 1000;
         int totalMovesTaken = 0;
         int currentMovesTaken = 0;
         int gamesWon = 0;
+        boolean printTable = false;
 
         for (int k = 0; k < amountOfGamesToRun; k++) {
             Table table = new TableIO();
@@ -154,10 +75,17 @@ class RunSimulation {
             table.initStartTable(startTable);
 
 
+
+            Match match;
             currentMovesTaken = 0;
-            for (int i = 0 ; i < 200 ; i++) {
-                table.printTable();
-                System.out.println("**** Round " + (i+1) + " ****");
+            for (int i = 0 ; i < 999 ; i++) {
+
+                if(printTable) {
+                    table.printTable();
+                }
+                if(printTable) {
+                    System.out.println("**** Round " + (i + 1) + " ****");
+                }
                 int total = 0;
                 for (int j = 0; j < 4; j++) total += table.getFundamentPiles().get(j).size();
                 if (total >= 52) {
@@ -190,13 +118,67 @@ class RunSimulation {
                     System.out.print("");
                 }
 
-                //assertEquals(cards.size(), unknownCards);
+                if (cards.size() == 0) {
+                    System.out.printf("");
+                }
 
-                Match match = algorithm.checkForAnyMatch();
+                //assertEquals(cards.size(), unknownCards);
+                int totalCardsInTablou = table.getAllPiles().get(0).size() + table.getAllPiles().get(1).size() + table.getAllPiles().get(2).size() + table.getAllPiles().get(3).size() + table.getAllPiles().get(4).size() + table.getAllPiles().get(5).size() + table.getAllPiles().get(6).size();
+                int totalCardsInFoundation = table.getFundamentPiles().get(0).size() + table.getFundamentPiles().get(1).size() + table.getFundamentPiles().get(2).size() + table.getFundamentPiles().get(3).size() - 4;
+                int totalCardsInStock = table.getPlayerDeck_FaceUp().size() + table.getPlayerDeck_FaceDown().size();
+
+                int totalCardsInGame = totalCardsInFoundation + totalCardsInStock + totalCardsInTablou;
+
+                if (totalCardsInGame != 52){
+                    System.out.printf("");
+                }
+                if(table.getFundamentPiles().get(0).get(table.getFundamentPiles().get(0).size() - 1).getBelongToPile() < 7 ||
+                        table.getFundamentPiles().get(1).get(table.getFundamentPiles().get(1).size() - 1).getBelongToPile() < 7 ||
+                        table.getFundamentPiles().get(2).get(table.getFundamentPiles().get(2).size() - 1).getBelongToPile() < 7 ||
+                        table.getFundamentPiles().get(3).get(table.getFundamentPiles().get(3).size() - 1).getBelongToPile() < 7){
+                    System.out.printf("");
+                }
+
+                match = algorithm.checkForAnyMatch();
+                if(match.toPile == 11){
+                    System.out.println("");
+                }
+                if (cards.size() == 0){
+                    System.out.printf("");
+                }
+                if (!match.match){
+                    System.out.printf("");
+                }
                 System.out.println("");
+
+                int cardsBefore = cards.size();
+
+                if (match.complex && (match.noNextInput || match.lastCardInPile)){
+                    if(printTable){
+                        System.out.println("Complex match, first move from pile " + match.fromPile + " at index " + match.complexIndex + " to tablou pile " + match.toPile);
+                        System.out.println("After that, move the card at tablou pile " + match.fromPile + " to foundation pile " + match.complexFinalFoundationPile);}
+                    move.moveCard_OrPile(match);
+                }
+                else if (match.complex){
+                    if(printTable) {
+                        System.out.println("Complex match, first move from pile " + match.fromPile + " at index " + match.complexIndex + " to tablou pile " + match.toPile);
+                        System.out.println("After that, move the card at tablou pile " + match.fromPile + " to foundation pile " + match.complexFinalFoundationPile);
+                        System.out.println("Last trun over the facedown card in tablou " + match.fromPile + " and enter value:");
+                    }
+                    Card card = cards.get(0);
+                    cards.remove(0);
+                    card.setFaceUp(true);
+                    match.nextPlayerCard = card;
+                    move.moveCard_OrPile(match);
+                    if(printTable) {
+                        table.printTable();
+                    }
+                }
                 //No match - Turn card from player pile - next input
-                if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
-                    System.out.println("Turn over three new cards in the stock pile");
+                else if(match.fromPile == 11 && !match.match && !match.noNextInput && !match.lastCardInPile){
+                    if(printTable) {
+                        System.out.println("Turn over three new cards in the stock pile");
+                    }
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -204,14 +186,18 @@ class RunSimulation {
                     move.moveCard_OrPile(match);
                 }
                 //No match - Turn card from player pile - no next input
-                else if(match.fromPile == 11 && !match.match && match.noNextInput && !match.lastCardInPile){
-                    System.out.println("Turn over three new cards in the stock pile");
+                else if(match.fromPile == 11 && !match.match && match.noNextInput && !match.lastCardInPile) {
+                    if (printTable){
+                        System.out.println("Turn over three new cards in the stock pile");
+                    }
                     move.moveCard_OrPile(match);
                     //System.out.printf("The next card you turn over is known and is: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                 }
                 //Match from player pile to tablou - next input
                 else if(match.fromPile == 11 && match.toPile < 7 && match.match && !match.noNextInput && !match.lastCardInPile){
-                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    if(printTable) {
+                        System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    }
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -220,7 +206,9 @@ class RunSimulation {
                 }
                 //Match from stock to foundation - next input
                 else if(match.fromPile == 11 && match.toPile >= 7 && match.match && !match.noNextInput && !match.lastCardInPile){
-                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    if(printTable) {
+                        System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    }
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -229,28 +217,38 @@ class RunSimulation {
                 }
                 //Match from stock to foundation - no next input
                 else if(match.fromPile == 11 && match.toPile > 6 && match.match && match.noNextInput){
-                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    if(printTable) {
+                        System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    }
                     move.moveCard_OrPile(match);
                 }
                 //Match from stock to tablou - next input
                 else if(match.fromPile == 11 && match.toPile < 7 && match.match && !match.noNextInput){
-                    System.out.println("Move from stock to tablou pile: " + match.toPile);
+                    if (printTable) {
+                        System.out.println("Move from stock to tablou pile: " + match.toPile);
+                    }
                     move.moveCard_OrPile(match);
                 }
                 //Match from stock to tablou - no next input
                 else if(match.fromPile == 11 && match.toPile < 7 && match.match){
-                    System.out.println("Move from stock to tablou pile: " + match.toPile);
+                    if(printTable) {
+                        System.out.println("Move from stock to tablou pile: " + match.toPile);
+                    }
                     move.moveCard_OrPile(match);
                     //System.out.println("The next card in stock pile is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
                 }
                 //Match from tablou to foundation - no next input
-                else if(match.fromPile < 7 && match.toPile > 6 && match.match && match.noNextInput && !match.lastCardInPile){
-                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                else if(match.fromPile < 7 && match.toPile > 6 && match.match && match.noNextInput){
+                    if(printTable) {
+                        System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    }
                     move.moveCard_OrPile(match);
                 }
                 //Match from tablou to foundation - next input
-                else if(match.fromPile < 7 && match.toPile > 6 && match.match && !match.noNextInput && !match.lastCardInPile){
-                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                else if(match.fromPile < 7 && match.toPile > 6 && match.match && !match.noNextInput){
+                    if(printTable) {
+                        System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    }
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -258,8 +256,10 @@ class RunSimulation {
                     move.moveCard_OrPile(match);
                 }
                 //Match from tablou to toblou - next input
-                else if(match.fromPile < 7 && match.toPile < 7 && match.match && !match.noNextInput && !match.lastCardInPile){
-                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                else if(match.fromPile < 7 && match.toPile < 7 && match.match && !match.noNextInput){
+                    if(printTable) {
+                        System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    }
                     Card card = cards.get(0);
                     cards.remove(0);
                     card.setFaceUp(true);
@@ -267,9 +267,14 @@ class RunSimulation {
                     move.moveCard_OrPile(match);
                 }
                 //Match from tablou to tablou - no next input
-                else if(match.fromPile < 7 && match.toPile < 7 && match.match && match.noNextInput && match.lastCardInPile){
-                    System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                else if(match.fromPile < 7 && match.toPile < 7 && match.match && match.noNextInput){
+                    if(printTable) {
+                        System.out.println("move from " + match.fromPile + " to " + match.toPile);
+                    }
                     move.moveCard_OrPile(match);
+                }
+                else {
+                    System.out.printf("Meeeh");
                 }
 
                 lastMove = "FromPile: " + Integer.toString(match.fromPile) + ", " + "ToPile: " + Integer.toString(match.toPile);
@@ -284,6 +289,21 @@ class RunSimulation {
                 if (i == 999) {
                     System.out.println("Game lost: " + table.getFundamentPiles().get(0).size() + ", " + table.getFundamentPiles().get(1).size() + ", " + table.getFundamentPiles().get(2).size() + ", " + table.getFundamentPiles().get(3).size() + ".");
                     break;
+                }
+                System.out.println("CARDS TOTAL: " +totalCardsInGame);
+                int cardsAfter = cardsBefore - cards.size();
+                if(cardsAfter > 1){
+                    System.out.printf("");
+                }
+                if (i > 250){
+                    System.out.printf("");
+                }
+                if(table.getFundamentPiles().get(0).get(table.getFundamentPiles().get(0).size() - 1).getType() != 0 ||
+                        table.getFundamentPiles().get(1).get(table.getFundamentPiles().get(1).size() - 1).getType() != 1 ||
+                        table.getFundamentPiles().get(2).get(table.getFundamentPiles().get(2).size() - 1).getType() != 2 ||
+                        table.getFundamentPiles().get(3).get(table.getFundamentPiles().get(3).size() - 1).getType() != 3){
+                    System.out.println(match);
+                    System.out.printf("");
                 }
             }
             totalMovesTaken += currentMovesTaken;

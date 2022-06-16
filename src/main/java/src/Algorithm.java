@@ -5,6 +5,7 @@ import src.Interfaces.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Algorithm implements Solver {
 
@@ -137,6 +138,7 @@ public class Algorithm implements Solver {
             if(table.getPlayerDeck_FaceUp().size() == 1){
                 match.setLastCardInPile(true);
                 match.setNoNextInput(true);
+                return match;
             }
             if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2).isFaceUp()){
                 match.setNoNextInput(true);
@@ -145,7 +147,17 @@ public class Algorithm implements Solver {
         }
 
         else if(checkForComplexMatch()){
-            return new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex, finalComplexPile);
+            Match match = new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex, finalComplexPile);
+            int index = 0;
+
+            if(cardFromComplexPileIndex < 2){
+                match.setNoNextInput(true);
+                return match;
+            }
+            if (table.getAllPiles().get(cardFromPile).get(cardFromComplexPileIndex - 2).isFaceUp()){
+                match.setNoNextInput(true);
+            }
+            return match;
         }
 
 
@@ -153,31 +165,86 @@ public class Algorithm implements Solver {
         else {
             Match match = new Match(11, -1, false, false);
         //If we are at the end of the pile
-            if(table.getPlayerDeck_FaceDown().size() > 2){
+            if(table.getPlayerDeck_FaceUp().size() > 2 && table.getPlayerDeck_FaceDown().size() > 2){
                 if (table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
                     match.setNoNextInput(true);
                 }
             }
-            else if (table.getPlayerDeck_FaceDown().size() == 2){
-                if (table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
+            else if (table.getPlayerDeck_FaceUp().size() == 2 && table.getPlayerDeck_FaceDown().size() > 2){
+                if (table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
                     match.setNoNextInput(true);
                 }
             }
-            else if(table.getPlayerDeck_FaceDown().size() == 1){
-                if (table.getPlayerDeck_FaceUp().get(1).isFaceUp()){
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() > 2){
+                if (table.getPlayerDeck_FaceUp().get(0).isFaceUp()){
                     match.setNoNextInput(true);
                 }
             }
-            else if(table.getPlayerDeck_FaceDown().size() == 0 && table.getPlayerDeck_FaceUp().size() > 3){
+            else if(table.getPlayerDeck_FaceUp().size() == 0 && table.getPlayerDeck_FaceDown().size() > 2){
+                if (table.getPlayerDeck_FaceDown().get(2).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            else if(table.getPlayerDeck_FaceUp().size() > 2 && table.getPlayerDeck_FaceDown().size() == 2){
+                if(table.getPlayerDeck_FaceUp().get(0).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            else if(table.getPlayerDeck_FaceUp().size() == 2 && table.getPlayerDeck_FaceDown().size() == 2){
+                if(table.getPlayerDeck_FaceUp().get(0).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 2){
+                match.setNoNextInput(true);
+            }
+            else if(table.getPlayerDeck_FaceUp().size() == 0 && table.getPlayerDeck_FaceDown().size() == 2){
+                if(table.getPlayerDeck_FaceDown().get(1).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            else if(table.getPlayerDeck_FaceUp().size() > 2 && table.getPlayerDeck_FaceDown().size() == 1){
+                if(table.getPlayerDeck_FaceUp().get(1).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            else if(table.getPlayerDeck_FaceUp().size() == 2 && table.getPlayerDeck_FaceDown().size() == 1){
+                if(table.getPlayerDeck_FaceUp().get(1).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            else if(table.getPlayerDeck_FaceUp().size() == 1 && table.getPlayerDeck_FaceDown().size() == 1){
+                match.setNoNextInput(true);
+            }
+            else if(table.getPlayerDeck_FaceUp().size() == 0 && table.getPlayerDeck_FaceDown().size() == 1){
+                if(table.getPlayerDeck_FaceDown().get(0).isFaceUp()){
+                    match.setNoNextInput(true);
+                }
+            }
+            else if(table.getPlayerDeck_FaceUp().size() >= 3 && table.getPlayerDeck_FaceDown().size() == 0){
                 if(table.getPlayerDeck_FaceUp().get(2).isFaceUp()){
                     match.setNoNextInput(true);
                 }
             }
-            else if(table.getPlayerDeck_FaceDown().size() == 0 && table.getPlayerDeck_FaceUp().size() <= 3){
-                match.setStockPileIsEmpty(true);
+            else if(table.getPlayerDeck_FaceUp().size() < 3 && table.getPlayerDeck_FaceDown().size() == 0){
+                match.setNoNextInput(true);
             }
             return match;
         }
+    }
+
+    private boolean allStockCardAreKnown() {
+        for (int i = 0 ; i < table.getPlayerDeck_FaceUp().size() ; i++){
+            if (!table.getPlayerDeck_FaceUp().get(i).isFaceUp()){
+                return false;
+            }
+        }
+        for (int i = 0 ; i < table.getPlayerDeck_FaceDown().size() ; i++){
+            if (!table.getPlayerDeck_FaceDown().get(i).isFaceUp()){
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean nextStockCardIsKnown() {
@@ -296,6 +363,7 @@ public class Algorithm implements Solver {
                 if(sortedList.get(j).isEmpty()){continue;}
                 if (sortedList.get(0).isEmpty()){continue;}
                 if(sortedList.get(j).get(sortedList.get(j).size() - 1).getColor() == validColor && sortedList.get(j).get(sortedList.get(j).size() - 1).getValue() == validValue){
+
                     cardFromPile = sortedList.get(0).get(0).getBelongToPile();
                     cardToPile = sortedList.get(j).get(0).getBelongToPile();
                     return true;
@@ -462,9 +530,6 @@ public class Algorithm implements Solver {
                             cardFromComplexPileIndex = k + 1;
                             table.setComplexSplitIndex(cardFromComplexPileIndex);
                             complexMatch = true;
-//                            if(table.getAllPiles().get(j).get(k).isFaceUp()){
-//                                noNeedNextInput_algoritmClass = true;
-//                            }
                             return true;
                         }
                     }
