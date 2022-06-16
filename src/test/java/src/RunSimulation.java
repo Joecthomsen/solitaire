@@ -159,7 +159,7 @@ class RunSimulation {
                         System.out.println("After that, move the card at tablou pile " + match.fromPile + " to foundation pile " + match.complexFinalFoundationPile);}
                     move.moveCard_OrPile(match);
                 }
-                else if (match.complex){
+                else if (match.complex && !match.noNextInput){
                     if(printTable) {
                         System.out.println("Complex match, first move from pile " + match.fromPile + " at index " + match.complexIndex + " to tablou pile " + match.toPile);
                         System.out.println("After that, move the card at tablou pile " + match.fromPile + " to foundation pile " + match.complexFinalFoundationPile);
@@ -277,6 +277,14 @@ class RunSimulation {
                     System.out.printf("Meeeh");
                 }
 
+                //DEBUGGING IF STATEMENT
+                if(table.getFundamentPiles().get(0).get(table.getFundamentPiles().get(0).size() - 1).getType() != 0 ||
+                        table.getFundamentPiles().get(1).get(table.getFundamentPiles().get(1).size() - 1).getType() != 1 ||
+                        table.getFundamentPiles().get(2).get(table.getFundamentPiles().get(2).size() - 1).getType() != 2 ||
+                        table.getFundamentPiles().get(3).get(table.getFundamentPiles().get(3).size() - 1).getType() != 3){
+                    System.out.printf("");
+                }
+
                 lastMove = "FromPile: " + Integer.toString(match.fromPile) + ", " + "ToPile: " + Integer.toString(match.toPile);
                 int pilesCompleted = 0;
                 for (int l = 0; l < 4; l++) {
@@ -290,19 +298,12 @@ class RunSimulation {
                     System.out.println("Game lost: " + table.getFundamentPiles().get(0).size() + ", " + table.getFundamentPiles().get(1).size() + ", " + table.getFundamentPiles().get(2).size() + ", " + table.getFundamentPiles().get(3).size() + ".");
                     break;
                 }
-                System.out.println("CARDS TOTAL: " +totalCardsInGame);
+                //System.out.println("CARDS TOTAL: " +totalCardsInGame);
                 int cardsAfter = cardsBefore - cards.size();
                 if(cardsAfter > 1){
                     System.out.printf("");
                 }
                 if (i > 250){
-                    System.out.printf("");
-                }
-                if(table.getFundamentPiles().get(0).get(table.getFundamentPiles().get(0).size() - 1).getType() != 0 ||
-                        table.getFundamentPiles().get(1).get(table.getFundamentPiles().get(1).size() - 1).getType() != 1 ||
-                        table.getFundamentPiles().get(2).get(table.getFundamentPiles().get(2).size() - 1).getType() != 2 ||
-                        table.getFundamentPiles().get(3).get(table.getFundamentPiles().get(3).size() - 1).getType() != 3){
-                    System.out.println(match);
                     System.out.printf("");
                 }
             }

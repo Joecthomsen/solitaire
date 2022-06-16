@@ -83,6 +83,20 @@ public class Algorithm implements Solver {
             return match;
         }
 
+        else if(checkForComplexMatch()){
+            Match match = new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex, finalComplexPile);
+            int index = 0;
+
+            if(cardFromComplexPileIndex < 2){
+                match.setNoNextInput(true);
+                return match;
+            }
+            if (table.getAllPiles().get(cardFromPile).get(cardFromComplexPileIndex - 2).isFaceUp()){
+                match.setNoNextInput(true);
+            }
+            return match;
+        }
+
         else if(checkForMatchBottomPiles()){    //TODO denne funktions skaber lidt problemer
             int index = 0;
             Match match = new Match(cardFromPile, cardToPile, true, false);
@@ -100,6 +114,19 @@ public class Algorithm implements Solver {
 
         else if(checkForKingMatch_FromTablou_ToEmptyPile()){
             return new Match(cardFromPile, cardToPile, true, false);
+        }
+
+        else if(checkForKingMatch_FromStack_ToEmptyPile()){
+            Match match = new Match(cardFromPile, cardToPile, true, false);
+            if(table.getPlayerDeck_FaceUp().size() == 1){
+                match.setLastCardInPile(true);
+                match.setNoNextInput(true);
+                return match;
+            }
+            if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2).isFaceUp()){
+                match.setNoNextInput(true);
+            }
+            return match;
         }
 
         else if(checkForMatch_playerDeck()) {
@@ -132,34 +159,6 @@ public class Algorithm implements Solver {
             }
             return match;
         }
-
-        else if(checkForKingMatch_FromStack_ToEmptyPile()){
-            Match match = new Match(cardFromPile, cardToPile, true, false);
-            if(table.getPlayerDeck_FaceUp().size() == 1){
-                match.setLastCardInPile(true);
-                match.setNoNextInput(true);
-                return match;
-            }
-            if(table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 2).isFaceUp()){
-                match.setNoNextInput(true);
-            }
-            return match;
-        }
-
-        else if(checkForComplexMatch()){
-            Match match = new Match(cardFromPile, cardToPile, true, true, cardFromComplexPileIndex, finalComplexPile);
-            int index = 0;
-
-            if(cardFromComplexPileIndex < 2){
-                match.setNoNextInput(true);
-                return match;
-            }
-            if (table.getAllPiles().get(cardFromPile).get(cardFromComplexPileIndex - 2).isFaceUp()){
-                match.setNoNextInput(true);
-            }
-            return match;
-        }
-
 
     //If nothing of above apply, then we need to turn three new cards from stock.
         else {

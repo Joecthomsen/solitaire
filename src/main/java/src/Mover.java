@@ -36,15 +36,25 @@ public class Mover implements Move {
 
             for (int i = match.complexIndex ; i < table.getAllPiles().get(match.fromPile).size(); i++) {
                 cardsToMove.add(table.getAllPiles().get(match.fromPile).get(i));
-                //table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
             }
-            for (int i = match.complexIndex ; i < table.getAllPiles().get(match.fromPile).size() + 1; i++) {
+            if(cardsToMove.size() > 2) {
+                System.out.println("");
+            }
+
+            for (int i = 0 ; i < cardsToMove.size() ; i++){
                 table.getAllPiles().get(match.fromPile).remove(match.complexIndex);
             }
+
             table.getAllPiles().get(match.toPile).addAll(cardsToMove);
+
             table.getFundamentPiles().get(match.getComplexFinalFoundationPile()).add(table.getAllPiles().get(match.fromPile).get(table.getAllPiles().get(match.fromPile).size() - 1));
             table.getFundamentPiles().get(match.complexFinalFoundationPile).get(table.getFundamentPiles().get(match.complexFinalFoundationPile).size() - 1).setBelongToPile(match.complexFinalFoundationPile + 7);
             table.getAllPiles().get(match.fromPile).remove(table.getAllPiles().get(match.fromPile).size() - 1);
+
+            int type = table.getFundamentPiles().get(match.complexFinalFoundationPile).get(table.getFundamentPiles().get(match.complexFinalFoundationPile).size() - 1).getType();
+            if(type != match.complexFinalFoundationPile){
+                System.out.printf("");
+            }
         }
         else if(match.complex){
             //First step tablou to tablou
