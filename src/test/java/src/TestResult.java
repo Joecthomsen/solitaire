@@ -9,4 +9,12 @@ public class TestResult {
         this.gamesWon = gamesWon;
         this.gamesLost = gamesLost;
     }
+
+    @Override
+    public String toString() {
+        return "TestResult{" +
+                "gamesWon=" + gamesWon +
+                ", gamesLost=" + gamesLost +
+                '}';
+    }
 }

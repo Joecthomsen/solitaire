@@ -32,6 +32,8 @@ public class Card {
             color = Colors.RED.ordinal();
     }
 
+
+
     public Card(int type, int color, int value, boolean faceUp, int belongToPile) {
         this.type = type;
         this.color = color;
@@ -102,6 +104,5 @@ public class Card {
     public void setValue(int value) {
         this.value = value;
     }
-
 
 }

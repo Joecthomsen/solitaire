@@ -38,7 +38,7 @@ public class Run {
         Algorithm algorithm = new Algorithm(table);
         Move move = new Mover(table);
         Match match;
-        table.initStartTable("H3,H4,S3,K4,K8,R5,S5");
+        table.initStartTable("H0,S0,R0,K0,H2,S2,R2");
         table.printTable();
         boolean printTable = true;
         for (int i = 0 ; i < 250 ; i++) {
@@ -58,6 +58,7 @@ public class Run {
                 String input = scanner.next();
                 Card card = table.stringToCardConverter(input);
                 card.setFaceUp(true);
+                match.nextPlayerCard = card;
                 move.moveCard_OrPile(match);
                 table.printTable();
             }
@@ -81,6 +82,13 @@ public class Run {
                 move.moveCard_OrPile(match);
                 table.printTable();
             }
+            //Match from player pile to tablou - no next input
+            else if(match.fromPile == 11 && match.toPile < 7 && match.match && match.noNextInput && !match.lastCardInPile){
+                System.out.println("There is a match from the player pile top tablou pile " + match.toPile);
+                move.moveCard_OrPile(match);
+                System.out.println("Next card in playerPile is known: " + table.getPlayerDeck_FaceUp().get(table.getPlayerDeck_FaceUp().size() - 1));
+                table.printTable();
+            }
             //Match from stock to foundation - next input
             else if(match.fromPile == 11 && match.toPile >= 7 && match.match && !match.noNextInput && !match.lastCardInPile){
                 System.out.println("There is a match from the stock pile to foundation pile " + (match.toPile - 7));
@@ -92,7 +100,7 @@ public class Run {
                 move.moveCard_OrPile(match);
             }
             //Match from stock to foundation - no next input
-            else if(match.fromPile == 11 && match.toPile < 7 && match.match && match.noNextInput){
+            else if(match.fromPile == 11 && match.toPile >= 7 && match.match && match.noNextInput){
                 System.out.println("Take the last card in the face up stock pile, and move it to tablou pile: " + match.toPile);
                 move.moveCard_OrPile(match);
                 //TODO evt placeres stoppere her, så man får ét move af gangen
@@ -137,8 +145,9 @@ public class Run {
                 move.moveCard_OrPile(match);
             }
             else {
-                System.out.printf("Meeeh");
+                System.out.println("Meeeh");
             }
+
 
             */
 

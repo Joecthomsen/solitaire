@@ -16,9 +16,6 @@ public class Simulation {
         this.maximumNumberOfHandsInEachGame = maximumNumberOfHandsInEachGame;
         this.printTable = printTable;
     }
-
-
-
     public TestResult runSimulation() {
         for (int i = 0; i < numberOfGames; i++) {
             Table table = new TableIO();
