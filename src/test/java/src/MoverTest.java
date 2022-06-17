@@ -275,6 +275,22 @@ class MoverTest {
         match = algorithm.checkForAnyMatch();
         match.nextPlayerCard = table.stringToCardConverter("K13");
         move.moveCard_OrPile(match);
+
+        table = new TableIO();
+        algorithm = new Algorithm(table);
+        move = new Mover(table);
+        table.initStartTable("K12,H12,K12,K13,R7,H12,K11");
+        table.getAllPiles().get(3).clear();
+        table.getAllPiles().get(4).clear();
+        table.getAllPiles().get(5).clear();
+        table.getAllPiles().get(3).add(table.stringToCardConverter("K13"));
+        table.getAllPiles().get(3).get(table.getAllPiles().get(3).size() - 1).setBelongToPile(3);
+        table.getAllPiles().get(3).add(table.stringToCardConverter("R12"));
+        table.getAllPiles().get(3).get(table.getAllPiles().get(3).size() - 1).setBelongToPile(3);
+
+        match = algorithm.checkForAnyMatch();
+
+
         System.out.printf("");
     }
     @Test

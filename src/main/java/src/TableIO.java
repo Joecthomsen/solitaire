@@ -177,7 +177,7 @@ public class TableIO implements Table {
             for (int i = 0; i < 1 + n; i++) {
                 Card card = new Card();
                 piles.get(n).add(card);
-                piles.get(n).get(i).setBelongToPile(i);
+                piles.get(n).get(i).setBelongToPile(n);
             }
             j++;
         }

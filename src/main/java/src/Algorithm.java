@@ -2,10 +2,9 @@ package src;
 
 import src.Interfaces.Solver;
 import src.Interfaces.Table;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Algorithm implements Solver {
 
@@ -54,6 +53,12 @@ public class Algorithm implements Solver {
          * -Start over, if no swaps is done, set the boolean to false, and the loop is broken.
          * */
         boolean swapped = true;
+        for (int i = 0 ; i < listToSort.size() ; i++){
+            if (listToSort.get(i).isEmpty()){
+                listToSort.remove(i);
+                i--;
+            }
+        }
         while (swapped)
         {
             swapped = false;
@@ -62,7 +67,7 @@ public class Algorithm implements Solver {
             while (next < listToSort.size())
             {
                 if(listToSort.get(current).isEmpty() || listToSort.get(next).isEmpty()){current++; next++; continue;}
-                if(listToSort.get(current).get(0).getValue() > listToSort.get(next).get(0).getValue())
+                else if(listToSort.get(current).get(0).getValue() > listToSort.get(next).get(0).getValue())
                 {
                     Collections.swap(listToSort, current, next);
                     swapped = true;
