@@ -42,7 +42,6 @@ public class RandomCards {
                         break;
                 }
                cards.add(result);
-
             }
         }
         Collections.shuffle(cards);
@@ -65,6 +64,9 @@ public class RandomCards {
     }
 
     public String getNextCard(){
+        if(cards.isEmpty()){
+            System.out.println("");
+        }
         String getCard = cards.get(0);
         cards.remove(0);
         return getCard;
