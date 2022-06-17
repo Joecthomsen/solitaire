@@ -9,6 +9,22 @@ import java.util.Objects;
 
 public class Algorithm implements Solver {
 
+
+    /*
+    * IDE TIL STOCK ALGORITME
+    *
+    * - Undgå at komme i loop, hvor man ikke kan bruge de kort man får.
+    *   Dette kan undgås ved, at (faceUp + FaceDown) % 3    !=   0
+    *
+    * - Før hver gang man trækker fra stock til foundation eller tablou, tjek om (faceUp + FaceDown - 1) % 3  =  0
+    * - Hvis denne bliver 0 næste gang, kan man gennemgå hele bunken - måske
+    *
+    * */
+
+    //TODO Tjek om bunken bliver vendt rigtigt
+
+
+
     private int cardFromPile;// = -10;
     private int cardToPile;// = -10;
     private int cardFromComplexPileIndex;
