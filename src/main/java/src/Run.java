@@ -3,6 +3,7 @@ package src;
 import src.Interfaces.Move;
 import src.Interfaces.Table;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Run {
@@ -11,6 +12,27 @@ public class Run {
 
         //TODO Hvis sidste kort fra tablou til foundation bliver tager, skal det printes
 
+        Communicator communicator = new Communicator();
+        communicator.initStartTable("H13,R8,H12,R5,K10,S4,R1");
+
+
+        Scanner scanner =  new Scanner(System.in);
+        String retMove;
+
+        while(true){
+            retMove = communicator.getNextMove();
+            System.out.println(retMove);
+            if (retMove == null){
+                String cardsString = scanner.next();
+                communicator.updateTable(cardsString);
+            }
+            else {
+                String cardsString = scanner.next();
+                communicator.updateTable(cardsString);
+            }
+        }
+
+        /*
         Scanner scanner = new Scanner(System.in);
         Table table = new TableIO();
         Algorithm algorithm = new Algorithm(table);
@@ -118,7 +140,7 @@ public class Run {
                 System.out.printf("Meeeh");
             }
 
-
+            */
 
 
 
@@ -131,4 +153,4 @@ public class Run {
 //            System.out.println("Meeeh");
         }
     }
-}
+
